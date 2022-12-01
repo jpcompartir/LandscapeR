@@ -1,5 +1,7 @@
 # LandscapeR
 
-Functions for mapping out unstructured text into navigable landscapes
+<img src="man/figures/Capture_Intelligence_FullColour.png" align="center" width="100%" style="padding: 25px 50px 25px 0px;"/>
 
-*** IN DEVELOPMENT ***
+Capture Intelligence's R Package for transforming unstructured raw text into a navigable landscape.
+
+\*\*\* IN DEVELOPMENT \*\*\*

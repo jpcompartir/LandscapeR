@@ -1,4 +1,18 @@
 # Volume_time plot function ----
+#' Title
+#'
+#' @param df Data Frame or Tibble object
+#' @param date_var Name of date variable
+#' @param unit Unit of time
+#' @param fill Colour - string or hexcode
+#'
+#' @return a ggplot object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' }
+#' @keywords internal
 .plot_volume_over_time <- function(df, date_var , unit = "week",  fill = "#0f50d2"){
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
@@ -14,13 +28,28 @@
 
 
 # Token plot function ----
+#' Title
+#'
+#' @param df Data Frame or Tibble object
+#' @param text_var Name of text variable
+#' @param top_n Number of tokens to show
+#' @param fill Colour - string or hexcode
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' }
+#' @keywords internal
+
 .plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
 
   .text_var <- rlang::enquo(text_var)
   df %>%
     tidytext::unnest_tokens(words, rlang::quo_name(.text_var))%>%
     dplyr::count(words, sort = TRUE) %>%
-    dplyr::top_n(top_n)%>%
+    dplyr::slice_max(order_by = n, n = top_n, with_ties = FALSE)%>%
     ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n))+
     ggplot2::geom_col(fill = fill)+
     ggplot2::coord_flip()+
@@ -30,6 +59,18 @@
 }
 
 #Download box function ----
+#' Title
+#'
+#' @param exportname Name of export as a string
+#' @param plot The plot to download
+#'
+#' @return A download handler
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' }
+#' @keywords internal
 download_box <- function(exportname, plot) {
   shiny::downloadHandler(
     filename = function() {
@@ -43,6 +84,17 @@ download_box <- function(exportname, plot) {
 
 
 #---- Render Titles ----
+#' Title
+#'
+#' @param plot_type Name of plot type as a string
+#'
+#' @return ggplot boilerplate code
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' }
+#' @keywords internal
 .titles_render <- function(plot_type){
 
   .plot_type <- stringr::str_to_title(plot_type)
@@ -66,7 +118,18 @@ download_box <- function(exportname, plot) {
 }
 
 
-#---- Labs Render ----
+#---- Labs Render ---- TODO
+#' Title
+#'
+#' @param plot_type Type of plot
+#'
+#' @return ggplot boiler code
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' }
+#' @keywords internal
 .labs_render <- function(plot_type){
   df +
     ggplot2::labs(title = paste0(input$sentimentTitle),
@@ -74,4 +137,64 @@ download_box <- function(exportname, plot) {
                   subtitle = paste0(input$sentimentSubtitle),
                   x = paste0(input$sentimentXlabel),
                   y = paste0(input$sentimentYlabel))
+}
+
+
+#---- plot sentiment distribution ---- TODO add percent option
+#' Title
+#'
+#' @param df Data Frame or Tibble Object
+#' @param sentiment_var Name of sentiment variable =
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' }
+#' @keywords internal
+.plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
+  df %>%
+    dplyr::filter({{sentiment_var}} %in% c("positive", "negative", "neutral", "POSITIVE", "NEGATIVE",
+           "NEUTRAL", "Neutral", "Negative", "Positive")) %>%
+    dplyr::count({{sentiment_var}}) %>%
+    dplyr::rename(sentiment = 1) %>%
+    dplyr::mutate(sentiment = tolower(sentiment)) %>%
+    ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
+    ggplot2::geom_col() + ggplot2::theme_bw() +
+    ggplot2::theme(plot.title = element_text(hjust = 0.5,
+                                             face = "bold"),
+                   legend.position = "none") +
+    ggplot2::scale_fill_manual(values = c(
+      positive = "#A4DE02",
+      negative = "#FF0000",
+      neutral = "#000000"))
+}
+
+#' Prepare a URL column to be clickable in Shiny/Data Table
+#'
+#' Will allow you to click the hyperlink to load a URL, e.g. for selecting an image.
+#' Make sure that DataTable is rendered with the argument 'escape = FALSE' or column will be all text.
+#'
+#' @param df Data Farame or Tibble Object
+#' @param url_var URL Column
+#'
+#' @return data frame with URL column edited to be clickable
+#' @export
+#' @keywords internals
+#'
+#' @examples
+#' \dontrun{
+#' Example 1:
+#' df %>% landscaper_link_click(permalink)
+#'
+#' Example 2:
+#' landscaper_link_click(data, mention_url)
+#' }
+landscaper_link_click <- function(df, url_var){
+  url_sym <- rlang::ensym(url_var)
+
+  df %>%
+    dplyr::mutate({{url_var}}:= paste0("<a href='", !!url_sym, "' target='blank'>", "Click to View", "</a>"))
 }
