@@ -4,12 +4,12 @@
 \alias{.plot_volume_over_time}
 \title{Title}
 \usage{
-.plot_volume_over_time(df, date_var, unit = "week", fill = "#0f50d2")
+.plot_volume_over_time(df, .date_var, unit = "week", fill = "#0f50d2")
 }
 \arguments{
 \item{df}{Data Frame or Tibble object}
 
-\item{date_var}{Name of date variable}
+\item{.date_var}{Name of date variable}
 
 \item{unit}{Unit of time}
 

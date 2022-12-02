@@ -2,7 +2,7 @@
 #' Title
 #'
 #' @param df Data Frame or Tibble object
-#' @param date_var Name of date variable
+#' @param .date_var Name of date variable
 #' @param unit Unit of time
 #' @param fill Colour - string or hexcode
 #'
@@ -13,7 +13,9 @@
 #' \dontrun{
 #' }
 #' @keywords internal
-.plot_volume_over_time <- function(df, date_var , unit = "week",  fill = "#0f50d2"){
+.plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f50d2"){
+
+  date_sym <- rlang::ensym(.date_var)
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
   df %>%

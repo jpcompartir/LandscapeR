@@ -35,50 +35,18 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
   cleaned_text_sym <- rlang::ensym(cleaned_text_var)
   id_sym <- rlang::ensym(id)
 
-  plotting_heights <- "450px"
-  plotting_widths <- "400px"
+  plotting_heights <- "450px";  plotting_widths <- "400px"
 
-  # Volume_time plot function ----
-  .plot_volume_over_time <- function(df, date_var , unit = "week",  fill = "#0f50d2"){
 
-    df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
-    df %>%
-      dplyr::count(plot_date) %>%
-      ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n)) +
-      ggplot2::geom_col(fill = fill) +
-      ggplot2::theme_minimal() +
-      ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
-      ggplot2::theme(legend.position = "none",
-                     axis.text.x = element_text(angle = 90))
-  }
+  #type checking ----
+  #End early if these varianles are not of the right type
+  check_text <- data %>% column_type_checker(column = {{text_var}}, type = "character")
+  if(check_text == "no") stop("text_var is not the right type (should be 'character')")
+  check_date <- data %>% column_type_checker(column = {{date_var}}, type = "Date")
+  if(check_date == "no") stop("date_var is not the right type (should be 'Date')")
+  check_sent <- data %>% column_type_checker(column = {{sentiment_var}}, type = "character")
+  if(check_sent == "no") stop("sentiment_var is not the right type (should be 'character')")
 
-  # Token plot function ----
-  .plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
-
-    .text_var <- rlang::enquo(text_var)
-    df %>%
-      tidytext::unnest_tokens(words, rlang::quo_name(.text_var))%>%
-      dplyr::count(words, sort = TRUE) %>%
-      dplyr::top_n(top_n)%>%
-      ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n))+
-      ggplot2::geom_col(fill = fill)+
-      ggplot2::coord_flip()+
-      ggplot2::theme_bw()+
-      ggplot2::labs(x = NULL, y =  "Word Count", title = "Bar Chart of Most Frequent Words")+
-      ggplot2::theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-  }
-
-  #Download box function ----
-  download_box <- function(exportname, plot) {
-    shiny::downloadHandler(
-      filename = function() {
-        paste(exportname, Sys.Date(), ".png", sep = "")
-      },
-      content = function(file) {
-        ggplot2::ggsave(file, plot = plot, device = "png", width = 8)
-      }
-    )
-  }
 
   #Get date ranges for volume
   dates <- data %>% select(!!date_sym) %>% summarise(min = min(!!date_sym), max = max(!!date_sym))
@@ -383,7 +351,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     shiny::observeEvent(plotly::event_data("plotly_selected"),{
       output$tokenPlot <- shiny::renderPlot({
         df_filtered %>%
-          .plot_tokens_counter(text_var = {{cleaned_text_var}}, top_n = 25, fill = delayedTokenHex()) +
+          LandscapeR::.plot_tokens_counter(text_var = {{cleaned_text_var}}, top_n = 25, fill = delayedTokenHex()) +
           ggplot2::labs(title = paste0(input$tokenTitle),
                         caption = paste0(input$tokenCaption),
                         subtitle = paste0(input$tokenSubtitle),
@@ -399,10 +367,10 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       output$volumePlot <- shiny::renderPlot({
 
         vol_data <- df_filtered %>%
-          dplyr::filter(date >= input$dateRange[[1]], date <= input$dateRange[[2]])
+          dplyr::filter({{date_var}} >= input$dateRange[[1]], {{date_var}} <= input$dateRange[[2]])
 
         vol_plot <- vol_data %>%
-          .plot_volume_over_time(date = date, unit =  input$dateBreak, fill = input$volumeHex) +
+          LandscapeR::.plot_volume_over_time(.date_var = {{date_var}}, unit =  input$dateBreak, fill = input$volumeHex) +
           ggplot2::labs(title = paste0(input$volumeTitle),
                         caption = paste0(input$volumeCaption),
                         subtitle = paste0(input$volumeSubtitle),
@@ -427,9 +395,6 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       width = function() input$volumeWidth,
       height = function() input$volumeHeight)
     })
-
-    #---- Render UI plot controls ----
-
 
     output$smoothControls <- shiny::renderUI({
       if(input$dateSmooth != "none"){
@@ -472,9 +437,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
           )
         }
       })
-
-
     }
+
     output$volumeTitles <- .titles_render("volume")
     output$sentimentTitles <- .titles_render("sentiment")
     output$tokenTitles <- .titles_render("token")
@@ -500,9 +464,9 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     })
     #---- Download boxes for plots ----
 
-    output$saveVolume <- download_box("volume_plot", volume_reactive())
-    output$saveToken <- download_box("token_plot", token_reactive())
-    output$saveSentiment <- download_box("sentiment_plot", sentiment_reactive())
+    output$saveVolume <- LandscapeR::download_box("volume_plot", volume_reactive())
+    output$saveToken <- LandscapeR::download_box("token_plot", token_reactive())
+    output$saveSentiment <- LandscapeR::download_box("sentiment_plot", sentiment_reactive())
   }
   #---- hide app render ----
   shiny::shinyApp(ui, server)
