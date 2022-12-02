@@ -85,10 +85,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
   date_min <- as.Date(dates$min)
   date_max <- as.Date(dates$max)
 
-  data <- dplyr::rename(data, id_var = {{id}})
-  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, id_var)
+  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, {{id}})
   #Rename columns to avoid relying on tidy evaluate in server logic
-  data <- dplyr::rename(data, text_var = 3, colour_var = 4, V1 = {{x_var}}, V2 = {{y_var}})
 
   # hide UI ----
   ui <- shiny::navbarPage("Conversation Landscape", theme = shinythemes::shinytheme("cosmo"), position = "fixed-top",
@@ -272,7 +270,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     #---- Delete IDS ----
     remove_range <- shiny::reactiveValues(
-      keep_keys = data$id_var, #Get the original IDs saved and save an object for later adding selected points to remove
+      keep_keys = data %>% dplyr::pull({{id}}), #Get the original IDs saved and save an object for later adding selected points to remove
       remove_keys = NULL
     )
 
@@ -286,15 +284,20 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     reactive_data <- shiny::reactive({
 
       data <- data %>%
-        dplyr::filter(V1 > input$x1[[1]], V1 < input$x1[[2]], V2 > input$y1[[1]], V2 < input$y1[[2]]) %>%
-        dplyr::filter(!colour_var %in% input$cluster,
-                      id_var %in% remove_range$keep_keys) %>%
-        dplyr::filter(grepl(input$filterPattern, text_var, ignore.case = TRUE))
+        dplyr::filter({{x_var}} > input$x1[[1]], {{x_var}} < input$x1[[2]], V2 > input$y1[[1]], V2 < input$y1[[2]]) %>%
+        dplyr::filter(!{{colour_var}} %in% input$cluster,
+                      {{id}} %in% remove_range$keep_keys) %>%
+        dplyr::filter(grepl(input$filterPattern, {{text_var}}, ignore.case = TRUE))
     })
 
     #---- UMAP Plot ----
     output$umapPlot = plotly::renderPlotly({
       reactive_data() %>%
+        dplyr::rename(V1 = {{x_var}}, #rename these variables to avoid problems with plotly NSE and not have to rename the eventual output's columns.
+                      V2 = {{y_var}},
+                      id_var = {{id}},
+                      text_var = {{text_var}},
+                      colour_var = {{colour_var}}) %>%
         plotly::plot_ly(x = ~V1, y = ~V2,
                         type = type,
                         color = ~colour_var,
@@ -323,12 +326,12 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       key <- selected_range()$key
 
       df_filtered <<- reactive_data() %>%
-        dplyr::filter(id_var %in% key) #TODO id_var dangerous(?)
+        dplyr::filter({{id}} %in% key) #TODO id_var dangerous(?)
 
       df <- df_filtered %>%
         #Select the columns you want to see from your data
-        dplyr::select(text_var,
-                      `Colour Variable` = colour_var, ..., !!sentiment_sym)
+        dplyr::select({{text_var}},
+                      {{colour_var}}, ..., !!sentiment_sym)
 
       DT::datatable(df, filter = "top", options = list(pageLength = 25,
                                                        dom = '<"top" ifp> rt<"bottom"lp>', autoWidth = FALSE), #TODO check adding l worked
@@ -482,11 +485,11 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
         if(length(selected_range()) > 1){
           if(!length(selected_range()) >= 5000){
             bigram <- df_filtered %>%
-              JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5)
+              JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5, remove_stops = FALSE)
           }else{
             bigram <- df_filtered %>%
               dplyr::sample_n(5000) %>%
-              JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5)
+              JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5, remove_stops = FALSE)
           }
         }
         bigram
