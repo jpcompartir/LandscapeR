@@ -19,10 +19,13 @@ Imports:
     dplyr,
     DT,
     ggplot2,
+    htmltools,
     magrittr,
     plotly,
     rlang,
     shiny,
     shinycssloaders,
+    shinyWidgets,
     stringr,
+    tableHTML,
     tidytext

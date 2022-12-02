@@ -1,0 +1,128 @@
+---
+title: "Developing The Tabs"
+output: html_document
+date: '2022-10-17'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Uses of App - to be decided but should probably be different for DS and analyst
+As DS I will personally use for nearly every project as it:
+
+a) is quick to set up
+b) saves time cleaning and helps to find keywords that have dual meanings
+c) leads to better outcomes
+d) is fairly painless when run as a local job
+e) helps me to understand the data better and check the output of topic modelling in a meaningful way
+
+Multiple reasons to provide an app for analyst:
+
+1) Show that query needs refinement
+2) Give them an overview of the themes and sub-themes present in the text, allow them to use domain knowledge to pick out the interesting regions (new data then saved and handed over to DS) - much more accessible than staring at Excel files/Data Tables in SL platform
+3) Ensure that DS and analyst are working from the same CSVs - so that volume etc. add up
+4) Give analysts access to DS plots inside the app so they aren't totally dependent on SL widgets
+5) Storytelling tool
+
+When it's not good:
+when volume is in the hundreds of K it can be a pain to get the embeddings + UMAP (though easier in Python)
+
+**** DEMO Friday week commencing 17th October ****
+15 minutes
+
+Misc tab / last week's todo list
+
+# DONE
+
+Colours of factors/categories - DONE
+Placing of ellipsis/extra columns or move to c()
+Relocate delete sections button - DONE
+Download all button - DONE
+Move download selection button - DONE
+Add step to sliders - DONE
+Permalink column with clickable link - DONE
+Pattern updating + reset button - DONE
+Filtering by pattern - this should probably have an action button - DONE
+Navbar always present at top - DONE
+Reactive Plots - DONE
+Tabs for plotting stuff and cluster/selection-cleanliness assessment - tabs are set up - DONE
+plot title, subtitle, caption, width, height - DONE
+Explanatory text/html (some done)
+Spinners on plots and UI outputs while waiting - DONE
+- plot_volume_over_time date breaks - DONE
+- geom_smooth for volume - probably want this to be a renderUI rendering after a checkbox input with se TRUE/FALSE and colour - DONE
+- Switch titles to renderUI and selectInput for space - DONE
+- Adding waiters - DONE
+- Allow for time filtering i.e. slider date ranges allowing user to select the timeframe they want to zoom in on - Added to Volume plot, could extend to others I suppose (Probably should)
+- Calculate Ngrams just once and filter - DONE  not worth as sampling maybe
+When and how plots should be rendered (as some may end up being costly computationally)
+  - Button click X OPTED AGAINST
+  - Tab change DONE
+  - Whenever reactive_data is updated  DONE
+  - Via a checkbox group input? DONE
+  - Volume, sentiment, tokens, bigrams DONE
+- Bigram networks are a good tool for assessing cleanliness but the function is costly - solution = sample - DONE
+- CSS and HTML custom arrangements - buttons, graph + DT, sliders, delete button - DONE (but needs prof. input)
+- JS checkboxes - DONE
+- Render titles functionised - DONE
+- TidyEvaluate for x_var and y_var - DONE
+
+
+ # In progress
+TODO
+- Modularising the app with NS() - Namespace functions & modules:
+https://debruine.github.io/shinyintro/modules.html
+- Add Date range to main UI for filtered_data?
+- Move functions to separate script/package?
+- plot download buttons
+- navbar orange styling CSS
+-Could we somehow cache the unfiltered data frame each time to make resetting the pattern quicker? Or would the performance gain be offset by data copying?
+- Filter for an additional (or multiple variables) e.g. by brand, topic, and sentiment. We can do this in R already, should we be able to do it in the app? It's added complexity, is the trade-off worth it? Do we have two apps, one for DS use one for analyst and only DS get this?
+- Tweet wall / most liked and favourited in time frame page on dashboard a la https://shiny.rstudio.com/gallery/conference-tweet-dashboard.html
+- Refactor App code to 
+a) remove duplication
+b) make maintaining easier
+c) create functions for use elsewhere in shiny app
+
+- entities plot (?) NAH
+- value boxes- where?
+- selecting and deselecting of factors with plotly and making sure that shiny doesn't reactively clear these things. When pattern etc. are updated - not sure how plausible this is
+
+Separate:
+- Investigate https://github.com/CreatingData/deepscatter
+
+Second tab needs some thinking before jumping into the code:
+
+Things that need to be settled:
+- Deciding which columns are necessary (e.g. ID/key, x, y, text, text_copy, colour = ?, date, sentiment, topic, cluster) DONE-ish
+- shape + = positive - negative dot = neutral (?)  too much info crammed in + UGLY - don't lose sight of the app's primary task (don't do everything poorly, do a couple things excellently)
+
+- How much flexibility to give the user - a set of default plots or user-selected
+  - renderUI based on column selections
+  - fixedUI with x, y, z plots
+  - can colour be changed in App via selectizeInput? or 
+  
+  Fixed, standardised, exportable 
+
+
+
+Which plots?
+
+There are multiple plots which would be useful here - but it also depends on what goal is set for the app - originally it was to clean data and help refine queries + evaluate topic modelling process, it quickly evolved into something more, both an alternative and a complement to the topic modelling process - a way to find interesting clusters etc.
+
+
+  - clean_text = FALSE would help - esp. if DS have already done those rudimentary cleaning steps on a copy of the text variable - copy isn't shown in data table but can be kept in. This ties in with determining which columns are necessary.
+    - Only taking a sample, could work
+
+Demo run-through
+15 mins practical run through (keeping to DS the setup)
+request suggestions on how to make a better tool
++discussion
+
+landscapeR
+
+The DT table change in app_dev_titles_plot (filter at bottom etc.)
+re-arrange the columns in same file 
+add the tags style thing to navbar pages -
+library(tableHTML) #for CSS styling

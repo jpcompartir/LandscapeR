@@ -101,8 +101,15 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                             gotop::use_gotop(),
                                             theme = shinythemes::shinytheme(theme = "cosmo"),
                                             shiny::fluidRow(
-                                              shiny::column(2, style = "padding-right: 0px; border: none;",  shiny::textInput("remainingName", "All Data", value = NULL, placeholder = "filename")),
-                                              shiny::column(1, style = "padding-left: 10px; padding-right: 20px;", shiny::div(style = "margin-top: 25px;",shiny::downloadButton("downloadAll", "Download", class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"))),
+                                              shiny::column(2, style = "padding-right: 0px; border: none;",
+                                                            shiny::textInput("remainingName", "All Data",
+                                                                             value = NULL,
+                                                                             placeholder = "filename")),
+                                              shiny::column(1, style = "padding-left: 10px; padding-right: 20px;",
+                                                            shiny::div(style = "margin-top: 25px;",
+                                                                       shiny::downloadButton("downloadAll", "Download",
+                                                                                             class = "btn btn-warning",
+                                                                                             style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"))),
                                               shiny::column(3, style = "padding-left: 20px; padding-right: 10px;", shinyWidgets::searchInput(
                                                 inputId = "filterPattern",
                                                 label = "Pattern to search text with",
@@ -113,7 +120,10 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                 value = ""
                                               )),
                                               shiny::column(2, shiny::textInput("fileName", "Selected Data", value = NULL, placeholder = "filename excluding .csv")),
-                                              shiny::column(2, shiny::div(style = "margin-top: 25px;",shiny::downloadButton("downloadData", "Download",class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")))
+                                              shiny::column(2, shiny::div(style = "margin-top: 25px;",
+                                                                          shiny::downloadButton("downloadData",
+                                                                                                "Download",class = "btn btn-warning",
+                                                                                                style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")))
                                             ),
                                             shiny::column(6, style = "width:50%; height: 10000px; position: relative;",
                                                           div(id = "graph",
