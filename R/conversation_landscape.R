@@ -35,60 +35,26 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
   cleaned_text_sym <- rlang::ensym(cleaned_text_var)
   id_sym <- rlang::ensym(id)
 
-  plotting_heights <- "450px"
-  plotting_widths <- "400px"
+  plotting_heights <- "450px";  plotting_widths <- "400px"
 
-  # Volume_time plot function ----
-  .plot_volume_over_time <- function(df, date_var , unit = "week",  fill = "#0f50d2"){
 
-    df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
-    df %>%
-      dplyr::count(plot_date) %>%
-      ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n)) +
-      ggplot2::geom_col(fill = fill) +
-      ggplot2::theme_minimal() +
-      ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
-      ggplot2::theme(legend.position = "none",
-                     axis.text.x = element_text(angle = 90))
-  }
+  #type checking ----
+  #End early if these varianles are not of the right type
+  check_text <- data %>% column_type_checker(column = {{text_var}}, type = "character")
+  if(check_text == "no") stop("text_var is not the right type (should be 'character')")
+  check_date <- data %>% column_type_checker(column = {{date_var}}, type = "Date")
+  if(check_date == "no") stop("date_var is not the right type (should be 'Date')")
+  check_sent <- data %>% column_type_checker(column = {{sentiment_var}}, type = "character")
+  if(check_sent == "no") stop("sentiment_var is not the right type (should be 'character')")
 
-  # Token plot function ----
-  .plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
-
-    .text_var <- rlang::enquo(text_var)
-    df %>%
-      tidytext::unnest_tokens(words, rlang::quo_name(.text_var))%>%
-      dplyr::count(words, sort = TRUE) %>%
-      dplyr::top_n(top_n)%>%
-      ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n))+
-      ggplot2::geom_col(fill = fill)+
-      ggplot2::coord_flip()+
-      ggplot2::theme_bw()+
-      ggplot2::labs(x = NULL, y =  "Word Count", title = "Bar Chart of Most Frequent Words")+
-      ggplot2::theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-  }
-
-  #Download box function ----
-  download_box <- function(exportname, plot) {
-    shiny::downloadHandler(
-      filename = function() {
-        paste(exportname, Sys.Date(), ".png", sep = "")
-      },
-      content = function(file) {
-        ggplot2::ggsave(file, plot = plot, device = "png", width = 8)
-      }
-    )
-  }
 
   #Get date ranges for volume
   dates <- data %>% select(!!date_sym) %>% summarise(min = min(!!date_sym), max = max(!!date_sym))
   date_min <- as.Date(dates$min)
   date_max <- as.Date(dates$max)
 
-  data <- dplyr::rename(data, id_var = {{id}})
-  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, id_var)
+  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, {{id}})
   #Rename columns to avoid relying on tidy evaluate in server logic
-  data <- dplyr::rename(data, text_var = 3, colour_var = 4, V1 = {{x_var}}, V2 = {{y_var}})
 
   # hide UI ----
   ui <- shiny::navbarPage("Conversation Landscape", theme = shinythemes::shinytheme("cosmo"), position = "fixed-top",
@@ -101,8 +67,15 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                             gotop::use_gotop(),
                                             theme = shinythemes::shinytheme(theme = "cosmo"),
                                             shiny::fluidRow(
-                                              shiny::column(2, style = "padding-right: 0px; border: none;",  shiny::textInput("remainingName", "All Data", value = NULL, placeholder = "filename")),
-                                              shiny::column(1, style = "padding-left: 10px; padding-right: 20px;", shiny::div(style = "margin-top: 25px;",shiny::downloadButton("downloadAll", "Download", class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"))),
+                                              shiny::column(2, style = "padding-right: 0px; border: none;",
+                                                            shiny::textInput("remainingName", "All Data",
+                                                                             value = NULL,
+                                                                             placeholder = "filename")),
+                                              shiny::column(1, style = "padding-left: 10px; padding-right: 20px;",
+                                                            shiny::div(style = "margin-top: 25px;",
+                                                                       shiny::downloadButton("downloadAll", "Download",
+                                                                                             class = "btn btn-warning",
+                                                                                             style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"))),
                                               shiny::column(3, style = "padding-left: 20px; padding-right: 10px;", shinyWidgets::searchInput(
                                                 inputId = "filterPattern",
                                                 label = "Pattern to search text with",
@@ -113,7 +86,10 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                 value = ""
                                               )),
                                               shiny::column(2, shiny::textInput("fileName", "Selected Data", value = NULL, placeholder = "filename excluding .csv")),
-                                              shiny::column(2, shiny::div(style = "margin-top: 25px;",shiny::downloadButton("downloadData", "Download",class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")))
+                                              shiny::column(2, shiny::div(style = "margin-top: 25px;",
+                                                                          shiny::downloadButton("downloadData",
+                                                                                                "Download",class = "btn btn-warning",
+                                                                                                style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")))
                                             ),
                                             shiny::column(6, style = "width:50%; height: 10000px; position: relative;",
                                                           div(id = "graph",
@@ -179,7 +155,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                                 shiny::selectInput(inputId = "dateBreak", label = "Unit", choices = c("day", "week", "month", "quarter", "year"), selected = "week"),
                                                                 shiny::selectInput(inputId = "dateSmooth", label = "Smooth", choices = c("none", "loess", "lm", "glm", "gam"), selected = "none"),
                                                                 shiny::uiOutput("smoothControls"),
-                                                                shiny::textInput("volumeHex", "colour", value ="#107C10"),
+                                                                shiny::debounce(shiny::textInput("volumeHex", "colour", value ="#107C10"), 1000),
+
                                                                 shinyWidgets::materialSwitch(
                                                                   inputId = "toggleVolumetitles",
                                                                   label = "Customise Titles?",
@@ -207,7 +184,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                                   status = "primary",
                                                                   right = TRUE
                                                                 ),
-                                                                shiny::textInput("tokenHex", "colour", value ="#0f50d2"),
+                                                                shiny::debounce(shiny::textInput("tokenHex", "colour", value ="#0f50d2"), 1000),
+
                                                                 shiny::uiOutput("tokenTitles"),
                                                                 shiny::downloadButton(outputId = "saveToken", class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"),
                                             ),
@@ -262,7 +240,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     #---- Delete IDS ----
     remove_range <- shiny::reactiveValues(
-      keep_keys = data$id_var, #Get the original IDs saved and save an object for later adding selected points to remove
+      keep_keys = data %>% dplyr::pull({{id}}), #Get the original IDs saved and save an object for later adding selected points to remove
       remove_keys = NULL
     )
 
@@ -276,15 +254,20 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     reactive_data <- shiny::reactive({
 
       data <- data %>%
-        dplyr::filter(V1 > input$x1[[1]], V1 < input$x1[[2]], V2 > input$y1[[1]], V2 < input$y1[[2]]) %>%
-        dplyr::filter(!colour_var %in% input$cluster,
-                      id_var %in% remove_range$keep_keys) %>%
-        dplyr::filter(grepl(input$filterPattern, text_var, ignore.case = TRUE))
+        dplyr::filter({{x_var}} > input$x1[[1]], {{x_var}} < input$x1[[2]], V2 > input$y1[[1]], V2 < input$y1[[2]]) %>%
+        dplyr::filter(!{{colour_var}} %in% input$cluster,
+                      {{id}} %in% remove_range$keep_keys) %>%
+        dplyr::filter(grepl(input$filterPattern, {{text_var}}, ignore.case = TRUE))
     })
 
     #---- UMAP Plot ----
     output$umapPlot = plotly::renderPlotly({
       reactive_data() %>%
+        dplyr::rename(V1 = {{x_var}}, #rename these variables to avoid problems with plotly NSE and not have to rename the eventual output's columns.
+                      V2 = {{y_var}},
+                      id_var = {{id}},
+                      text_var = {{text_var}},
+                      colour_var = {{colour_var}}) %>%
         plotly::plot_ly(x = ~V1, y = ~V2,
                         type = type,
                         color = ~colour_var,
@@ -297,28 +280,38 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
         plotly::event_register(event = "plotly_selected")
     })
 
-    #Instantiate a reactive value, then update that value dynamically when points are selected.
+    #Instantiate a reactive value, then update that value dynamically when points are selected. ----
     selected_range <- shiny::reactiveVal({})
 
     shiny::observeEvent(plotly::event_data("plotly_selected"),{
       selected_range(plotly::event_data("plotly_selected"))
     })
 
+    #---- key ----
+    key <- reactive({
+      selected_range()$key
+    })
+
+    #---- filtered_df ----
+    df_filtered <- reactive({
+      df_filtered <- reactive_data() %>%
+        dplyr::filter({{id}} %in% key())
+    })
 
     #---- Data Table ----
-    #Now render the data table, selecting all points within our boundaries. Would need to update this for lasso selection.,
+    #Now render the data table, selecting all points within our boundaries. Would need to update this for lasso selection.
     output$highlightedTable <- DT::renderDataTable({
 
       #Replacing pointNumber with a key allows for precise showing of points irrespective of variable input type.
-      key <- selected_range()$key
+      # key <- selected_range()$key
 
-      df_filtered <<- reactive_data() %>%
-        dplyr::filter(id_var %in% key) #TODO id_var dangerous(?)
+      # df_filtered <<- reactive_data() %>%
+      #   dplyr::filter({{id}} %in% key()) #TODO id_var dangerous(?)
 
-      df <- df_filtered %>%
+      df <- df_filtered() %>%
         #Select the columns you want to see from your data
-        dplyr::select(text_var,
-                      `Colour Variable` = colour_var, ..., !!sentiment_sym)
+        dplyr::select({{text_var}},
+                      {{colour_var}}, ..., !!sentiment_sym)
 
       DT::datatable(df, filter = "top", options = list(pageLength = 25,
                                                        dom = '<"top" ifp> rt<"bottom"lp>', autoWidth = FALSE), #TODO check adding l worked
@@ -345,84 +338,134 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       }
     )
 
-    delayedTokenHex <- shiny::reactive({
+    delayedTokenHex <- shiny::debounce(shiny::reactive({
       input$tokenHex
-    }) %>%
-      shiny::debounce(2000)
+    }), 1000)
+    delayedVolumeHex <- shiny::debounce(shiny::reactive({
+      input$tokenHex
+    }), 1000)
 
     #---- Reactive plots + Observes ----
-    shiny::observeEvent(plotly::event_data("plotly_selected"),{
-      output$sentimentPlot <- shiny::renderPlot({
-        df_filtered %>%
-          HelpR::plot_sentiment_distribution(sentiment_var = {{sentiment_var}}) +
-          HelpR::theme_microsoft_discrete() +
-          ggplot2::theme(legend.position = "none") +
-          ggplot2::labs(title = paste0(input$sentimentTitle),
-                        caption = paste0(input$sentimentCaption),
-                        subtitle = paste0(input$sentimentSubtitle),
-                        x = paste0(input$sentimentXlabel),
-                        y = paste0(input$sentimentYlabel))
-      }, res = 100,
-      width = function() input$sentimentWidth,
-      height = function() input$sentimentHeight)
-    })
-    #---- Token plot ----
-    shiny::observeEvent(plotly::event_data("plotly_selected"),{
-      output$tokenPlot <- shiny::renderPlot({
-        df_filtered %>%
-          .plot_tokens_counter(text_var = {{cleaned_text_var}}, top_n = 25, fill = delayedTokenHex()) +
-          ggplot2::labs(title = paste0(input$tokenTitle),
-                        caption = paste0(input$tokenCaption),
-                        subtitle = paste0(input$tokenSubtitle),
-                        x = paste0(input$tokenXlabel),
-                        y = paste0(input$tokenYlabel)) +
-          ggplot2::scale_fill_manual(values = input$tokenHex)
-      }, res = 100,
-      width = function() input$tokenWidth,
-      height = function() input$tokenHeight)
-    })
-    #---- Volume Plot ----
-    shiny::observeEvent(plotly::event_data("plotly_selected"),{
-      output$volumePlot <- shiny::renderPlot({
-
-        vol_data <- df_filtered %>%
-          dplyr::filter(date >= input$dateRange[[1]], date <= input$dateRange[[2]])
-
-        vol_plot <- vol_data %>%
-          .plot_volume_over_time(date = date, unit =  input$dateBreak, fill = input$volumeHex) +
-          ggplot2::labs(title = paste0(input$volumeTitle),
-                        caption = paste0(input$volumeCaption),
-                        subtitle = paste0(input$volumeSubtitle),
-                        x = paste0(input$volumeXlabel),
-                        y = paste0(input$volumeYlabel))
-
-        if(!input$dateSmooth == "none"){
-          if(input$smoothSe == "FALSE"){
-            vol_plot <- vol_plot +
-              ggplot2::geom_smooth(method = input$dateSmooth, se = FALSE, colour = input$smoothColour)
-          }else {
-            vol_plot <- vol_plot+
-              ggplot2::geom_smooth(method = input$dateSmooth, colour = input$smoothColour)
+    #First create the reactive (this will be sent to download handler) then create the server's output for display in app
+    sentiment_reactive <- reactive({
+      df_filtered() %>%
+        LandscapeR::.plot_sentiment_distribution(sentiment_var = {
+          {
+            sentiment_var
           }
-        }
-
-
-        return(vol_plot)
-
-
-      }, res = 100,
-      width = function() input$volumeWidth,
-      height = function() input$volumeHeight)
+        }) +
+        ggplot2::labs(
+          title = input$sentimentTitle,
+          caption = input$sentimentCaption,
+          subtitle = input$sentimentSubtitle,
+          x = input$sentimentXlabel,
+          y = input$sentimentYlabel
+        )
     })
 
-    #---- Render UI plot controls ----
+    #now create the server's output for display in app
+    output$sentimentPlot <-
+      shiny::renderPlot({
+        sentiment_reactive()
+      }, res = 100, width = function()
+        input$sentimentWidth, height = function()
+          input$sentimentHeight)
 
+    #---- Token plot ----
+    token_reactive <- reactive({
+      df_filtered() %>%
+        LandscapeR::.plot_tokens_counter(text_var = {
+          {
+            cleaned_text_var
+          }
+        },
+        top_n = 25,
+        fill = delayedTokenHex()) +
+        ggplot2::labs(
+          title = input$tokenTitle,
+          caption = input$tokenCaption,
+          subtitle = input$tokenSubtitle,
+          x = input$tokenXlabel,
+          y = input$tokenYlabel
+        ) +
+        ggplot2::scale_fill_manual(values = input$tokenHex)
 
+    })
+
+    output$tokenPlot <- shiny::renderPlot({
+      token_reactive()
+    }, res = 100, width = function()
+      input$tokenWidth, height = function()
+        input$tokenHeight)
+
+    #---- Volume Plot ----
+    volume_reactive <- reactive({
+      vol_data <- df_filtered() %>%
+        dplyr::filter({
+          {
+            date_var
+          }
+        } >= input$dateRange[[1]], {
+          {
+            date_var
+          }
+        } <= input$dateRange[[2]])
+
+      vol_plot <- vol_data %>%
+        LandscapeR::.plot_volume_over_time(
+          .date_var = {
+            {
+              date_var
+            }
+          },
+          unit =  input$dateBreak,
+          fill = delayedVolumeHex()
+        ) +
+        ggplot2::labs(
+          title = input$volumeTitle,
+          caption = input$volumeCaption,
+          subtitle = input$volumeSubtitle,
+          x = input$volumeXlabel,
+          y = input$volumeYlabel
+        )
+
+      if (!input$dateSmooth == "none") {
+        if (input$smoothSe == "FALSE") {
+          vol_plot <- vol_plot +
+            ggplot2::geom_smooth(
+              method = input$dateSmooth,
+              se = FALSE,
+              colour = input$smoothColour
+            )
+        } else {
+          vol_plot <- vol_plot +
+            ggplot2::geom_smooth(method = input$dateSmooth,
+                                 colour = input$smoothColour)
+        }
+      }
+
+      return(vol_plot)
+
+    })
+
+    output$volumePlot <-
+      shiny::renderPlot({
+        volume_reactive()
+      }, res = 100, width = function()
+        input$volumeWidth,  height = function()
+          input$volumeHeight)
+
+    #Volume plot smooth controls
     output$smoothControls <- shiny::renderUI({
-      if(input$dateSmooth != "none"){
+      if (input$dateSmooth != "none") {
         shiny::tagList(
-          shiny::selectInput("smoothSe", "show standard error?", choices = c("TRUE", "FALSE"), selected = "TRUE"),
-          shiny::textInput("smoothColour", "Smooth colour", value ="#000000")
+          shiny::selectInput(
+            "smoothSe",
+            "show standard error?",
+            choices = c("TRUE", "FALSE"),
+            selected = "TRUE"
+          ),
+          shiny::textInput("smoothColour", "Smooth colour", value = "#000000")
         )
       }
 
@@ -430,66 +473,112 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     #Make delete button disappear when nothing selected
     output$deleteme <- shiny::renderUI({
-      if(length(selected_range() > 1)){
+      if (length(selected_range() > 1)) {
         shiny::tagList(
-          shiny::actionButton("delete", "Delete selections", class = 'btn-warning', style = "position: absolute; bottom 7px; right: 7px; background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")
+          shiny::actionButton(
+            "delete",
+            "Delete selections",
+            class = 'btn-warning',
+            style = "position: absolute; bottom 7px; right: 7px; background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"
+          )
         )
 
       }
     })
 
     #---- Render Titles ----
-    .titles_render <- function(plot_type){
-
+    .titles_render <- function(plot_type) {
       .plot_type <- stringr::str_to_title(plot_type)
 
       shiny::renderUI({
-        if(eval(parse(text = paste0("input$toggle", .plot_type, "titles"))) == "TRUE"){
+        if (eval(parse(text = paste0("input$toggle", .plot_type, "titles"))) == "TRUE") {
           shiny::tagList(
-            shiny::textInput(inputId = paste0(plot_type, "Title"), label = "Title",
-                             placeholder = "Write title here...", value = ""),
-            shiny::textInput(inputId = paste0(plot_type, "Subtitle"), label = "Subtitle",
-                             placeholder = "Write subtitle here...", value = ""),
-            shiny::textInput(inputId = paste0(plot_type, "Caption"), label = "Caption",
-                             placeholder = "Write caption here...", value = ""),
-            shiny::textInput(inputId = paste0(plot_type, "Xlabel"), label = "X axis title",
-                             placeholder = "Write the x axis title here..."),
-            shiny::textInput(inputId = paste0(plot_type, "Ylabel"), label = "Y axis title",
-                             placeholder = "Write the y axis title here")
+            shiny::textInput(
+              inputId = paste0(plot_type, "Title"),
+              label = "Title",
+              placeholder = "Write title here...",
+              value = ""
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Subtitle"),
+              label = "Subtitle",
+              placeholder = "Write subtitle here...",
+              value = ""
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Caption"),
+              label = "Caption",
+              placeholder = "Write caption here...",
+              value = ""
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Xlabel"),
+              label = "X axis title",
+              placeholder = "Write the x axis title here..."
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Ylabel"),
+              label = "Y axis title",
+              placeholder = "Write the y axis title here"
+            )
           )
         }
       })
-
-
     }
+
     output$volumeTitles <- .titles_render("volume")
     output$sentimentTitles <- .titles_render("sentiment")
     output$tokenTitles <- .titles_render("token")
 
     #---- Bigram Plot ----
-    shiny::observeEvent(plotly::event_data("plotly_selected"),{
+    shiny::observeEvent(plotly::event_data("plotly_selected"), {
       output$bigramPlot <- shiny::renderPlot({
-        if(length(selected_range()) > 1){
-          if(!length(selected_range()) >= 5000){
-            bigram <- df_filtered %>%
-              JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5)
-          }else{
-            bigram <- df_filtered %>%
+        if (length(selected_range()) > 1) {
+          if (!length(selected_range()) >= 5000) {
+            bigram <- df_filtered() %>%
+              JPackage::make_bigram_viz(
+                text_var = {
+                  {
+                    cleaned_text_var
+                  }
+                },
+                clean_text = FALSE,
+                min = 5,
+                remove_stops = FALSE
+              )
+          } else{
+            bigram <- df_filtered() %>%
               dplyr::sample_n(5000) %>%
-              JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5)
+              JPackage::make_bigram_viz(
+                text_var = {
+                  {
+                    cleaned_text_var
+                  }
+                },
+                clean_text = FALSE,
+                min = 5,
+                remove_stops = FALSE
+              )
           }
         }
         bigram
 
       }, res = 100,
-      width = function() input$bigramWidth,
-      height = function() input$bigramHeight)
+      width = function()
+        input$bigramWidth,
+      height = function()
+        input$bigramHeight)
     })
     #---- Download boxes for plots ----
 
-    output$saveVolume <- download_box("volume_plot", volume_reactive())
-    output$saveToken <- download_box("token_plot", token_reactive())
-    output$saveSentiment <- download_box("sentiment_plot", sentiment_reactive())
+    output$saveVolume <-
+      LandscapeR::download_box("volume_plot", volume_reactive())
+    output$saveToken <-
+      LandscapeR::download_box("token_plot", token_reactive(),
+                               width = input$tokenWidth,
+                               height = input$tokenHeight
+                                                 )
+    output$saveSentiment <- LandscapeR::download_box(exportname = "sentiment_plot", plot = sentiment_reactive())
   }
   #---- hide app render ----
   shiny::shinyApp(ui, server)

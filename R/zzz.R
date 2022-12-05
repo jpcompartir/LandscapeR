@@ -2,7 +2,7 @@
 #' Title
 #'
 #' @param df Data Frame or Tibble object
-#' @param date_var Name of date variable
+#' @param .date_var Name of date variable
 #' @param unit Unit of time
 #' @param fill Colour - string or hexcode
 #'
@@ -13,7 +13,9 @@
 #' \dontrun{
 #' }
 #' @keywords internal
-.plot_volume_over_time <- function(df, date_var , unit = "week",  fill = "#0f50d2"){
+.plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f50d2"){
+
+  date_sym <- rlang::ensym(.date_var)
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
   df %>%
@@ -71,18 +73,23 @@
 #' \dontrun{
 #' }
 #' @keywords internal
-download_box <- function(exportname, plot) {
+download_box <- function(exportname, plot, width = 300, height = 250) {
   shiny::downloadHandler(
     filename = function() {
       paste(exportname, Sys.Date(), ".png", sep = "")
     },
     content = function(file) {
-      ggplot2::ggsave(file, plot = plot, device = "png", width = 8)
+      ggplot2::ggsave(file,
+                      plot = plot,
+                      device = "png",
+                      width = width,
+                      height = height,
+                      units = "px",
+                      bg = "white",
+                      dpi = 100)
     }
   )
 }
-
-
 #---- Render Titles ----
 #' Title
 #'
@@ -131,14 +138,13 @@ download_box <- function(exportname, plot) {
 #' }
 #' @keywords internal
 .labs_render <- function(plot_type){
-  df +
+
     ggplot2::labs(title = paste0(input$sentimentTitle),
                   caption = paste0(input$sentimentCaption),
                   subtitle = paste0(input$sentimentSubtitle),
                   x = paste0(input$sentimentXlabel),
                   y = paste0(input$sentimentYlabel))
 }
-
 
 #---- plot sentiment distribution ---- TODO add percent option
 #' Title
@@ -163,13 +169,10 @@ download_box <- function(exportname, plot) {
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
     ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() + ggplot2::theme_bw() +
+    HelpR::theme_microsoft_discrete() +
     ggplot2::theme(plot.title = element_text(hjust = 0.5,
                                              face = "bold"),
-                   legend.position = "none") +
-    ggplot2::scale_fill_manual(values = c(
-      positive = "#A4DE02",
-      negative = "#FF0000",
-      neutral = "#000000"))
+                   legend.position = "none")
 }
 
 #' Prepare a URL column to be clickable in Shiny/Data Table
@@ -197,4 +200,32 @@ landscaper_link_click <- function(df, url_var){
 
   df %>%
     dplyr::mutate({{url_var}}:= paste0("<a href='", !!url_sym, "' target='blank'>", "Click to View", "</a>"))
+}
+
+
+#' Quick function for checking if a column is of the right type using data-masking
+#'
+#' @param data Data Frame or Tibble object
+#' @param column Column you want to check
+#' @param type `column`'s expected type
+#'
+#' @return a character vector
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_text <- df %>% column_type_checker(text_var, "character")
+#'
+#' if(check_text == "no") stop("Wrong type")
+#'
+#' }
+column_type_checker <- function(data,
+                                column,
+                                type){
+  if(!all(class(data %>% dplyr::pull({{column}})) == type)){
+    return("no")
+  } else {
+    return("yes")
+  }
+
 }
