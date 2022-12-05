@@ -278,26 +278,26 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
         plotly::event_register(event = "plotly_selected")
     })
 
-    #Instantiate a reactive value, then update that value dynamically when points are selected.
+    #Instantiate a reactive value, then update that value dynamically when points are selected. ----
     selected_range <- shiny::reactiveVal({})
 
     shiny::observeEvent(plotly::event_data("plotly_selected"),{
       selected_range(plotly::event_data("plotly_selected"))
     })
 
-
-    #---- Data Table ----
-    #Now render the data table, selecting all points within our boundaries. Would need to update this for lasso selection.,
-
+    #---- key ----
     key <- reactive({
       selected_range()$key
     })
 
+    #---- filtered_df ----
     df_filtered <- reactive({
       df_filtered <- reactive_data() %>%
         dplyr::filter({{id}} %in% key())
     })
 
+    #---- Data Table ----
+    #Now render the data table, selecting all points within our boundaries. Would need to update this for lasso selection.
     output$highlightedTable <- DT::renderDataTable({
 
       #Replacing pointNumber with a key allows for precise showing of points irrespective of variable input type.
@@ -398,7 +398,8 @@ sentiment_reactive <- reactive({
       return(vol_plot)
 
     })
-    output$volumePlot <- shiny::renderPlot({volume_reactive()}, res = 100, width = function() input$volumeWidth,   height = function() input$volumeHeight)
+
+    output$volumePlot <- shiny::renderPlot({volume_reactive()}, res = 100, width = function() input$volumeWidth,  height = function() input$volumeHeight)
 
     #Volume plot smooth controls
     output$smoothControls <- shiny::renderUI({
@@ -453,7 +454,7 @@ sentiment_reactive <- reactive({
         output$bigramPlot <- shiny::renderPlot({
           if(length(selected_range()) > 1){
             if(!length(selected_range()) >= 5000){
-              bigram <- df_filtered %>%
+              bigram <- df_filtered() %>%
                 JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5, remove_stops = FALSE)
             }else{
               bigram <- df_filtered %>%
@@ -470,7 +471,10 @@ sentiment_reactive <- reactive({
     #---- Download boxes for plots ----
 
     output$saveVolume <- LandscapeR::download_box("volume_plot", volume_reactive())
-    output$saveToken <- LandscapeR::download_box("token_plot", token_reactive())
+    output$saveToken <- LandscapeR::download_box("token_plot", token_reactive(),
+                                                 # width = input$toknWidth,
+                                                 # height = input$tokenHeight
+                                                 )
     output$saveSentiment <- LandscapeR::download_box(exportname = "sentiment_plot", plot = sentiment_reactive())
   }
   #---- hide app render ----
