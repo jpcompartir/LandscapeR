@@ -250,7 +250,7 @@ reactive_labels <- function(prefix, input) {
       caption = input[[paste0( prefix, "Caption")]],
       subtitle = input[[paste0(prefix, "Subtitle")]],
       x = input[[paste0(prefix, "Xlabel")]],
-      y = input[[paste0(prefix, "YLabel")]]
+      y = input[[paste0(prefix, "Ylabel")]]
     )
   })
 }

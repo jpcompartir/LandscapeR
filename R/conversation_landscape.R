@@ -251,8 +251,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
       data <- data %>%
         dplyr::filter({{x_var}} > input$x1[[1]], {{x_var}} < input$x1[[2]], V2 > input$y1[[1]], V2 < input$y1[[2]]) %>%
-        dplyr::filter(!{{colour_var}} %in% input$cluster,
-                      {{id}} %in% remove_range$keep_keys) %>%
+        dplyr::filter({{id}} %in% remove_range$keep_keys) %>%
         dplyr::filter(grepl(input$filterPattern, {{text_var}}, ignore.case = TRUE))
     })
 
