@@ -155,7 +155,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                                 shiny::selectInput(inputId = "dateBreak", label = "Unit", choices = c("day", "week", "month", "quarter", "year"), selected = "week"),
                                                                 shiny::selectInput(inputId = "dateSmooth", label = "Smooth", choices = c("none", "loess", "lm", "glm", "gam"), selected = "none"),
                                                                 shiny::uiOutput("smoothControls"),
-                                                                shiny::textInput("volumeHex", "colour", value ="#107C10"),
+                                                                shiny::debounce(shiny::textInput("volumeHex", "colour", value ="#107C10"), 1000),
+
                                                                 shinyWidgets::materialSwitch(
                                                                   inputId = "toggleVolumetitles",
                                                                   label = "Customise Titles?",
@@ -183,7 +184,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                                   status = "primary",
                                                                   right = TRUE
                                                                 ),
-                                                                shiny::textInput("tokenHex", "colour", value ="#0f50d2"),
+                                                                shiny::debounce(shiny::textInput("tokenHex", "colour", value ="#0f50d2"), 1000),
+
                                                                 shiny::uiOutput("tokenTitles"),
                                                                 shiny::downloadButton(outputId = "saveToken", class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"),
                                             ),
@@ -336,10 +338,12 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       }
     )
 
-    delayedTokenHex <- shiny::reactive({
+    delayedTokenHex <- shiny::debounce(shiny::reactive({
       input$tokenHex
-    }) %>%
-      shiny::debounce(2000)
+    }), 1000)
+    delayedVolumeHex <- shiny::debounce(shiny::reactive({
+      input$tokenHex
+    }), 1000)
 
     #---- Reactive plots + Observes ----
     #First create the reactive (this will be sent to download handler) then create the server's output for display in app
@@ -415,7 +419,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
             }
           },
           unit =  input$dateBreak,
-          fill = input$volumeHex
+          fill = delayedVolumeHex()
         ) +
         ggplot2::labs(
           title = input$volumeTitle,
@@ -543,7 +547,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                 remove_stops = FALSE
               )
           } else{
-            bigram <- df_filtered()x %>%
+            bigram <- df_filtered() %>%
               dplyr::sample_n(5000) %>%
               JPackage::make_bigram_viz(
                 text_var = {
