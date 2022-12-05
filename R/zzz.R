@@ -73,7 +73,7 @@
 #' \dontrun{
 #' }
 #' @keywords internal
-download_box <- function(exportname, plot, width = 6, height = 4) {
+download_box <- function(exportname, plot, width = 300, height = 250) {
   shiny::downloadHandler(
     filename = function() {
       paste(exportname, Sys.Date(), ".png", sep = "")
@@ -84,7 +84,9 @@ download_box <- function(exportname, plot, width = 6, height = 4) {
                       device = "png",
                       width = width,
                       height = height,
-                      units = "in")
+                      units = "px",
+                      bg = "white",
+                      dpi = 100)
     }
   )
 }

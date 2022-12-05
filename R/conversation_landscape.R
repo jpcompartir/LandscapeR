@@ -343,55 +343,100 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     #---- Reactive plots + Observes ----
     #First create the reactive (this will be sent to download handler) then create the server's output for display in app
-sentiment_reactive <- reactive({
-          df_filtered() %>%
-            LandscapeR::.plot_sentiment_distribution(sentiment_var = {{sentiment_var}}) +
-            ggplot2::labs(title = input$sentimentTitle,
-                          caption = input$sentimentCaption,
-                          subtitle = input$sentimentSubtitle,
-                          x = input$sentimentXlabel,
-                          y = input$sentimentYlabel)
-        })
+    sentiment_reactive <- reactive({
+      df_filtered() %>%
+        LandscapeR::.plot_sentiment_distribution(sentiment_var = {
+          {
+            sentiment_var
+          }
+        }) +
+        ggplot2::labs(
+          title = input$sentimentTitle,
+          caption = input$sentimentCaption,
+          subtitle = input$sentimentSubtitle,
+          x = input$sentimentXlabel,
+          y = input$sentimentYlabel
+        )
+    })
 
     #now create the server's output for display in app
-    output$sentimentPlot <- shiny::renderPlot({sentiment_reactive()},res = 100, width = function() input$sentimentWidth, height = function() input$sentimentHeight)
+    output$sentimentPlot <-
+      shiny::renderPlot({
+        sentiment_reactive()
+      }, res = 100, width = function()
+        input$sentimentWidth, height = function()
+          input$sentimentHeight)
 
     #---- Token plot ----
     token_reactive <- reactive({
       df_filtered() %>%
-        LandscapeR::.plot_tokens_counter(text_var = {{cleaned_text_var}}, top_n = 25, fill = delayedTokenHex()) +
-        ggplot2::labs(title = input$tokenTitle,
-                      caption = input$tokenCaption,
-                      subtitle =input$tokenSubtitle,
-                      x = input$tokenXlabel,
-                      y = input$tokenYlabel) +
+        LandscapeR::.plot_tokens_counter(text_var = {
+          {
+            cleaned_text_var
+          }
+        },
+        top_n = 25,
+        fill = delayedTokenHex()) +
+        ggplot2::labs(
+          title = input$tokenTitle,
+          caption = input$tokenCaption,
+          subtitle = input$tokenSubtitle,
+          x = input$tokenXlabel,
+          y = input$tokenYlabel
+        ) +
         ggplot2::scale_fill_manual(values = input$tokenHex)
 
     })
 
     output$tokenPlot <- shiny::renderPlot({
-      token_reactive()}, res = 100, width = function() input$tokenWidth,height = function() input$tokenHeight)
+      token_reactive()
+    }, res = 100, width = function()
+      input$tokenWidth, height = function()
+        input$tokenHeight)
 
     #---- Volume Plot ----
     volume_reactive <- reactive({
       vol_data <- df_filtered() %>%
-        dplyr::filter({{date_var}} >= input$dateRange[[1]], {{date_var}} <= input$dateRange[[2]])
+        dplyr::filter({
+          {
+            date_var
+          }
+        } >= input$dateRange[[1]], {
+          {
+            date_var
+          }
+        } <= input$dateRange[[2]])
 
       vol_plot <- vol_data %>%
-        LandscapeR::.plot_volume_over_time(.date_var = {{date_var}}, unit =  input$dateBreak, fill = input$volumeHex) +
-        ggplot2::labs(title = input$volumeTitle,
-                      caption = input$volumeCaption,
-                      subtitle = input$volumeSubtitle,
-                      x = input$volumeXlabel,
-                      y = input$volumeYlabel)
+        LandscapeR::.plot_volume_over_time(
+          .date_var = {
+            {
+              date_var
+            }
+          },
+          unit =  input$dateBreak,
+          fill = input$volumeHex
+        ) +
+        ggplot2::labs(
+          title = input$volumeTitle,
+          caption = input$volumeCaption,
+          subtitle = input$volumeSubtitle,
+          x = input$volumeXlabel,
+          y = input$volumeYlabel
+        )
 
-      if(!input$dateSmooth == "none"){
-        if(input$smoothSe == "FALSE"){
+      if (!input$dateSmooth == "none") {
+        if (input$smoothSe == "FALSE") {
           vol_plot <- vol_plot +
-            ggplot2::geom_smooth(method = input$dateSmooth, se = FALSE, colour = input$smoothColour)
-        }else {
-          vol_plot <- vol_plot+
-            ggplot2::geom_smooth(method = input$dateSmooth, colour = input$smoothColour)
+            ggplot2::geom_smooth(
+              method = input$dateSmooth,
+              se = FALSE,
+              colour = input$smoothColour
+            )
+        } else {
+          vol_plot <- vol_plot +
+            ggplot2::geom_smooth(method = input$dateSmooth,
+                                 colour = input$smoothColour)
         }
       }
 
@@ -399,14 +444,24 @@ sentiment_reactive <- reactive({
 
     })
 
-    output$volumePlot <- shiny::renderPlot({volume_reactive()}, res = 100, width = function() input$volumeWidth,  height = function() input$volumeHeight)
+    output$volumePlot <-
+      shiny::renderPlot({
+        volume_reactive()
+      }, res = 100, width = function()
+        input$volumeWidth,  height = function()
+          input$volumeHeight)
 
     #Volume plot smooth controls
     output$smoothControls <- shiny::renderUI({
-      if(input$dateSmooth != "none"){
+      if (input$dateSmooth != "none") {
         shiny::tagList(
-          shiny::selectInput("smoothSe", "show standard error?", choices = c("TRUE", "FALSE"), selected = "TRUE"),
-          shiny::textInput("smoothColour", "Smooth colour", value ="#000000")
+          shiny::selectInput(
+            "smoothSe",
+            "show standard error?",
+            choices = c("TRUE", "FALSE"),
+            selected = "TRUE"
+          ),
+          shiny::textInput("smoothColour", "Smooth colour", value = "#000000")
         )
       }
 
@@ -414,32 +469,54 @@ sentiment_reactive <- reactive({
 
     #Make delete button disappear when nothing selected
     output$deleteme <- shiny::renderUI({
-      if(length(selected_range() > 1)){
+      if (length(selected_range() > 1)) {
         shiny::tagList(
-          shiny::actionButton("delete", "Delete selections", class = 'btn-warning', style = "position: absolute; bottom 7px; right: 7px; background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")
+          shiny::actionButton(
+            "delete",
+            "Delete selections",
+            class = 'btn-warning',
+            style = "position: absolute; bottom 7px; right: 7px; background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"
+          )
         )
 
       }
     })
 
     #---- Render Titles ----
-    .titles_render <- function(plot_type){
-
+    .titles_render <- function(plot_type) {
       .plot_type <- stringr::str_to_title(plot_type)
 
       shiny::renderUI({
-        if(eval(parse(text = paste0("input$toggle", .plot_type, "titles"))) == "TRUE"){
+        if (eval(parse(text = paste0("input$toggle", .plot_type, "titles"))) == "TRUE") {
           shiny::tagList(
-            shiny::textInput(inputId = paste0(plot_type, "Title"), label = "Title",
-                             placeholder = "Write title here...", value = ""),
-            shiny::textInput(inputId = paste0(plot_type, "Subtitle"), label = "Subtitle",
-                             placeholder = "Write subtitle here...", value = ""),
-            shiny::textInput(inputId = paste0(plot_type, "Caption"), label = "Caption",
-                             placeholder = "Write caption here...", value = ""),
-            shiny::textInput(inputId = paste0(plot_type, "Xlabel"), label = "X axis title",
-                             placeholder = "Write the x axis title here..."),
-            shiny::textInput(inputId = paste0(plot_type, "Ylabel"), label = "Y axis title",
-                             placeholder = "Write the y axis title here")
+            shiny::textInput(
+              inputId = paste0(plot_type, "Title"),
+              label = "Title",
+              placeholder = "Write title here...",
+              value = ""
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Subtitle"),
+              label = "Subtitle",
+              placeholder = "Write subtitle here...",
+              value = ""
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Caption"),
+              label = "Caption",
+              placeholder = "Write caption here...",
+              value = ""
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Xlabel"),
+              label = "X axis title",
+              placeholder = "Write the x axis title here..."
+            ),
+            shiny::textInput(
+              inputId = paste0(plot_type, "Ylabel"),
+              label = "Y axis title",
+              placeholder = "Write the y axis title here"
+            )
           )
         }
       })
@@ -450,30 +527,52 @@ sentiment_reactive <- reactive({
     output$tokenTitles <- .titles_render("token")
 
     #---- Bigram Plot ----
-      shiny::observeEvent(plotly::event_data("plotly_selected"),{
-        output$bigramPlot <- shiny::renderPlot({
-          if(length(selected_range()) > 1){
-            if(!length(selected_range()) >= 5000){
-              bigram <- df_filtered() %>%
-                JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5, remove_stops = FALSE)
-            }else{
-              bigram <- df_filtered %>%
-                dplyr::sample_n(5000) %>%
-                JPackage::make_bigram_viz(text_var = {{cleaned_text_var}}, clean_text = FALSE, min = 5, remove_stops = FALSE)
-            }
+    shiny::observeEvent(plotly::event_data("plotly_selected"), {
+      output$bigramPlot <- shiny::renderPlot({
+        if (length(selected_range()) > 1) {
+          if (!length(selected_range()) >= 5000) {
+            bigram <- df_filtered() %>%
+              JPackage::make_bigram_viz(
+                text_var = {
+                  {
+                    cleaned_text_var
+                  }
+                },
+                clean_text = FALSE,
+                min = 5,
+                remove_stops = FALSE
+              )
+          } else{
+            bigram <- df_filtered()x %>%
+              dplyr::sample_n(5000) %>%
+              JPackage::make_bigram_viz(
+                text_var = {
+                  {
+                    cleaned_text_var
+                  }
+                },
+                clean_text = FALSE,
+                min = 5,
+                remove_stops = FALSE
+              )
           }
-          bigram
+        }
+        bigram
 
-        }, res = 100,
-        width = function() input$bigramWidth,
-        height = function() input$bigramHeight)
-      })
+      }, res = 100,
+      width = function()
+        input$bigramWidth,
+      height = function()
+        input$bigramHeight)
+    })
     #---- Download boxes for plots ----
 
-    output$saveVolume <- LandscapeR::download_box("volume_plot", volume_reactive())
-    output$saveToken <- LandscapeR::download_box("token_plot", token_reactive(),
-                                                 # width = input$toknWidth,
-                                                 # height = input$tokenHeight
+    output$saveVolume <-
+      LandscapeR::download_box("volume_plot", volume_reactive())
+    output$saveToken <-
+      LandscapeR::download_box("token_plot", token_reactive(),
+                               width = input$tokenWidth,
+                               height = input$tokenHeight
                                                  )
     output$saveSentiment <- LandscapeR::download_box(exportname = "sentiment_plot", plot = sentiment_reactive())
   }
