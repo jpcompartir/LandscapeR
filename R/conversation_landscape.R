@@ -155,8 +155,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                                 shiny::selectInput(inputId = "dateBreak", label = "Unit", choices = c("day", "week", "month", "quarter", "year"), selected = "week"),
                                                                 shiny::selectInput(inputId = "dateSmooth", label = "Smooth", choices = c("none", "loess", "lm", "glm", "gam"), selected = "none"),
                                                                 shiny::uiOutput("smoothControls"),
-                                                                shiny::debounce(shiny::textInput("volumeHex", "colour", value ="#107C10"), 1000),
-
+                                                                shiny::textInput("volumeHex", "colour", value ="#107C10"),
                                                                 shinyWidgets::materialSwitch(
                                                                   inputId = "toggleVolumetitles",
                                                                   label = "Customise Titles?",
@@ -184,8 +183,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
                                                                   status = "primary",
                                                                   right = TRUE
                                                                 ),
-                                                                shiny::debounce(shiny::textInput("tokenHex", "colour", value ="#0f50d2"), 1000),
-
+                                                                shiny::textInput("tokenHex", "colour", value ="#0f50d2"),
                                                                 shiny::uiOutput("tokenTitles"),
                                                                 shiny::downloadButton(outputId = "saveToken", class = "btn btn-warning",  style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"),
                                             ),
@@ -223,7 +221,6 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     #---- Pattern ----
     pattern <- shiny::reactiveVal(value = "",{})
-
     shiny::observeEvent(input$filterPattern, {
       pattern(input$Regex)
     })
@@ -233,7 +230,6 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       pattern(input$Regex)
       updateTextInput(session, "Regex", value = "")
     })
-
     shiny::observeEvent(input$reset, {
       pattern("")
     })
@@ -301,13 +297,6 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     #---- Data Table ----
     #Now render the data table, selecting all points within our boundaries. Would need to update this for lasso selection.
     output$highlightedTable <- DT::renderDataTable({
-
-      #Replacing pointNumber with a key allows for precise showing of points irrespective of variable input type.
-      # key <- selected_range()$key
-
-      # df_filtered <<- reactive_data() %>%
-      #   dplyr::filter({{id}} %in% key()) #TODO id_var dangerous(?)
-
       df <- df_filtered() %>%
         #Select the columns you want to see from your data
         dplyr::select({{text_var}},
@@ -338,12 +327,10 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       }
     )
 
-    delayedTokenHex <- shiny::debounce(shiny::reactive({
-      input$tokenHex
-    }), 1000)
-    delayedVolumeHex <- shiny::debounce(shiny::reactive({
-      input$tokenHex
-    }), 1000)
+    delayedTokenHex <- shiny::reactive({input$tokenHex}) %>%
+      shiny::debounce(500)
+    delayedVolumeHex <- shiny::reactive({input$volumeHex}) %>%
+      shiny::debounce(500)
 
     #---- Reactive plots + Observes ----
     #First create the reactive (this will be sent to download handler) then create the server's output for display in app
@@ -367,9 +354,9 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     output$sentimentPlot <-
       shiny::renderPlot({
         sentiment_reactive()
-      }, res = 100, width = function()
-        input$sentimentWidth, height = function()
-          input$sentimentHeight)
+      }, res = 100,
+      width = function() input$sentimentWidth,
+      height = function() input$sentimentHeight)
 
     #---- Token plot ----
     token_reactive <- reactive({
@@ -394,30 +381,18 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     output$tokenPlot <- shiny::renderPlot({
       token_reactive()
-    }, res = 100, width = function()
-      input$tokenWidth, height = function()
-        input$tokenHeight)
+    }, res = 100,
+    width = function()  input$tokenWidth,
+    height = function() input$tokenHeight)
 
     #---- Volume Plot ----
     volume_reactive <- reactive({
       vol_data <- df_filtered() %>%
-        dplyr::filter({
-          {
-            date_var
-          }
-        } >= input$dateRange[[1]], {
-          {
-            date_var
-          }
-        } <= input$dateRange[[2]])
+        dplyr::filter({{date_var}} >= input$dateRange[[1]], {{date_var}} <= input$dateRange[[2]])
 
       vol_plot <- vol_data %>%
         LandscapeR::.plot_volume_over_time(
-          .date_var = {
-            {
-              date_var
-            }
-          },
+          .date_var = {{date_var}},
           unit =  input$dateBreak,
           fill = delayedVolumeHex()
         ) +
@@ -440,20 +415,17 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
         } else {
           vol_plot <- vol_plot +
             ggplot2::geom_smooth(method = input$dateSmooth,
-                                 colour = input$smoothColour)
-        }
-      }
+                                 colour = input$smoothColour)}}
 
       return(vol_plot)
 
     })
 
     output$volumePlot <-
-      shiny::renderPlot({
-        volume_reactive()
-      }, res = 100, width = function()
-        input$volumeWidth,  height = function()
-          input$volumeHeight)
+      shiny::renderPlot({volume_reactive()},
+                        res = 100,
+                        width = function() input$volumeWidth,
+                        height = function() input$volumeHeight)
 
     #Volume plot smooth controls
     output$smoothControls <- shiny::renderUI({
@@ -537,11 +509,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
           if (!length(selected_range()) >= 5000) {
             bigram <- df_filtered() %>%
               JPackage::make_bigram_viz(
-                text_var = {
-                  {
-                    cleaned_text_var
-                  }
-                },
+                text_var = {{cleaned_text_var}},
                 clean_text = FALSE,
                 min = 5,
                 remove_stops = FALSE
@@ -550,11 +518,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
             bigram <- df_filtered() %>%
               dplyr::sample_n(5000) %>%
               JPackage::make_bigram_viz(
-                text_var = {
-                  {
-                    cleaned_text_var
-                  }
-                },
+                text_var = {{cleaned_text_var}},
                 clean_text = FALSE,
                 min = 5,
                 remove_stops = FALSE
@@ -571,13 +535,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     })
     #---- Download boxes for plots ----
 
-    output$saveVolume <-
-      LandscapeR::download_box("volume_plot", volume_reactive())
-    output$saveToken <-
-      LandscapeR::download_box("token_plot", token_reactive(),
-                               width = input$tokenWidth,
-                               height = input$tokenHeight
-                                                 )
+    output$saveVolume <- LandscapeR::download_box("volume_plot", volume_reactive())
+    output$saveToken <-  LandscapeR::download_box("token_plot", token_reactive(),width = input$tokenWidth,height = input$tokenHeight)
     output$saveSentiment <- LandscapeR::download_box(exportname = "sentiment_plot", plot = sentiment_reactive())
   }
   #---- hide app render ----
