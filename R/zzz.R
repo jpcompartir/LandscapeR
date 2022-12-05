@@ -73,18 +73,21 @@
 #' \dontrun{
 #' }
 #' @keywords internal
-download_box <- function(exportname, plot) {
+download_box <- function(exportname, plot, width = 6, height = 4) {
   shiny::downloadHandler(
     filename = function() {
       paste(exportname, Sys.Date(), ".png", sep = "")
     },
     content = function(file) {
-      ggplot2::ggsave(file, plot = plot, device = "png", width = 8)
+      ggplot2::ggsave(file,
+                      plot = plot,
+                      device = "png",
+                      width = width,
+                      height = height,
+                      units = "in")
     }
   )
 }
-
-
 #---- Render Titles ----
 #' Title
 #'
@@ -133,14 +136,13 @@ download_box <- function(exportname, plot) {
 #' }
 #' @keywords internal
 .labs_render <- function(plot_type){
-  df +
+
     ggplot2::labs(title = paste0(input$sentimentTitle),
                   caption = paste0(input$sentimentCaption),
                   subtitle = paste0(input$sentimentSubtitle),
                   x = paste0(input$sentimentXlabel),
                   y = paste0(input$sentimentYlabel))
 }
-
 
 #---- plot sentiment distribution ---- TODO add percent option
 #' Title
@@ -165,13 +167,10 @@ download_box <- function(exportname, plot) {
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
     ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() + ggplot2::theme_bw() +
+    HelpR::theme_microsoft_discrete() +
     ggplot2::theme(plot.title = element_text(hjust = 0.5,
                                              face = "bold"),
-                   legend.position = "none") +
-    ggplot2::scale_fill_manual(values = c(
-      positive = "#A4DE02",
-      negative = "#FF0000",
-      neutral = "#000000"))
+                   legend.position = "none")
 }
 
 #' Prepare a URL column to be clickable in Shiny/Data Table

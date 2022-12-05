@@ -87,7 +87,7 @@ c) create functions for use elsewhere in shiny app
 
 - entities plot (?) NAH
 - value boxes- where?
-- selecting and deselecting of factors with plotly and making sure that shiny doesn't reactively clear these things. When pattern etc. are updated - not sure how plausible this is
+- selecting and deselecting of factors with plotly and making sure that shiny doesn't reactively clear these things. When pattern etc. are updated 
 
 Separate:
 - Investigate https://github.com/CreatingData/deepscatter

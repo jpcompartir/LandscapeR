@@ -1,0 +1,21 @@
+---
+title: "changelog"
+author: "Jack Penzer"
+date: '2022-12-05'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Timeline & Changes:
+
+Friday 2nd December -
+Tidyevaluate changes, now plotly's NSE is taken care of in a 'just in time'-esque way and original variables are left untouched
+
+Monday 5th Dec
+`.labs_render()` function trialling
+Editing the sentiment_distribution plot
+
+moving sentiment function from HelpR to LandscapeR

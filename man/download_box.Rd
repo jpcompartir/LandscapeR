@@ -4,7 +4,7 @@
 \alias{download_box}
 \title{Title}
 \usage{
-download_box(exportname, plot)
+download_box(exportname, plot, width = 6, height = 4)
 }
 \arguments{
 \item{exportname}{Name of export as a string}
