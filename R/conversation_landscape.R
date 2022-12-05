@@ -334,20 +334,12 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
     #---- Reactive plots + Observes ----
     #First create the reactive (this will be sent to download handler) then create the server's output for display in app
+
+    sentiment_label <- reactive_labels("sentiment", input)
     sentiment_reactive <- reactive({
       df_filtered() %>%
-        LandscapeR::.plot_sentiment_distribution(sentiment_var = {
-          {
-            sentiment_var
-          }
-        }) +
-        ggplot2::labs(
-          title = input$sentimentTitle,
-          caption = input$sentimentCaption,
-          subtitle = input$sentimentSubtitle,
-          x = input$sentimentXlabel,
-          y = input$sentimentYlabel
-        )
+        LandscapeR::.plot_sentiment_distribution(sentiment_var = {{sentiment_var}}) +
+        sentiment_label()
     })
 
     #now create the server's output for display in app
@@ -359,23 +351,14 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       height = function() input$sentimentHeight)
 
     #---- Token plot ----
+    token_label <- reactive_labels("token", input)
     token_reactive <- reactive({
       df_filtered() %>%
-        LandscapeR::.plot_tokens_counter(text_var = {
-          {
-            cleaned_text_var
-          }
-        },
+        LandscapeR::.plot_tokens_counter(text_var = {{cleaned_text_var}},
         top_n = 25,
         fill = delayedTokenHex()) +
-        ggplot2::labs(
-          title = input$tokenTitle,
-          caption = input$tokenCaption,
-          subtitle = input$tokenSubtitle,
-          x = input$tokenXlabel,
-          y = input$tokenYlabel
-        ) +
-        ggplot2::scale_fill_manual(values = input$tokenHex)
+        ggplot2::scale_fill_manual(values = input$tokenHex) +
+        token_label()
 
     })
 
@@ -386,6 +369,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     height = function() input$tokenHeight)
 
     #---- Volume Plot ----
+    volume_label <- reactive_labels("volume", input)
     volume_reactive <- reactive({
       vol_data <- df_filtered() %>%
         dplyr::filter({{date_var}} >= input$dateRange[[1]], {{date_var}} <= input$dateRange[[2]])
@@ -396,13 +380,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
           unit =  input$dateBreak,
           fill = delayedVolumeHex()
         ) +
-        ggplot2::labs(
-          title = input$volumeTitle,
-          caption = input$volumeCaption,
-          subtitle = input$volumeSubtitle,
-          x = input$volumeXlabel,
-          y = input$volumeYlabel
-        )
+        volume_label()
 
       if (!input$dateSmooth == "none") {
         if (input$smoothSe == "FALSE") {
@@ -536,7 +514,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     #---- Download boxes for plots ----
 
     output$saveVolume <- LandscapeR::download_box("volume_plot", volume_reactive())
-    output$saveToken <-  LandscapeR::download_box("token_plot", token_reactive(),width = input$tokenWidth,height = input$tokenHeight)
+    output$saveToken <-  LandscapeR::download_box("token_plot", token_reactive())
     output$saveSentiment <- LandscapeR::download_box(exportname = "sentiment_plot", plot = sentiment_reactive())
   }
   #---- hide app render ----

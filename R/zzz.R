@@ -229,3 +229,28 @@ column_type_checker <- function(data,
   }
 
 }
+
+
+#' Programmatically generate reactive labels from a prefix
+#'
+#' @param prefix type of plot e.g. 'sentiment'
+#' @param input reading from Shiny's server `input` object - the list of all inputs.
+#'
+#' @return ggplot boiler-plate code with dynamically generated inputs
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' }
+#' @keywords internal
+reactive_labels <- function(prefix, input) {
+  shiny::reactive({
+    ggplot2::labs(
+      title = input[[paste0(prefix, "Title")]],
+      caption = input[[paste0( prefix, "Caption")]],
+      subtitle = input[[paste0(prefix, "Subtitle")]],
+      x = input[[paste0(prefix, "Xlabel")]],
+      y = input[[paste0(prefix, "YLabel")]]
+    )
+  })
+}
