@@ -21,4 +21,3 @@ Programmatically generate reactive labels from a prefix
 \dontrun{
 }
 }
-\keyword{internal}
