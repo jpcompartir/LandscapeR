@@ -21,10 +21,10 @@
 #' @export
 #'
 conversation_landscape <- function(data,..., id = document, text_var = text, colour_var, cleaned_text_var = clean_text, date_var = date, sentiment_var = sentiment, url_var = permalink, size = 2, x_var = V1, y_var = V2, type = "scattergl", colour_mapping = NULL){
-#
-#   library(htmltools)
-#   library(tableHTML)
-#   library(shinyWidgets)
+
+  library(htmltools)
+  library(tableHTML)
+  library(shinyWidgets)
 
   #----- hide wrangling ----
   text_sym <- rlang::ensym(text_var)
@@ -41,8 +41,6 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
   date_min <- as.Date(dates$min)
   date_max <- as.Date(dates$max)
 
-  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, {{id}}) #Rename columns to avoid relying on tidy evaluate in server logic
-
   #Early stopping/type checking ----
   #End early if these varianles are not of the right type
   check_text <- data %>% column_type_checker(column = {{text_var}}, type = "character")
@@ -51,10 +49,6 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
   if(check_date == "no") stop("date_var is not the right type (should be 'Date')")
   check_sent <- data %>% column_type_checker(column = {{sentiment_var}}, type = "character")
   if(check_sent == "no") stop("sentiment_var is not the right type (should be 'character')")
-
-
-
-
 
   # hide UI ----
   ui <- shiny::navbarPage("Conversation Landscape", theme = shinythemes::shinytheme("cosmo"), position = "fixed-top",
@@ -248,7 +242,6 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
     })
     #---- reactive data ---
     reactive_data <- shiny::reactive({
-
       data <- data %>%
         dplyr::filter({{x_var}} > input$x1[[1]], {{x_var}} < input$x1[[2]], V2 > input$y1[[1]], V2 < input$y1[[2]]) %>%
         dplyr::filter({{id}} %in% remove_range$keep_keys) %>%
@@ -439,37 +432,35 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
     output$sentimentTitles <- LandscapeR::titles_render("sentiment", input)
     output$tokenTitles <- LandscapeR::titles_render("token", input )
 
-    #---- Bigram Plot ----
-    shiny::observeEvent(plotly::event_data("plotly_selected"), {
-      output$bigramPlot <- shiny::renderPlot({
-        if (length(selected_range()) > 1) {
-          if (!length(selected_range()) >= 5000) {
-            bigram <- df_filtered() %>%
-              JPackage::make_bigram_viz(
-                text_var = {{cleaned_text_var}},
-                clean_text = FALSE,
-                min = 5,
-                remove_stops = FALSE
-              )
-          } else{
-            bigram <- df_filtered() %>%
-              dplyr::sample_n(5000) %>%
-              JPackage::make_bigram_viz(
-                text_var = {{cleaned_text_var}},
-                clean_text = FALSE,
-                min = 5,
-                remove_stops = FALSE
-              )
-          }
+    bigram_reactive <- reactive({
+      if (length(selected_range()) > 1) {
+        if (!length(selected_range()) >= 5000) {
+          bigram <- df_filtered() %>%
+            JPackage::make_bigram_viz(
+              text_var = {{cleaned_text_var}},
+              clean_text = FALSE,
+              min = 5,
+              remove_stops = FALSE
+            )
+        } else{
+          bigram <- df_filtered() %>%
+            dplyr::sample_n(5000) %>%
+            JPackage::make_bigram_viz(
+              text_var = {{cleaned_text_var}},
+              clean_text = FALSE,
+              min = 5,
+              remove_stops = FALSE
+            )
         }
-        bigram
-
-      }, res = 100,
-      width = function()
-        input$bigramWidth,
-      height = function()
-        input$bigramHeight)
+      }
+      return(bigram)
     })
+    output$bigramPlot <- shiny::renderPlot({
+      bigram_reactive()
+    }, res = 100,
+    width = function() input$bigramWidth,
+    height = function() input$bigramHeight)
+
     #---- Download boxes for plots ----
 
     output$saveVolume <- LandscapeR::download_box("volume_plot", volume_reactive())
