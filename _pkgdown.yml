@@ -4,22 +4,27 @@ navbar:
     right: [github]
 
 reference:
-  - title: "Navigating a Conversation"
-    desc: "One stop shop for rendering a converssation landscape Shiny app"
-  - contents:
-    - conversation_landscape
+- title: Navigating a Conversation
+  desc: >
+    One stop shop for building a Shiny app to explore a conversation
+  contents:
+  - '`conversation_landscape`'
 
-  - title: "Utility functions"
-    desc: "Exported functions which can be used for multiple purposes"
-  - contents:
-    - "column_type_checker"
-    - "ls_link_click"
+
+- title: Utility Functions
+  desc: >
+    Exported functions for use elsewhere
+  contents:
+  - '`column_type_checker`'
+  - '`ls_link_click`'
+  - '`reactive_labels`'
 
 repo:
-  url: https://github.com/jpcompartir/LandscapeR
-  source: https://github.com/jpcompartir/LandscapeR/tree/main/R
+  url:
+    home: https://github.com/jpcompartir/LandscapeR
+    source: https://github.com/jpcompartir/LandscapeR/tree/main
 
 home:
   links:
-    - text: Report an issue
-      href: https://github.com/jpcompartir/LandscapeR/issues
+  - text: Report an issue
+    href: https://github.com/jpcompartir/LimpiaR/issues
