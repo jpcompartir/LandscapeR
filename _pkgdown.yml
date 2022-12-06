@@ -1,4 +1,25 @@
-url: ~
-template:
-  bootstrap: 5
+navbar:
+  structure:
+    left: [home, intro, reference, articles]
+    right: [github]
 
+reference:
+  - title: "Navigating a Conversation"
+    desc: "One stop shop for rendering a converssation landscape Shiny app"
+  - contents:
+    - conversation_landscape
+
+  - title: "Utility functions"
+    desc: "Exported functions which can be used for multiple purposes"
+  - contents:
+    - "column_type_checker"
+    - "ls_link_click"
+
+repo:
+  url: https://github.com/jpcompartir/LandscapeR
+  source: https://github.com/jpcompartir/LandscapeR/tree/main/R
+
+home:
+  links:
+    - text: Report an issue
+      href: https://github.com/jpcompartir/LandscapeR/issues
