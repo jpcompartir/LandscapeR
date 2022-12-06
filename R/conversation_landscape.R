@@ -306,7 +306,7 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
         paste0(input$fileName, ".csv")
       },
       content = function(file) {
-        utils::write.csv(df_filtered, file)
+        utils::write.csv(df_filtered(), file)
       }
     )
 
