@@ -13,6 +13,7 @@ conversation_landscape(
   cleaned_text_var = clean_text,
   date_var = date,
   sentiment_var = sentiment,
+  url_var = permalink,
   size = 2,
   x_var = V1,
   y_var = V2,
@@ -37,6 +38,10 @@ conversation_landscape(
 
 \item{sentiment_var}{Sentiment variable}
 
+\item{url_var}{Variable which contains a url (preferably after using link_click)}
+
+\item{size}{}
+
 \item{x_var}{Variable which contains your x co-ordinates}
 
 \item{y_var}{Variable which contains your y co-ordinates}
@@ -44,10 +49,6 @@ conversation_landscape(
 \item{type}{Type of the plotly output, unlikely to change from 'scattergl'}
 
 \item{colour_mapping}{Which colours the colour variable should be mapped to}
-
-\item{point_size}{Size of the points in the plotly output}
-
-\item{plotly_height}{height of the plotly output}
 }
 \value{
 A shiny application

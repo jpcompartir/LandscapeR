@@ -126,27 +126,6 @@ titles_render <- function(plot_type, input){
 }
 
 
-#---- Labs Render ---- TODO
-#' Title
-#'
-#' @param plot_type Type of plot
-#'
-#' @return ggplot boiler code
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' }
-#' @keywords internal
-labs_render <- function(plot_type){
-
-    ggplot2::labs(title = paste0(input$sentimentTitle),
-                  caption = paste0(input$sentimentCaption),
-                  subtitle = paste0(input$sentimentSubtitle),
-                  x = paste0(input$sentimentXlabel),
-                  y = paste0(input$sentimentYlabel))
-}
-
 #---- plot sentiment distribution ---- TODO add percent option
 #' Title
 #'
@@ -243,7 +222,6 @@ column_type_checker <- function(data,
 #' @examples
 #' \dontrun{
 #' }
-#' @keywords internal
 reactive_labels <- function(prefix, input) {
   shiny::reactive({
     ggplot2::labs(

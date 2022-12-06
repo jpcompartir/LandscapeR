@@ -22,9 +22,39 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/column_type_checker.html</loc>
+  </url>
+  <url>
     <loc>/reference/conversation_landscape.html</loc>
   </url>
   <url>
+    <loc>/reference/download_box.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/labs_render.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_link_click.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_plot_sentiment_distribution.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_plot_tokens_counter.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_plot_volume_over_time.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/reactive_labels.html</loc>
+  </url>
+  <url>
+    <loc>/reference/titles_render.html</loc>
   </url>
 </urlset>
