@@ -40,7 +40,7 @@ conversation_landscape(
 
 \item{url_var}{Variable which contains a url (preferably after using link_click)}
 
-\item{size}{}
+\item{size}{size of each point on the plotly chart}
 
 \item{x_var}{Variable which contains your x co-ordinates}
 

@@ -15,7 +15,7 @@
 #' @param type Type of the plotly output, unlikely to change from 'scattergl'
 #' @param colour_mapping Which colours the colour variable should be mapped to
 #' @param url_var Variable which contains a url (preferably after using link_click)
-#' @param size
+#' @param size size of each point on the plotly chart
 #'
 #' @return A shiny application
 #' @export

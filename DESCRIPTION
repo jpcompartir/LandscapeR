@@ -1,31 +1,42 @@
 Package: LandscapeR
-Title: What the Package Does (One Line, Title Case)
+Title: Turns Unstructured Text Data Into A Navigable Landscape
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    as.person(c(
+  "Jack Penzer <jack.penzer@sharecreative.com> [cre, aut]",
+  "Mike Tapp <michael.tapp@sharecreative.com> [aut]",
+  "Jamie Hudson <jamie.hudson@sharecreative.com> [aut]",
+  "Tim Mooney <tim.mooney@sharecreative.com> [aut]",
+  "SHARE Creative [cph]",
+  "Capture Intelligence[cph]"
+  ))
+Description: Turns unstructured text data into a navigable landscape
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Suggests: 
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+    knitr (>= 1.39),
+    rmarkdown (>= 2.14),
+    testthat (>= 3.1.4),
+    tableHTML (>= 2.1.0),
+    htmltools (>= 0.5.2),
+    HelpR (>= 0.1.1),
+    JPackage (>= 0.0.0.9000)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Imports: 
-    dplyr,
-    DT,
-    ggplot2,
-    htmltools,
-    magrittr,
-    plotly,
-    rlang,
-    shiny,
-    shinycssloaders,
-    shinyWidgets,
-    stringr,
-    tableHTML,
-    tidytext
+    dplyr (>= 1.0.9),
+    DT (>= 0.23),
+    ggplot2 (>= 3.3.6),
+    magrittr (>= 2.0.3),
+    plotly (>= 4.10.0),
+    rlang (>= 1.0.3),
+    shiny (>= 1.7.2),
+    shinycssloaders (>= 1.0.0),
+    shinyWidgets (>= 0.7.4),
+    stringr (>= 1.4.0),
+    tidytext (>= 0.3.3),
+    gotop (>= 0.1.2),
+    shinythemes (>= 1.2.0),
+    lubridate (>= 1.8.0)
