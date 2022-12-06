@@ -1,4 +1,9 @@
+template:
+  bootstrap: 5
+  theme: arrow-dark
+
 navbar:
+  bg: "#ff7518"
   structure:
     left: [home, intro, reference, articles]
     right: [github]
@@ -9,7 +14,6 @@ reference:
     One stop shop for building a Shiny app to explore a conversation
   contents:
   - '`conversation_landscape`'
-
 
 - title: Utility Functions
   desc: >
