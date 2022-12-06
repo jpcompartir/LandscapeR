@@ -10,7 +10,7 @@ Authors@R:
   "SHARE Creative [cph]",
   "Capture Intelligence[cph]"
   ))
-Description: Turns unstructured text data into a navigable landscape
+Description: Turns unstructured text data into a navigable landscape.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
