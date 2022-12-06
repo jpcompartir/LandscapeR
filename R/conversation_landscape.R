@@ -10,22 +10,21 @@
 #' @param cleaned_text_var The cleaned text variable for bigram and token plots
 #' @param date_var Your date variable
 #' @param sentiment_var Sentiment variable
-#' @param point_size Size of the points in the plotly output
-#' @param plotly_height height of the plotly output
 #' @param x_var Variable which contains your x co-ordinates
 #' @param y_var Variable which contains your y co-ordinates
 #' @param type Type of the plotly output, unlikely to change from 'scattergl'
 #' @param colour_mapping Which colours the colour variable should be mapped to
+#' @param url_var Variable which contains a url (preferably after using link_click)
+#' @param size
 #'
 #' @return A shiny application
 #' @export
 #'
-conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_text_var, date_var, sentiment_var,
-                                   size = 2, x_var = V1, y_var = V2, type = "scattergl", colour_mapping = NULL){
-
-  library(htmltools)
-  library(tableHTML)
-  library(shinyWidgets)
+conversation_landscape <- function(data,..., id = document, text_var = text, colour_var, cleaned_text_var = clean_text, date_var = date, sentiment_var = sentiment, url_var = permalink, size = 2, x_var = V1, y_var = V2, type = "scattergl", colour_mapping = NULL){
+#
+#   library(htmltools)
+#   library(tableHTML)
+#   library(shinyWidgets)
 
   #----- hide wrangling ----
   text_sym <- rlang::ensym(text_var)
@@ -37,8 +36,14 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
 
   plotting_heights <- "450px";  plotting_widths <- "400px"
 
+  #Get date ranges for volume
+  dates <- data %>% select(!!date_sym) %>% summarise(min = min(!!date_sym), max = max(!!date_sym))
+  date_min <- as.Date(dates$min)
+  date_max <- as.Date(dates$max)
 
-  #type checking ----
+  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, {{id}}) #Rename columns to avoid relying on tidy evaluate in server logic
+
+  #Early stopping/type checking ----
   #End early if these varianles are not of the right type
   check_text <- data %>% column_type_checker(column = {{text_var}}, type = "character")
   if(check_text == "no") stop("text_var is not the right type (should be 'character')")
@@ -48,13 +53,8 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
   if(check_sent == "no") stop("sentiment_var is not the right type (should be 'character')")
 
 
-  #Get date ranges for volume
-  dates <- data %>% select(!!date_sym) %>% summarise(min = min(!!date_sym), max = max(!!date_sym))
-  date_min <- as.Date(dates$min)
-  date_max <- as.Date(dates$max)
 
-  data <- dplyr::relocate(data, {{x_var}},{{y_var}}, {{text_var}}, {{colour_var}}, {{id}})
-  #Rename columns to avoid relying on tidy evaluate in server logic
+
 
   # hide UI ----
   ui <- shiny::navbarPage("Conversation Landscape", theme = shinythemes::shinytheme("cosmo"), position = "fixed-top",
@@ -337,7 +337,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     sentiment_label <- reactive_labels("sentiment", input)
     sentiment_reactive <- reactive({
       df_filtered() %>%
-        LandscapeR::.plot_sentiment_distribution(sentiment_var = {{sentiment_var}}) +
+        LandscapeR::ls_plot_sentiment_distribution(sentiment_var = {{sentiment_var}}) +
         sentiment_label()
     })
 
@@ -353,9 +353,9 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
     token_label <- reactive_labels("token", input)
     token_reactive <- reactive({
       df_filtered() %>%
-        LandscapeR::.plot_tokens_counter(text_var = {{cleaned_text_var}},
-        top_n = 25,
-        fill = delayedTokenHex()) +
+        LandscapeR::ls_plot_tokens_counter(text_var = {{cleaned_text_var}},
+                                         top_n = 25,
+                                         fill = delayedTokenHex()) +
         ggplot2::scale_fill_manual(values = input$tokenHex) +
         token_label()
 
@@ -374,7 +374,7 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
         dplyr::filter({{date_var}} >= input$dateRange[[1]], {{date_var}} <= input$dateRange[[2]])
 
       vol_plot <- vol_data %>%
-        LandscapeR::.plot_volume_over_time(
+        LandscapeR::ls_plot_volume_over_time(
           .date_var = {{date_var}},
           unit =  input$dateBreak,
           fill = delayedVolumeHex()
@@ -435,49 +435,9 @@ conversation_landscape <- function(data,..., id, text_var, colour_var, cleaned_t
       }
     })
 
-    #---- Render Titles ----
-    .titles_render <- function(plot_type) {
-      .plot_type <- stringr::str_to_title(plot_type)
-
-      shiny::renderUI({
-        if (eval(parse(text = paste0("input$toggle", .plot_type, "titles"))) == "TRUE") {
-          shiny::tagList(
-            shiny::textInput(
-              inputId = paste0(plot_type, "Title"),
-              label = "Title",
-              placeholder = "Write title here...",
-              value = ""
-            ),
-            shiny::textInput(
-              inputId = paste0(plot_type, "Subtitle"),
-              label = "Subtitle",
-              placeholder = "Write subtitle here...",
-              value = ""
-            ),
-            shiny::textInput(
-              inputId = paste0(plot_type, "Caption"),
-              label = "Caption",
-              placeholder = "Write caption here...",
-              value = ""
-            ),
-            shiny::textInput(
-              inputId = paste0(plot_type, "Xlabel"),
-              label = "X axis title",
-              placeholder = "Write the x axis title here..."
-            ),
-            shiny::textInput(
-              inputId = paste0(plot_type, "Ylabel"),
-              label = "Y axis title",
-              placeholder = "Write the y axis title here"
-            )
-          )
-        }
-      })
-    }
-
-    output$volumeTitles <- .titles_render("volume")
-    output$sentimentTitles <- .titles_render("sentiment")
-    output$tokenTitles <- .titles_render("token")
+    output$volumeTitles <- LandscapeR::titles_render("volume", input)
+    output$sentimentTitles <- LandscapeR::titles_render("sentiment", input)
+    output$tokenTitles <- LandscapeR::titles_render("token", input )
 
     #---- Bigram Plot ----
     shiny::observeEvent(plotly::event_data("plotly_selected"), {

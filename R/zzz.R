@@ -13,7 +13,7 @@
 #' \dontrun{
 #' }
 #' @keywords internal
-.plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f50d2"){
+ls_plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f50d2"){
 
   date_sym <- rlang::ensym(.date_var)
 
@@ -45,7 +45,7 @@
 #' }
 #' @keywords internal
 
-.plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
+ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
 
   .text_var <- rlang::enquo(text_var)
   df %>%
@@ -102,12 +102,13 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
 #' \dontrun{
 #' }
 #' @keywords internal
-.titles_render <- function(plot_type){
+titles_render <- function(plot_type, input){
 
-  .plot_type <- stringr::str_to_title(plot_type)
+  plot_type_title <- stringr::str_to_title(plot_type)
 
   shiny::renderUI({
-    if(eval(parse(text = paste0("input$toggle", .plot_type, "titles"))) == "TRUE"){
+
+    if(input[[paste0("toggle", plot_type_title, "titles")]]){
       shiny::tagList(
         shiny::textInput(inputId = paste0(plot_type, "Title"), label = "Title",
                          placeholder = "Write title here...", value = ""),
@@ -137,7 +138,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
 #' \dontrun{
 #' }
 #' @keywords internal
-.labs_render <- function(plot_type){
+labs_render <- function(plot_type){
 
     ggplot2::labs(title = paste0(input$sentimentTitle),
                   caption = paste0(input$sentimentCaption),
@@ -160,7 +161,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
 #'
 #' }
 #' @keywords internal
-.plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
+ls_plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
   df %>%
     dplyr::filter({{sentiment_var}} %in% c("positive", "negative", "neutral", "POSITIVE", "NEGATIVE",
            "NEUTRAL", "Neutral", "Negative", "Positive")) %>%
@@ -195,7 +196,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
 #' Example 2:
 #' landscaper_link_click(data, mention_url)
 #' }
-landscaper_link_click <- function(df, url_var){
+ls_link_click <- function(df, url_var){
   url_sym <- rlang::ensym(url_var)
 
   df %>%
