@@ -1,8 +1,8 @@
-ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow){
+ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow, fill_colour = "blue"){
 
   group_sym <- rlang::ensym(group_var)
 
-  group_names <- df %>% dplyr::pull({{group_var}}) %>% unique()
+  group_names <- df %>% dplyr::pull({{group_var}}) %>% unique() %>% sort()
 
   facet_plots <- purrr::map(
     group_names,
@@ -14,7 +14,7 @@ ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow){
       ggplot2::geom_point(shape = ".") +
       ggplot2::theme_bw() +
       ggplot2::scale_colour_manual(values = c(
-        "A" = "blue",
+        "A" = fill_colour,
         "B" = "grey80")) +
       ggplot2::scale_alpha_manual(values = c("A" = 1,
                                     "B" = 0.5)) +
