@@ -9,9 +9,6 @@
 #' @return a ggplot object
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' }
 #' @keywords internal
 ls_plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f50d2"){
 
@@ -40,9 +37,6 @@ ls_plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f
 #' @return ggplot object
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' }
 #' @keywords internal
 
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
@@ -69,9 +63,6 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
 #' @return A download handler
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' }
 #' @keywords internal
 download_box <- function(exportname, plot, width = 300, height = 250) {
   shiny::downloadHandler(
@@ -98,9 +89,6 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
 #' @return ggplot boilerplate code
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' }
 #' @keywords internal
 titles_render <- function(plot_type, input){
 
@@ -135,10 +123,6 @@ titles_render <- function(plot_type, input){
 #' @return ggplot object
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#'
-#' }
 #' @keywords internal
 ls_plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
   df %>%
@@ -219,9 +203,6 @@ column_type_checker <- function(data,
 #' @return ggplot boiler-plate code with dynamically generated inputs
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' }
 reactive_labels <- function(prefix, input) {
   shiny::reactive({
     ggplot2::labs(
@@ -233,3 +214,25 @@ reactive_labels <- function(prefix, input) {
     )
   })
 }
+
+
+
+#' Tibble of examples for LandscapeR functions & tests
+#'
+#'
+#' @format A tibble with 10 rows and 5 columns
+#' \describe{
+#'   \item{document}{Post ID}
+#'   \item{text}{Text variable for data table}
+#'   \item{permalink}{Link to original post}
+#'   \item{clean_text}{cleaner version of text variable for plots}
+#'   \item{date}{Date variable in ymd_hms format}
+#'   \item{setniment}{Sentiment variable}
+#'   \item{V1}{x co-ordinates}
+#'   \item{V2}{y co-ordinates}
+#' }
+#' @docType data
+#' @name ls_example
+#' @usage data("ls_example")
+#' @keywords internal
+"ls_example"

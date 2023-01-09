@@ -21,8 +21,4 @@ a ggplot object
 \description{
 Title
 }
-\examples{
-\dontrun{
-}
-}
 \keyword{internal}

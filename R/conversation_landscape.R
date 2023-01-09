@@ -292,7 +292,7 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
       df <- df_filtered() %>%
         #Select the columns you want to see from your data
         dplyr::select({{text_var}},
-                      {{colour_var}}, ..., !!sentiment_sym)
+                      {{colour_var}}, {{url_var}}, ..., !!sentiment_sym)
 
       DT::datatable(df, filter = "top", options = list(pageLength = 25,
                                                        dom = '<"top" ifp> rt<"bottom"lp>', autoWidth = FALSE), #TODO check adding l worked

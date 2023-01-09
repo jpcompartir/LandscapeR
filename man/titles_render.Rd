@@ -15,8 +15,4 @@ ggplot boilerplate code
 \description{
 Title
 }
-\examples{
-\dontrun{
-}
-}
 \keyword{internal}

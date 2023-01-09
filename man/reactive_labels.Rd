@@ -17,7 +17,3 @@ ggplot boiler-plate code with dynamically generated inputs
 \description{
 Programmatically generate reactive labels from a prefix
 }
-\examples{
-\dontrun{
-}
-}

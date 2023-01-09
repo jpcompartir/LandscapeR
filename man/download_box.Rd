@@ -17,8 +17,4 @@ A download handler
 \description{
 Title
 }
-\examples{
-\dontrun{
-}
-}
 \keyword{internal}
