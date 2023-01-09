@@ -1,4 +1,7 @@
-ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow, fill_colour = "blue"){
+ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow, fill_colour = "blue",
+                                output = c("wrapped_plots", "list_of_plots", "wrapped_and_list")){
+
+  output <- match.arg(if (missing(output)) "wrapped_pots" else output, c("wrapped_plots", "list_of_plots", "wrapped_and_list"))
 
   group_sym <- rlang::ensym(group_var)
 
@@ -30,7 +33,19 @@ ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow, fil
 
   wrapped_plots <- patchwork::wrap_plots(facet_plots, nrow = nrow)
 
-  return(wrapped_plots)
+  names(facet_plots) <- group_names
+
+  if(output == "wrapped_plots"){
+    return(wrapped_plots)
+  }
+
+  if(output == "list_of_plots"){
+    return(facet_plots)
+  }
+
+  if(output == "wrapped_and_list"){
+    return(list(wrapped = wrapped_plots, list_plots = facet_plots))
+  }
 
 }
 
