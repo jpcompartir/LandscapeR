@@ -7,9 +7,9 @@ ls_plot_static <- function(df, x_var = V1, y_var = V2, colour = "black"){
     ggplot2::theme_bw() +
     ggplot2::theme(
       legend.position = "none",
-      panel.grid = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text = element_blank()) +
+      panel.grid = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      axis.text = ggplot2::element_blank()) +
     ggplot2::labs(x = "",
                   y = "")
 

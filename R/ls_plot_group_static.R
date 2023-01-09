@@ -6,12 +6,12 @@ ls_plot_group_static <- function(df, x_var = V1, y_var = V2, group_var, point_si
     ggplot2::ggplot(aes(x = {{x_var}}, y = {{y_var }}, colour = {{group_var}})) +
     ggplot2::geom_point(size = point_size) +
     ggplot2::theme_bw() +
-    ggplot2::guides(color = guide_legend(override.aes = list(shape = 16, size = 4, alpha = 1))) +
+    ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(shape = 16, size = 4, alpha = 1))) +
     ggplot2::scale_colour_viridis_d(option = 'H') +
     ggplot2::theme(legend.position = "bottom",
-                   panel.grid = element_blank(),
-                   axis.ticks = element_blank(),
-                   axis.text = element_blank()) +
+                   panel.grid =  ggplot2::element_blank(),
+                   axis.ticks = ggplot2::element_blank(),
+                   axis.text = ggplot2::element_blank()) +
     ggplot2::labs(x = "", y = "")
 
   return(plot)
