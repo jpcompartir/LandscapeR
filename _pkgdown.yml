@@ -1,6 +1,5 @@
 template:
   bootstrap: 5
-  theme: arrow-dark
 
 navbar:
   bg: "#ff7518"
@@ -14,6 +13,9 @@ reference:
     One stop shop for building a Shiny app to explore a conversation
   contents:
   - '`conversation_landscape`'
+  - '`ls_plot_static`'
+  - '`ls_plot_group_facet`'
+  - '`ls_plot_group_static`'
 
 - title: Utility Functions
   desc: >
