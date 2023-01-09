@@ -214,3 +214,25 @@ reactive_labels <- function(prefix, input) {
     )
   })
 }
+
+
+
+#' Tibble of examples for LandscapeR functions & tests
+#'
+#'
+#' @format A tibble with 10 rows and 5 columns
+#' \describe{
+#'   \item{document}{Post ID}
+#'   \item{text}{Text variable for data table}
+#'   \item{permalink}{Link to original post}
+#'   \item{clean_text}{cleaner version of text variable for plots}
+#'   \item{date}{Date variable in ymd_hms format}
+#'   \item{setniment}{Sentiment variable}
+#'   \item{V1}{x co-ordinates}
+#'   \item{V2}{y co-ordinates}
+#' }
+#' @docType data
+#' @name ls_example
+#' @usage data("ls_example")
+#' @keywords internal
+"ls_example"

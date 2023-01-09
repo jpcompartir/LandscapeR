@@ -39,7 +39,9 @@ Imports:
     tidytext (>= 0.3.3),
     gotop (>= 0.1.2),
     shinythemes (>= 1.2.0),
-    lubridate (>= 1.8.0)
+    lubridate (>= 1.8.0),
+    patchwork,
+    purrr
 Depends: 
     R (>= 2.10)
 LazyData: true

@@ -1,7 +1,7 @@
 ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow, fill_colour = "blue",
                                 output = c("wrapped_plots", "list_of_plots", "wrapped_and_list")){
 
-  output <- match.arg(if (missing(output)) "wrapped_pots" else output, c("wrapped_plots", "list_of_plots", "wrapped_and_list"))
+  output <- match.arg(if (missing(output)) "wrapped_plots" else output, c("wrapped_plots", "list_of_plots", "wrapped_and_list"))
 
   group_sym <- rlang::ensym(group_var)
 
