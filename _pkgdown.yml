@@ -1,6 +1,9 @@
 template:
   bootstrap: 5
 
+development:
+  mode: auto
+
 navbar:
   bg: "#ff7518"
   structure:
