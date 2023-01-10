@@ -1,0 +1,71 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# LandscapeR
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+<img src="man/figures/Capture_Intelligence_FullColour.png" align="center" width="100%" style="padding: 25px 50px 25px 0px;"/>
+
+LandscapeR is our R Package for transforming unstructured raw text into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration & cleaning UI.
+
+
+## Installation
+
+You can install the development version of LandscapeR using the `install_github` function from the `devtools` package:
+
+```{r, eval = FALSE} 
+devtools::install_github(repo = "jpcompartir/LandscapeR")
+```
+
+## Example Use Case
+
+We can take this table of text:
+
+```{r example}
+library(LandscapeR)
+library(tidyverse)
+
+ls_example 
+```
+
+And transform it into a navigable landscape:
+
+```{r}
+ls_example %>% ls_plot_static()
+```
+
+We can add colour to a grouping variable to see where our groups sit and how they relate:
+```{r}
+ls_example %>% 
+  mutate(cluster = factor(cluster)) %>%
+  ls_plot_group_static(group_var = cluster)
+```
+
+We can home in on each group:
+```{r}
+ls_example %>%
+  mutate(cluster = factor(cluster)) %>%
+  ls_plot_group_facet(group_var = cluster)
+```
+
+
+An interesting use case which can be used to inform the LandscapeR investigative process when comparing two grouping variables, such as cluster and sentiment, or product and topic etc. is the `ls_plot_variation_matrix()` function:
+```{r}
+ls_example %>%
+  ls_plot_variation_matrix(cluster, sentiment)
+```
+

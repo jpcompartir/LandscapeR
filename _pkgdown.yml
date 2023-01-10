@@ -16,6 +16,7 @@ reference:
   - '`ls_plot_static`'
   - '`ls_plot_group_facet`'
   - '`ls_plot_group_static`'
+  - '`ls_plot_variation_matrix`'
 
 - title: Utility Functions
   desc: >

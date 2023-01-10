@@ -9,7 +9,7 @@ ls_plot_group_facet(
   x_var = V1,
   y_var = V2,
   group_var,
-  nrow,
+  nrow = 3,
   fill_colour = "blue",
   output = c("wrapped_plots", "list_of_plots", "wrapped_and_list")
 )

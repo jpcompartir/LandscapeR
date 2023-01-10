@@ -17,7 +17,7 @@
 #' df <- ls_example
 #' df %>% ls_plot_group_facet(group_var = cluster, fill_colour = "midnightblue", nrow = 3)
 #'
-ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow, fill_colour = "blue",
+ls_plot_group_facet <- function(df, x_var = V1, y_var = V2, group_var, nrow = 3, fill_colour = "blue",
                                 output = c("wrapped_plots", "list_of_plots", "wrapped_and_list")){
 
   output <- match.arg(if (missing(output)) "wrapped_plots" else output, c("wrapped_plots", "list_of_plots", "wrapped_and_list"))
