@@ -22,9 +22,9 @@
 #'
 conversation_landscape <- function(data,..., id = document, text_var = text, colour_var, cleaned_text_var = clean_text, date_var = date, sentiment_var = sentiment, url_var = permalink, size = 2, x_var = V1, y_var = V2, type = "scattergl", colour_mapping = NULL){
 
-  library(htmltools)
-  library(tableHTML)
-  library(shinyWidgets)
+  requireNamespace("htmltools")
+  requireNamespace("tableHTML")
+  requireNamespace("shinyWidgets")
 
   #----- hide wrangling ----
   text_sym <- rlang::ensym(text_var)
@@ -37,7 +37,7 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
   plotting_heights <- "450px";  plotting_widths <- "400px"
 
   #Get date ranges for volume
-  dates <- data %>% select(!!date_sym) %>% summarise(min = min(!!date_sym), max = max(!!date_sym))
+  dates <- data %>% dplyr::select(!!date_sym) %>% dplyr::summarise(min = min(!!date_sym), max = max(!!date_sym))
   date_min <- as.Date(dates$min)
   date_max <- as.Date(dates$max)
 
@@ -52,7 +52,7 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
 
   # hide UI ----
   ui <- shiny::navbarPage("Conversation Landscape", theme = shinythemes::shinytheme("cosmo"), position = "fixed-top",
-                          tags$style(type="text/css", "body {padding-top: 70px;}"), #Prevents the navbar from eating body of app
+                          htmltools::tags$style(type="text/css", "body {padding-top: 70px;}"), #Prevents the navbar from eating body of app
                           #colours all 10  sliders orange
                           shinyWidgets::setSliderColor(color = rep("#ff7518", 10), sliderId = c(1:10)),
                           #---- Landscape Tab----
@@ -86,9 +86,9 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
                                                                                                 style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;")))
                                             ),
                                             shiny::column(6, style = "width:50%; height: 10000px; position: relative;",
-                                                          div(id = "graph",
+                                                          htmltools::div(id = "graph",
                                                               shinycssloaders::withSpinner(plotly::plotlyOutput("umapPlot", height = 600)),
-                                                              div(id = "button",
+                                                              htmltools::div(id = "button",
                                                                   shiny::fluidRow(
                                                                     shiny::uiOutput("deleteme"),
                                                                   ),
@@ -96,11 +96,11 @@ conversation_landscape <- function(data,..., id = document, text_var = text, col
                                                               shiny::br(),
                                                               shiny::br(),
                                                               shiny::fluidRow(
-                                                                shiny::column(6, div(id = "slider1",
+                                                                shiny::column(6, htmltools::div(id = "slider1",
                                                                                      style = "width: 100%;",
                                                                                      shiny::sliderInput("x1","V1 Range",step = 5,  -100, 100, c(-20, 20))),),
                                                                 shiny::column(6,
-                                                                              div(id = "slider2", style = "width: 100%;",
+                                                                              htmltools::div(id = "slider2", style = "width: 100%;",
                                                                                   shiny::sliderInput( "y1","V2 Range",step = 5, -100, 100, c(-20, 20)))
                                                                 ),
                                                               )
