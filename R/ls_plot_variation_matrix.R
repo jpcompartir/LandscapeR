@@ -1,3 +1,16 @@
+#' Compare proportion of x in y
+#'
+#' Use this function to compare two grouping variables, for example to see what percentage of each cluster fall into each sentiment category (by volume).
+#'
+#' @param df Data Frame or Tibble object
+#' @param x_var The grouping variable for the x axis.
+#' @param y_var The grouping variable for the y axis.
+#'
+#' @return a ggplot object
+#' @export
+#'
+#' @examples
+#' ls_example %>% ls_plot_variation_matrix(cluster, sentiment)
 ls_plot_variation_matrix <- function(df, x_var, y_var){
   requireNamespace("viridis")
 
