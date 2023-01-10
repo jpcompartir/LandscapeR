@@ -7,3 +7,4 @@
 ^docs$
 ^pkgdown$
 rendering_an_app
+^README\.Rmd$

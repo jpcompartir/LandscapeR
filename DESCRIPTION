@@ -22,7 +22,8 @@ Suggests:
     tableHTML (>= 2.1.0),
     htmltools (>= 0.5.2),
     HelpR (>= 0.1.1),
-    JPackage (>= 0.0.0.9000)
+    JPackage (>= 0.0.0.9000),
+    viridis (>= 0.6.2)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Imports: 
@@ -40,8 +41,8 @@ Imports:
     gotop (>= 0.1.2),
     shinythemes (>= 1.2.0),
     lubridate (>= 1.8.0),
-    patchwork,
-    purrr
+    patchwork (>= 1.1.1),
+    purrr (>= 1.0.0)
 Depends: 
     R (>= 2.10)
 LazyData: true

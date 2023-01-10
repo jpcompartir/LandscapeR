@@ -1,36 +1,34 @@
-ls_plot_variation_matrix <- function(df, var1, var2){
+ls_plot_variation_matrix <- function(df, x_var, y_var){
   requireNamespace("viridis")
 
-  plotting_table <- df %>%
-    dplyr::add_count({{var1}}, name = "var1_n") %>%
-    dplyr::add_count({{var2}}, name = "var2_n") %>%
-    dplyr::add_count({{var1}}, {{var2}}, name = "var1_var2_n") %>%
-    dplyr::mutate(percentage_plot = var1_var2_n/var1_n * 100) %>%
-    dplyr::select({{var1}}, {{var2}}, var1_n, var2_n, var1_var2_n, percentage_plot) %>%
-    dplyr::distinct({{var1}}, {{var2}}, var1_var2_n, .keep_all = TRUE)
+  x_sym <- rlang::ensym(x_var)
+  y_sym <- rlang::ensym(y_var)
 
-  browser()
+  plotting_table <- df %>%
+    #Coerce variables to factor:
+    dplyr::mutate({{x_var}} := factor(!!x_sym),
+                  {{y_var}} := factor(!!y_sym)) %>%
+    #Count our variables separately (don't really need var2_n but...)
+    dplyr::add_count({{x_var}}, name = "var1_n") %>%
+    dplyr::add_count({{y_var}}, name = "var2_n") %>%
+    #Count x in y
+    dplyr::add_count({{x_var}}, {{y_var}}, name = "var1_var2_n") %>%
+    #Get percentage of x in y
+    dplyr::mutate(percentage_plot = var1_var2_n/var1_n * 100) %>%
+    dplyr::select({{x_var}}, {{y_var }}, var1_n, var2_n, var1_var2_n, percentage_plot) %>%
+    #Remove duplicates (we didn't summarise)
+    dplyr::distinct({{x_var}}, {{y_var}}, var1_var2_n, .keep_all = TRUE)
+
+  #Generate plot
+  plot <- plotting_table %>%
+    ggplot2::ggplot(aes(x = {{x_var}}, y = {{y_var}}, fill = percentage_plot)) +
+    ggplot2::geom_tile(color = "white") + #For box trim
+    ggplot2::theme_bw() +
+    viridis::scale_fill_viridis() +
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2::labs(fill = "% of x in y",
+                  subtitle = "Bright colours = high proportion.")
+
+  return(plot)
 }
 
-
-# product_topic_summary_table <- df_topics %>%
-#   add_count(product, topic, name = "product_topic_n") %>%
-#   add_count(product, name = "product_n") %>%
-#   add_count(topic, name = "topic_n") %>%
-#   select(contains('topic'), contains('product'), - topic_probability) %>%
-#   mutate(percentage = product_topic_n/ product_n * 100) %>%
-#   distinct(topic, product_topic_n, product, .keep_all = TRUE) %>%
-#   relocate(product, topic, product_topic_n, percentage, topic_n, product_n)
-#
-# product_topic_summary_table %>%
-#   write_csv('data/ari_files/kyle_product_topic_summary_percentages.csv')
-# library(viridis)
-# product_topic_summary_table %>%
-#   ggplot(aes(x= product, y = topic, fill = percentage)) +
-#   geom_tile(color = "white") +
-#   theme_minimal() +
-#   labs(x = "Product", y = "Topic",
-#        fill = "% of product mentions by topic",
-#        title = "Microsoft - 576 Edge Browser - Product & Topic Variation Matrix") +
-#   scale_fill_viridis(discrete = FALSE) +
-#   theme(legend.position = "bottom")
