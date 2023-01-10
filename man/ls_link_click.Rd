@@ -18,13 +18,4 @@ data frame with URL column edited to be clickable
 Will allow you to click the hyperlink to load a URL, e.g. for selecting an image.
 Make sure that DataTable is rendered with the argument 'escape = FALSE' or column will be all text.
 }
-\examples{
-\dontrun{
-Example 1:
-df \%>\% landscaper_link_click(permalink)
-
-Example 2:
-landscaper_link_click(data, mention_url)
-}
-}
-\keyword{internals}
+\keyword{internal}

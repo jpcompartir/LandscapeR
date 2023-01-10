@@ -149,16 +149,8 @@ ls_plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
 #'
 #' @return data frame with URL column edited to be clickable
 #' @export
-#' @keywords internals
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' Example 1:
-#' df %>% landscaper_link_click(permalink)
-#'
-#' Example 2:
-#' landscaper_link_click(data, mention_url)
-#' }
 ls_link_click <- function(df, url_var){
   url_sym <- rlang::ensym(url_var)
 
