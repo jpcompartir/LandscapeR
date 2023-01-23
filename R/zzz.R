@@ -10,8 +10,7 @@
 #' @export
 #'
 #' @keywords internal
-ls_plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f50d2"){
-
+ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50d2") {
   date_sym <- rlang::ensym(.date_var)
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
@@ -21,8 +20,10 @@ ls_plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f
     ggplot2::geom_col(fill = fill) +
     ggplot2::theme_minimal() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
-    ggplot2::theme(legend.position = "none",
-                   axis.text.x = element_text(angle = 90))
+    ggplot2::theme(
+      legend.position = "none",
+      axis.text.x = element_text(angle = 90)
+    )
 }
 
 
@@ -39,22 +40,21 @@ ls_plot_volume_over_time <- function(df, .date_var , unit = "week",  fill = "#0f
 #'
 #' @keywords internal
 
-ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2"){
-
+ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
   .text_var <- rlang::enquo(text_var)
   df %>%
-    tidytext::unnest_tokens(words, rlang::quo_name(.text_var))%>%
+    tidytext::unnest_tokens(words, rlang::quo_name(.text_var)) %>%
     dplyr::count(words, sort = TRUE) %>%
-    dplyr::slice_max(order_by = n, n = top_n, with_ties = FALSE)%>%
-    ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n))+
-    ggplot2::geom_col(fill = fill)+
-    ggplot2::coord_flip()+
-    ggplot2::theme_bw()+
-    ggplot2::labs(x = NULL, y =  "Word Count", title = "Bar Chart of Most Frequent Words")+
+    dplyr::slice_max(order_by = n, n = top_n, with_ties = FALSE) %>%
+    ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n)) +
+    ggplot2::geom_col(fill = fill) +
+    ggplot2::coord_flip() +
+    ggplot2::theme_bw() +
+    ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
     ggplot2::theme(plot.title = element_text(hjust = 0.5, face = "bold"))
 }
 
-#Download box function ----
+# Download box function ----
 #' Title
 #'
 #' @param exportname Name of export as a string
@@ -71,13 +71,14 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
     },
     content = function(file) {
       ggplot2::ggsave(file,
-                      plot = plot,
-                      device = "png",
-                      width = width,
-                      height = height,
-                      units = "px",
-                      bg = "white",
-                      dpi = 100)
+        plot = plot,
+        device = "png",
+        width = width,
+        height = height,
+        units = "px",
+        bg = "white",
+        dpi = 100
+      )
     }
   )
 }
@@ -90,24 +91,32 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
 #' @export
 #'
 #' @keywords internal
-titles_render <- function(plot_type, input){
-
+titles_render <- function(plot_type, input) {
   plot_type_title <- stringr::str_to_title(plot_type)
 
   shiny::renderUI({
-
-    if(input[[paste0("toggle", plot_type_title, "titles")]]){
+    if (input[[paste0("toggle", plot_type_title, "titles")]]) {
       shiny::tagList(
-        shiny::textInput(inputId = paste0(plot_type, "Title"), label = "Title",
-                         placeholder = "Write title here...", value = ""),
-        shiny::textInput(inputId = paste0(plot_type, "Subtitle"), label = "Subtitle",
-                         placeholder = "Write subtitle here...", value = ""),
-        shiny::textInput(inputId = paste0(plot_type, "Caption"), label = "Caption",
-                         placeholder = "Write caption here...", value = ""),
-        shiny::textInput(inputId = paste0(plot_type, "Xlabel"), label = "X axis title",
-                         placeholder = "Write the x axis title here..."),
-        shiny::textInput(inputId = paste0(plot_type, "Ylabel"), label = "Y axis title",
-                         placeholder = "Write the y axis title here")
+        shiny::textInput(
+          inputId = paste0(plot_type, "Title"), label = "Title",
+          placeholder = "Write title here...", value = ""
+        ),
+        shiny::textInput(
+          inputId = paste0(plot_type, "Subtitle"), label = "Subtitle",
+          placeholder = "Write subtitle here...", value = ""
+        ),
+        shiny::textInput(
+          inputId = paste0(plot_type, "Caption"), label = "Caption",
+          placeholder = "Write caption here...", value = ""
+        ),
+        shiny::textInput(
+          inputId = paste0(plot_type, "Xlabel"), label = "X axis title",
+          placeholder = "Write the x axis title here..."
+        ),
+        shiny::textInput(
+          inputId = paste0(plot_type, "Ylabel"), label = "Y axis title",
+          placeholder = "Write the y axis title here"
+        )
       )
     }
   })
@@ -124,19 +133,26 @@ titles_render <- function(plot_type, input){
 #' @export
 #'
 #' @keywords internal
-ls_plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
+ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
   df %>%
-    dplyr::filter({{sentiment_var}} %in% c("positive", "negative", "neutral", "POSITIVE", "NEGATIVE",
-           "NEUTRAL", "Neutral", "Negative", "Positive")) %>%
-    dplyr::count({{sentiment_var}}) %>%
+    dplyr::filter({{ sentiment_var }} %in% c(
+      "positive", "negative", "neutral", "POSITIVE", "NEGATIVE",
+      "NEUTRAL", "Neutral", "Negative", "Positive"
+    )) %>%
+    dplyr::count({{ sentiment_var }}) %>%
     dplyr::rename(sentiment = 1) %>%
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
     ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
-    ggplot2::geom_col() + ggplot2::theme_bw() +
+    ggplot2::geom_col() +
+    ggplot2::theme_bw() +
     HelpR::theme_microsoft_discrete() +
-    ggplot2::theme(plot.title = element_text(hjust = 0.5,
-                                             face = "bold"),
-                   legend.position = "none")
+    ggplot2::theme(
+      plot.title = element_text(
+        hjust = 0.5,
+        face = "bold"
+      ),
+      legend.position = "none"
+    )
 }
 
 #' Prepare a URL column to be clickable in Shiny/Data Table
@@ -151,11 +167,11 @@ ls_plot_sentiment_distribution <- function (df, sentiment_var = sentiment){
 #' @export
 #' @keywords internal
 #'
-ls_link_click <- function(df, url_var){
+ls_link_click <- function(df, url_var) {
   url_sym <- rlang::ensym(url_var)
 
   df %>%
-    dplyr::mutate({{url_var}}:= paste0("<a href='", !!url_sym, "' target='blank'>", "Click to View", "</a>"))
+    dplyr::mutate({{ url_var }} := paste0("<a href='", !!url_sym, "' target='blank'>", "Click to View", "</a>"))
 }
 
 
@@ -172,18 +188,16 @@ ls_link_click <- function(df, url_var){
 #' \dontrun{
 #' check_text <- df %>% column_type_checker(text_var, "character")
 #'
-#' if(check_text == "no") stop("Wrong type")
-#'
+#' if (check_text == "no") stop("Wrong type")
 #' }
 column_type_checker <- function(data,
                                 column,
-                                type){
-  if(!all(class(data %>% dplyr::pull({{column}})) == type)){
+                                type) {
+  if (!all(class(data %>% dplyr::pull({{ column }})) == type)) {
     return("no")
   } else {
     return("yes")
   }
-
 }
 
 
@@ -199,7 +213,7 @@ reactive_labels <- function(prefix, input) {
   shiny::reactive({
     ggplot2::labs(
       title = input[[paste0(prefix, "Title")]],
-      caption = input[[paste0( prefix, "Caption")]],
+      caption = input[[paste0(prefix, "Caption")]],
       subtitle = input[[paste0(prefix, "Subtitle")]],
       x = input[[paste0(prefix, "Xlabel")]],
       y = input[[paste0(prefix, "Ylabel")]]

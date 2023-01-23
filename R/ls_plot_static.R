@@ -11,10 +11,9 @@
 #' @examples
 #' df <- ls_example
 #' df %>% ls_plot_group_static()
-ls_plot_static <- function(df, x_var = V1, y_var = V2, fill_colour = "black"){
-
+ls_plot_static <- function(df, x_var = V1, y_var = V2, fill_colour = "black") {
   df %>%
-    ggplot2::ggplot(ggplot2::aes(x = {{x_var}}, y = {{y_var}})) +
+    ggplot2::ggplot(ggplot2::aes(x = {{ x_var }}, y = {{ y_var }})) +
     ggplot2::geom_point(shape = ".", colour = fill_colour) +
     HelpR::theme_microsoft_continuous() +
     ggplot2::theme_bw() +
@@ -22,9 +21,10 @@ ls_plot_static <- function(df, x_var = V1, y_var = V2, fill_colour = "black"){
       legend.position = "none",
       panel.grid = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
-      axis.text = ggplot2::element_blank()) +
-    ggplot2::labs(x = "",
-                  y = "")
-
+      axis.text = ggplot2::element_blank()
+    ) +
+    ggplot2::labs(
+      x = "",
+      y = ""
+    )
 }
-
