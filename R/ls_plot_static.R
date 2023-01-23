@@ -5,7 +5,7 @@
 #' @param y_var The variable containing y-coordinates
 #' @param fill_colour What colour the points should be
 #'
-#' @return a ggplot obje t
+#' @return a ggplot object
 #' @export
 #'
 #' @examples

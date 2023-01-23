@@ -16,7 +16,7 @@ ls_plot_static(df, x_var = V1, y_var = V2, fill_colour = "black")
 \item{fill_colour}{What colour the points should be}
 }
 \value{
-a ggplot obje t
+a ggplot object
 }
 \description{
 Create a landscape plot without segmenting by groups
