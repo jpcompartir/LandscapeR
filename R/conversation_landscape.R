@@ -21,11 +21,13 @@
 #' @export
 #'
 conversation_landscape <- function(data, ..., id = document, text_var = text, colour_var, cleaned_text_var = clean_text, date_var = date, sentiment_var = sentiment, url_var = permalink, size = 2, x_var = V1, y_var = V2, type = "scattergl", colour_mapping = NULL) {
+
   requireNamespace("htmltools")
   requireNamespace("tableHTML")
   requireNamespace("shinyWidgets")
 
   #----- hide wrangling ----
+  #Get tidy-evaluation supplied variables for wrangling phases (long term aim is to reduce need for tidy evaluation in Shiny app to reduce maintenance complexity without sacrificing too much in terms of UI/UX)
   text_sym <- rlang::ensym(text_var)
   colour_sym <- rlang::ensym(colour_var)
   date_sym <- rlang::ensym(date_var)
@@ -33,10 +35,11 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
   cleaned_text_sym <- rlang::ensym(cleaned_text_var)
   id_sym <- rlang::ensym(id)
 
+  #Set parameters which will be used as default plot heights and widths, could change to other units
   plotting_heights <- "450px"
   plotting_widths <- "400px"
 
-  # Get date ranges for volume
+  # Get date ranges for volume filtering (this could be re-used for bigrams or sentiment too.)
   dates <- data %>%
     dplyr::select(!!date_sym) %>%
     dplyr::summarise(min = min(!!date_sym), max = max(!!date_sym))
@@ -62,16 +65,17 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
     shiny::tabPanel(
       "Survey the Landscape",
       shiny::fluidPage(
-        gotop::use_gotop(),
+        gotop::use_gotop(), #Add a clickable button to scroll to the top in the landscape page
         theme = shinythemes::shinytheme(theme = "cosmo"),
         shiny::fluidRow(
           shiny::column(2,
-            style = "padding-right: 0px; border: none;",
+            style = "padding-right: 0px; border: none;", #Relocates buttons for aesthetic reasons
             shiny::textInput("remainingName", "All Data",
               value = NULL,
               placeholder = "filename"
             )
           ),
+          #Download handler for all remaining data (after things have been removed etc.)
           shiny::column(1,
             style = "padding-left: 10px; padding-right: 20px;",
             shiny::div(
@@ -83,6 +87,7 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
             )
           ),
           shiny::column(3, style = "padding-left: 20px; padding-right: 10px;", shinyWidgets::searchInput(
+            #Use the shinyWidget searchInput for a tidy searchable button
             inputId = "filterPattern",
             label = "Pattern to search text with",
             placeholder = "A placeholder",
@@ -91,6 +96,7 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
             width = "100%",
             value = ""
           )),
+          #Download handler for the selected text
           shiny::column(2, shiny::textInput("fileName", "Selected Data", value = NULL, placeholder = "filename excluding .csv")),
           shiny::column(2, shiny::div(
             style = "margin-top: 25px;",
@@ -101,6 +107,8 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
             )
           ))
         ),
+
+        #UI logic for the UMAP plot
         shiny::column(6,
           style = "width:50%; height: 10000px; position: relative;",
           htmltools::div(
@@ -109,7 +117,7 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
             htmltools::div(
               id = "button",
               shiny::fluidRow(
-                shiny::uiOutput("deleteme"),
+                shiny::uiOutput("deleteme"), #Dynamic UI placeholder (renders once a selection has been made)
               ),
             ),
             shiny::br(),
@@ -150,13 +158,13 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
           # Should functionise all of this and use map to render the UI elements.
           shiny::sliderInput("sentimentHeight", "Height", min = 100, max = 800, value = 400, step = 50),
           shiny::sliderInput("sentimentWidth", "Width", min = 100, max = 800, value = 400, step = 50),
-          shinyWidgets::materialSwitch(
+          shinyWidgets::materialSwitch( #JS toggle
             inputId = "toggleSentimenttitles",
             label = "Customise Titles?",
             status = "primary",
             right = TRUE
           ),
-          shiny::uiOutput("sentimentTitles"),
+          shiny::uiOutput("sentimentTitles"), #Dynamic UI render placeholder (see )
           shiny::downloadButton(outputId = "saveSentiment", class = "btn btn-warning", style = "background: #ff4e00; border-radius: 100px; color: #ffffff; border:none;"),
         ),
         shiny::mainPanel(
@@ -248,6 +256,7 @@ conversation_landscape <- function(data, ..., id = document, text_var = text, co
   #---- Server ----
   server <- function(input, output, session) {
     #---- Pattern ----
+    #We create a reactive variable called pattern, which  has a default
     pattern <- shiny::reactiveVal(value = "", {})
     shiny::observeEvent(input$filterPattern, {
       pattern(input$Regex)
