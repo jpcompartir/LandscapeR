@@ -23,7 +23,6 @@ Quick function for checking if a column is of the right type using data-masking
 \dontrun{
 check_text <- df \%>\% column_type_checker(text_var, "character")
 
-if(check_text == "no") stop("Wrong type")
-
+if (check_text == "no") stop("Wrong type")
 }
 }

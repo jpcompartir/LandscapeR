@@ -8,3 +8,4 @@
 ^pkgdown$
 rendering_an_app
 ^README\.Rmd$
+golem_testing
