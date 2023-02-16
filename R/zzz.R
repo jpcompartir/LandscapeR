@@ -142,7 +142,7 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
     dplyr::count({{ sentiment_var }}) %>%
     dplyr::rename(sentiment = 1) %>%
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
-    ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
+    ggplot2::ggplot(ggplot2::aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() +
     ggplot2::theme_minimal() +
     HelpR::theme_microsoft_discrete() +
