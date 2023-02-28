@@ -238,3 +238,73 @@ reactive_labels <- function(prefix, input) {
 #' @usage data("ls_example")
 #' @keywords internal
 "ls_example"
+
+#' A LandscapeR version of ParseR's Weighted Log-odds
+#'
+#' Function should be used for identifying the differences between levels of a
+#' grouping variable.
+#'
+#' @param df Data Frame or Tibble object
+#' @param group_var The variable to group with e.g. topic, sentiment
+#' @param text_var Your text variable
+#' @param top_n Number of terms per plot
+#' @param nrow Number of rows to display the plots across
+#' @param top_terms_cutoff The top x words which should have WLOs calculated for them
+#'
+#' @return a ggplot object
+#' @export
+#'
+ls_wlos <- function(df,
+                    group_var = cluster,
+                    text_var = clean_text,
+                    top_n = 30,
+                    nrow = 4,
+                    top_terms_cutoff = 5000){
+
+    text_sym <- rlang::enquo(text_var)
+    group_sym <- rlang::ensym(group_var)
+
+    wlos <- df %>%
+      tidytext::unnest_tokens(word, !!text_sym) %>%
+      dplyr::rename(facet_var = !!group_sym) %>%
+      dplyr::group_by(facet_var) %>%
+      dplyr::count(word, sort = TRUE) %>%
+      dplyr::ungroup() %>%
+      tidylo::bind_log_odds(set = facet_var,
+                            feature = word,
+                            n = n)
+
+    viz <- wlos %>%
+      dplyr::slice_max(order_by = n,
+                       n = top_terms_cutoff) %>%
+      dplyr::group_by(facet_var) %>%
+      dplyr::top_n(n = top_n,
+                   wt = log_odds_weighted) %>%
+      dplyr::ungroup() %>%
+      ggplot2::ggplot(ggplot2::aes(x = n,
+                                   y = log_odds_weighted,
+                                   label = word)) +
+      ggplot2::geom_hline(yintercept = 0,
+                          lty = 2,
+                          color = "gray50",
+                          alpha = 0.5,
+                          linewidth = 1.2) +
+      ggrepel::geom_text_repel(size = 3,
+                               segment.size = 0.5,
+                               color = 'black') +
+      ggplot2::geom_point(size = .4,
+                          show.legend = F) +
+      ggplot2::facet_wrap(~facet_var,
+                          nrow = nrow,
+                          scales = "free") +
+      ggplot2::scale_x_log10() +
+      ggplot2::labs(x = "Word frequency",
+                    y = "Log odds ratio, weighted by uninformative Dirichlet prior") +
+      ggplot2::theme(strip.background =element_rect(fill="gray"))+
+      ggplot2::theme_bw() +
+      ggplot2::theme(strip.background = element_rect(fill = "white",colour = "white"),
+                     strip.text = element_text(face = "bold"),
+                     panel.grid.minor = element_blank())
+
+    return(viz)
+}
