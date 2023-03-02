@@ -26,7 +26,6 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
     ggplot2::theme(
       legend.position = "none",
-      axis.text.x = ggplot2::element_text(angle = 90),
       axis.text.x = ggplot2::element_text(angle = 90)
     )
 }
@@ -48,9 +47,8 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
 
   text_quo <- rlang::ensym(text_var)
-  df %>%
-    tidytext::unnest_tokens(words, !!text_quo) %>%
   .text_var <- rlang::enquo(text_var)
+
   df %>%
     tidytext::unnest_tokens(words, rlang::quo_name(.text_var)) %>%
     dplyr::count(words, sort = TRUE) %>%
@@ -62,7 +60,7 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words")+
     ggplot2::theme_bw() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
-    ggplot2::theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
 }
 
 # Download box function ----
@@ -157,12 +155,8 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
     ggplot2::geom_col() +
     ggplot2::theme_minimal() +
     HelpR::theme_microsoft_discrete() +
-    ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
-    ggplot2::geom_col() +
-    ggplot2::theme_bw() +
-    HelpR::theme_microsoft_discrete() +
     ggplot2::theme(
-      plot.title = element_text(
+      plot.title = ggplot2::element_text(
         hjust = 0.5,
         face = "bold"
       ),
