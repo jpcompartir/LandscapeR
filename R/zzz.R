@@ -11,9 +11,9 @@
 #'
 #' @keywords internal
 ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50d2") {
-  date_sym <- rlang::ensym(.date_var)
+  date_quo <- rlang::ensym(.date_var)
 
-  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
+  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_quo, unit = unit))
   df %>%
     dplyr::count(plot_date) %>%
     ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n)) +
@@ -42,9 +42,9 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
 
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
 
-  text_sym <- rlang::ensym(text_var)
+  text_quo <- rlang::ensym(text_var)
   df %>%
-    tidytext::unnest_tokens(words, !!text_sym) %>%
+    tidytext::unnest_tokens(words, !!text_quo) %>%
     dplyr::count(words, sort = TRUE) %>%
     dplyr::slice_max(order_by = n, n = top_n, with_ties = FALSE) %>%
     ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n)) +
@@ -164,10 +164,10 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
 #' @keywords internal
 #'
 ls_link_click <- function(df, url_var) {
-  url_sym <- rlang::ensym(url_var)
+  url_quo <- rlang::ensym(url_var)
 
   df %>%
-    dplyr::mutate({{ url_var }} := paste0("<a href='", !!url_sym, "' target='blank'>", "Click to View", "</a>"))
+    dplyr::mutate({{ url_var }} := paste0("<a href='", !!url_quo, "' target='blank'>", "Click to View", "</a>"))
 }
 
 
@@ -250,6 +250,7 @@ reactive_labels <- function(prefix, input) {
 #' @param top_n Number of terms per plot
 #' @param nrow Number of rows to display the plots across
 #' @param top_terms_cutoff The top x words which should have WLOs calculated for them
+#' @param text_size An integer determining text size, higher = larger
 #'
 #' @return a ggplot object
 #' @export
@@ -258,15 +259,17 @@ ls_wlos <- function(df,
                     group_var = cluster,
                     text_var = clean_text,
                     top_n = 30,
+                    text_size = 4,
                     nrow = 4,
                     top_terms_cutoff = 5000){
 
-    text_sym <- rlang::enquo(text_var)
-    group_sym <- rlang::ensym(group_var)
+    text_quo <- rlang::enquo(text_var)
+    group_quo <- rlang::enquo(group_var)
 
     wlos <- df %>%
-      tidytext::unnest_tokens(word, !!text_sym) %>%
-      dplyr::rename(facet_var = !!group_sym) %>%
+      tidytext::unnest_tokens(word, !!text_quo) %>%
+      dplyr::rename(facet_var = !!group_quo) %>%
+      dplyr::mutate(facet_var = factor(facet_var)) %>%
       dplyr::group_by(facet_var) %>%
       dplyr::count(word, sort = TRUE) %>%
       dplyr::ungroup() %>%
@@ -289,9 +292,10 @@ ls_wlos <- function(df,
                           color = "gray50",
                           alpha = 0.5,
                           linewidth = 1.2) +
-      ggrepel::geom_text_repel(size = 3,
+      ggrepel::geom_text_repel(size = text_size,
                                segment.size = 0.5,
-                               color = 'black') +
+                               color = 'black',
+                               bg.color = "white") +
       ggplot2::geom_point(size = .4,
                           show.legend = F) +
       ggplot2::facet_wrap(~facet_var,
@@ -300,11 +304,12 @@ ls_wlos <- function(df,
       ggplot2::scale_x_log10() +
       ggplot2::labs(x = "Word frequency",
                     y = "Log odds ratio, weighted by uninformative Dirichlet prior") +
-      ggplot2::theme(strip.background =element_rect(fill="gray"))+
+      ggplot2::theme(strip.background = ggplot2::element_rect(fill="gray"))+
       ggplot2::theme_bw() +
-      ggplot2::theme(strip.background = element_rect(fill = "white",colour = "white"),
-                     strip.text = element_text(face = "bold"),
-                     panel.grid.minor = element_blank())
+      ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white",
+                                                              colour = "white"),
+                     strip.text = ggplot2::element_text(face = "bold"),
+                     panel.grid.minor = ggplot2::element_blank())
 
     return(viz)
 }
