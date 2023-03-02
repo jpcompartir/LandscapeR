@@ -8,10 +8,15 @@
 #' @return a ggplot object
 #' @export
 #'
-ls_sentiment_over_time <- function(df, sentiment_var = sentiment, date_var = date,
-                                   unit = c("week", "day","month", "quarter", "year")){
+ls_sentiment_over_time <- function(df, sentiment_var = sentiment, date_var = date, unit = c("week", "day","month", "quarter", "year")){
   unit <- match.arg(unit)
 
+  if(!sentiment_var %in% colnames(df)){
+    stop(paste0("Cannot find ", sentiment_var, " in the data frame, did you mean `sentiment_var = sentiment`?"))
+  }
+  if(!date_var %in% colnames(df)){
+    stop(paste0("Cannot find ", date_var, " in the data frame, did you mean `date_var = date`?"))
+  }
   sent_quo <- rlang::enquo(sentiment_var)
   date_quo <- rlang::enquo(date_var)
 
