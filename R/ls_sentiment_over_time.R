@@ -8,25 +8,35 @@
 #' @return a ggplot object
 #' @export
 #'
-ls_sentiment_over_time <- function(df, sentiment_var = sentiment, date_var = date, unit = c("week", "day","month", "quarter", "year")){
+ls_sentiment_over_time <- function(df,
+                                   sentiment_var = sentiment,
+                                   date_var = date,
+                                  unit = c("week", "day","month", "quarter", "year")){
+
   unit <- match.arg(unit)
 
-  if(!sentiment_var %in% colnames(df)){
-    stop(paste0("Cannot find ", sentiment_var, " in the data frame, did you mean `sentiment_var = sentiment`?"))
-  }
-  if(!date_var %in% colnames(df)){
-    stop(paste0("Cannot find ", date_var, " in the data frame, did you mean `date_var = date`?"))
-  }
-  sent_quo <- rlang::enquo(sentiment_var)
-  date_quo <- rlang::enquo(date_var)
+  sent_sym <- rlang::ensym(sentiment_var)
+  date_sym <- rlang::ensym(date_var)
+
+  sent_string <- rlang::as_string(sent_sym)
+  date_string <- rlang::as_string(date_sym)
+
+if(!sent_string %in% colnames(df)){
+  stop(paste0("Cannot find '", sent_string, "' in the data frame, did you mean `sentiment_var = sentiment`?"))
+}
+if(!date_string %in% colnames(df)){
+  stop(paste0("Cannot find '", date_string, "' in the data frame, did you mean `date_var = date`?"))
+}
+
+
 
   df <- df %>% dplyr:: mutate(
-    plot_date = as.Date(!!date_quo),
+    plot_date = as.Date(!!date_sym),
     plot_date = lubridate::floor_date(plot_date, unit = unit))
 
   plot <- df %>%
-    dplyr::count(plot_date,!!sent_quo) %>%
-    ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n, fill = !!sent_quo)) +
+    dplyr::count(plot_date,!!sent_sym) %>%
+    ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n, fill = !!sent_sym)) +
     ggplot2::geom_col() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
     ggplot2::scale_fill_manual(aesthetics = c("fill", "colour"),
