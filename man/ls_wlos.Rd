@@ -9,6 +9,7 @@ ls_wlos(
   group_var = cluster,
   text_var = clean_text,
   top_n = 30,
+  text_size = 4,
   nrow = 4,
   top_terms_cutoff = 5000
 )
@@ -21,6 +22,8 @@ ls_wlos(
 \item{text_var}{Your text variable}
 
 \item{top_n}{Number of terms per plot}
+
+\item{text_size}{An integer determining text size, higher = larger}
 
 \item{nrow}{Number of rows to display the plots across}
 
