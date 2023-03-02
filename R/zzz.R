@@ -11,9 +11,13 @@
 #'
 #' @keywords internal
 ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50d2") {
+  date_quo <- rlang::ensym(.date_var)
+
+  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_quo, unit = unit))
   date_sym <- rlang::ensym(.date_var)
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
+
   df %>%
     dplyr::count(plot_date) %>%
     ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n)) +
@@ -22,7 +26,8 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
     ggplot2::theme(
       legend.position = "none",
-      axis.text.x = element_text(angle = 90)
+      axis.text.x = ggplot2::element_text(angle = 90),
+      axis.text.x = ggplot2::element_text(angle = 90)
     )
 }
 
@@ -41,6 +46,10 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
 #' @keywords internal
 
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
+
+  text_quo <- rlang::ensym(text_var)
+  df %>%
+    tidytext::unnest_tokens(words, !!text_quo) %>%
   .text_var <- rlang::enquo(text_var)
   df %>%
     tidytext::unnest_tokens(words, rlang::quo_name(.text_var)) %>%
@@ -49,6 +58,8 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
     ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n)) +
     ggplot2::geom_col(fill = fill) +
     ggplot2::coord_flip() +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words")+
     ggplot2::theme_bw() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
     ggplot2::theme(plot.title = element_text(hjust = 0.5, face = "bold"))
@@ -142,6 +153,10 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
     dplyr::count({{ sentiment_var }}) %>%
     dplyr::rename(sentiment = 1) %>%
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
+    ggplot2::ggplot(ggplot2::aes(x = sentiment, y = n, fill = sentiment)) +
+    ggplot2::geom_col() +
+    ggplot2::theme_minimal() +
+    HelpR::theme_microsoft_discrete() +
     ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() +
     ggplot2::theme_bw() +
@@ -168,6 +183,7 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
 #' @keywords internal
 #'
 ls_link_click <- function(df, url_var) {
+
   url_sym <- rlang::ensym(url_var)
 
   df %>%
@@ -242,3 +258,78 @@ reactive_labels <- function(prefix, input) {
 #' @usage data("ls_example")
 #' @keywords internal
 "ls_example"
+
+#' A LandscapeR version of ParseR's Weighted Log-odds
+#'
+#' Function should be used for identifying the differences between levels of a
+#' grouping variable.
+#'
+#' @param df Data Frame or Tibble object
+#' @param group_var The variable to group with e.g. topic, sentiment
+#' @param text_var Your text variable
+#' @param top_n Number of terms per plot
+#' @param nrow Number of rows to display the plots across
+#' @param top_terms_cutoff The top x words which should have WLOs calculated for them
+#' @param text_size An integer determining text size, higher = larger
+#'
+#' @return a ggplot object
+#' @export
+#'
+ls_wlos <- function(df,
+                    group_var = cluster,
+                    text_var = clean_text,
+                    top_n = 30,
+                    text_size = 4,
+                    nrow = 4,
+                    top_terms_cutoff = 5000){
+
+    text_quo <- rlang::enquo(text_var)
+    group_quo <- rlang::enquo(group_var)
+
+    wlos <- df %>%
+      tidytext::unnest_tokens(word, !!text_quo) %>%
+      dplyr::rename(facet_var = !!group_quo) %>%
+      dplyr::mutate(facet_var = factor(facet_var)) %>%
+      dplyr::group_by(facet_var) %>%
+      dplyr::count(word, sort = TRUE) %>%
+      dplyr::ungroup() %>%
+      tidylo::bind_log_odds(set = facet_var,
+                            feature = word,
+                            n = n)
+
+    viz <- wlos %>%
+      dplyr::slice_max(order_by = n,
+                       n = top_terms_cutoff) %>%
+      dplyr::group_by(facet_var) %>%
+      dplyr::top_n(n = top_n,
+                   wt = log_odds_weighted) %>%
+      dplyr::ungroup() %>%
+      ggplot2::ggplot(ggplot2::aes(x = n,
+                                   y = log_odds_weighted,
+                                   label = word)) +
+      ggplot2::geom_hline(yintercept = 0,
+                          lty = 2,
+                          color = "gray50",
+                          alpha = 0.5,
+                          linewidth = 1.2) +
+      ggrepel::geom_text_repel(size = text_size,
+                               segment.size = 0.5,
+                               color = 'black',
+                               bg.color = "white") +
+      ggplot2::geom_point(size = .4,
+                          show.legend = F) +
+      ggplot2::facet_wrap(~facet_var,
+                          nrow = nrow,
+                          scales = "free") +
+      ggplot2::scale_x_log10() +
+      ggplot2::labs(x = "Word frequency",
+                    y = "Log odds ratio, weighted by uninformative Dirichlet prior") +
+      ggplot2::theme(strip.background = ggplot2::element_rect(fill="gray"))+
+      ggplot2::theme_bw() +
+      ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white",
+                                                              colour = "white"),
+                     strip.text = ggplot2::element_text(face = "bold"),
+                     panel.grid.minor = ggplot2::element_blank())
+
+    return(viz)
+}
