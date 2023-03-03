@@ -9,7 +9,7 @@ download_box(exportname, plot, width = 300, height = 250)
 \arguments{
 \item{exportname}{Name of export as a string}
 
-\item{plot}{The plot to download}
+\item{plot}{The plot to download, which should be stored as a reactive.}
 }
 \value{
 A download handler
