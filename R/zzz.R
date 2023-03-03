@@ -11,9 +11,8 @@
 #'
 #' @keywords internal
 ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50d2") {
-  date_quo <- rlang::ensym(.date_var)
 
-  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_quo, unit = unit))
+  date_quo <- rlang::enquo(.date_var)
   date_sym <- rlang::ensym(.date_var)
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
@@ -50,11 +49,7 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
   text_quo <- rlang::ensym(text_var)
 
   df %>%
-    tidytext::unnest_tokens(words, !!text_quo) %>%
-  .text_var <- rlang::enquo(text_var)
-
-  df %>%
-    tidytext::unnest_tokens(words, rlang::quo_name(.text_var)) %>%
+    tidytext::unnest_tokens(words, rlang::quo_name(text_quo)) %>%
     dplyr::count(words, sort = TRUE) %>%
     dplyr::slice_max(order_by = n, n = top_n, with_ties = FALSE) %>%
     ggplot2::ggplot(ggplot2::aes(x = reorder(words, n), y = n)) +
@@ -84,7 +79,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
     },
     content = function(file) {
       ggplot2::ggsave(file,
-        plot = plot(),
+        plot = plot(), #make sure the reactive object's state is collected here, important!
         device = "png",
         width = width,
         height = height,
