@@ -15,7 +15,8 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
   date_quo <- rlang::enquo(.date_var)
   date_sym <- rlang::ensym(.date_var)
 
-  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit))
+  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit),
+                             plot_date = as.Date(plot_date))
 
   df %>%
     dplyr::count(plot_date) %>%
@@ -25,7 +26,6 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
     ggplot2::theme(
       legend.position = "none",
-      axis.text.x = ggplot2::element_text(angle = 90),
       axis.text.x = ggplot2::element_text(angle = 90)
     )
 }
