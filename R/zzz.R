@@ -57,7 +57,7 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
     ggplot2::coord_flip() +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words")+
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
 }
@@ -150,10 +150,6 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
     dplyr::count({{ sentiment_var }}) %>%
     dplyr::rename(sentiment = 1) %>%
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
-    ggplot2::ggplot(ggplot2::aes(x = sentiment, y = n, fill = sentiment)) +
-    ggplot2::geom_col() +
-    ggplot2::theme_minimal() +
-    HelpR::theme_microsoft_discrete() +
     ggplot2::ggplot(ggplot2::aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() +
     ggplot2::theme_minimal() +
