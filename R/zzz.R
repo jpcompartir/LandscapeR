@@ -67,7 +67,7 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
 #' Title
 #'
 #' @param exportname Name of export as a string
-#' @param plot The plot to download
+#' @param plot The plot to download, which should be stored as a reactive.
 #'
 #' @return A download handler
 #' @export
@@ -80,7 +80,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
     },
     content = function(file) {
       ggplot2::ggsave(file,
-        plot = plot,
+        plot = plot(),
         device = "png",
         width = width,
         height = height,

@@ -45,7 +45,8 @@ if(!date_string %in% colnames(df)){
                                           "neutral" = "#FFB900")) +
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "none",
-                   panel.grid.major = ggplot2::element_blank()) +
+                   panel.grid.major = ggplot2::element_blank(),
+                   axis.text.x = ggplot2::element_text(angle = 90)) +
     ggplot2::labs(y = "n", x = paste0("Date by ", unit))
 
   return(plot)
