@@ -26,6 +26,7 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
     ggplot2::theme(
       legend.position = "none",
+      axis.text.x = ggplot2::element_text(angle = 90),
       axis.text.x = ggplot2::element_text(angle = 90)
     )
 }
@@ -47,6 +48,9 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
 
   text_quo <- rlang::ensym(text_var)
+
+  df %>%
+    tidytext::unnest_tokens(words, !!text_quo) %>%
   .text_var <- rlang::enquo(text_var)
 
   df %>%
@@ -152,6 +156,10 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
     dplyr::rename(sentiment = 1) %>%
     dplyr::mutate(sentiment = tolower(sentiment)) %>%
     ggplot2::ggplot(ggplot2::aes(x = sentiment, y = n, fill = sentiment)) +
+    ggplot2::geom_col() +
+    ggplot2::theme_minimal() +
+    HelpR::theme_microsoft_discrete() +
+    ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() +
     ggplot2::theme_minimal() +
     HelpR::theme_microsoft_discrete() +
