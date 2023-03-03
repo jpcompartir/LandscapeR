@@ -48,9 +48,11 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
 
   text_quo <- rlang::ensym(text_var)
+
   df %>%
     tidytext::unnest_tokens(words, !!text_quo) %>%
   .text_var <- rlang::enquo(text_var)
+
   df %>%
     tidytext::unnest_tokens(words, rlang::quo_name(.text_var)) %>%
     dplyr::count(words, sort = TRUE) %>%
@@ -62,14 +64,14 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words")+
     ggplot2::theme_bw() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
-    ggplot2::theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
 }
 
 # Download box function ----
 #' Title
 #'
 #' @param exportname Name of export as a string
-#' @param plot The plot to download
+#' @param plot The plot to download, which should be stored as a reactive.
 #'
 #' @return A download handler
 #' @export
@@ -82,7 +84,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
     },
     content = function(file) {
       ggplot2::ggsave(file,
-        plot = plot,
+        plot = plot(),
         device = "png",
         width = width,
         height = height,
@@ -159,10 +161,10 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
     HelpR::theme_microsoft_discrete() +
     ggplot2::ggplot(aes(x = sentiment, y = n, fill = sentiment)) +
     ggplot2::geom_col() +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     HelpR::theme_microsoft_discrete() +
     ggplot2::theme(
-      plot.title = element_text(
+      plot.title = ggplot2::element_text(
         hjust = 0.5,
         face = "bold"
       ),
