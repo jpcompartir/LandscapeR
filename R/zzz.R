@@ -345,15 +345,20 @@ ls_plot_group_sent <- function(df,
                                  type = c("percent", "volume"),
                                  title = "Grouped Sentiment Chart",
                                bar_labels = c("none", "percent", "volume")) {
-  # group_sym <- rlang::ensym(group_var)
-  group_quo <- rlang::enquo(group_var)
+
+  group_sym <- group_var #Weird tidy eval pattern when the columns are being generated dynamically with updateSelectInput. First get the variable (in this case a string) then convert to symbol.
+  group_sym <- rlang::ensym(group_var)
+  sentiment_sym <- rlang::ensym(sentiment_var)
 
   bar_labels <- match.arg(if (missing(bar_labels)) "volume" else bar_labels, c("none", "percent", "volume"))
   type <- match.arg(if (missing(type)) "percent" else type, c("percent", "volume"))
 
   df <- df %>%
-    dplyr::count({{ group_var }}, {{ sentiment_var }}) %>%
-    dplyr::add_count({{ group_var }}, wt = n, name = ".total") %>%
+    dplyr::mutate(group_var = !!group_sym,
+                  sentiment_var = !!sentiment_sym,
+                  group_var = factor(group_var)) %>%
+    dplyr::count(group_var, sentiment_var) %>%
+    dplyr::add_count(group_var , wt = n, name = ".total") %>%
     dplyr::mutate(
       percent = n / .total * 100,
       percent_character = paste0(round(percent, digits = 1), "%")
@@ -361,7 +366,9 @@ ls_plot_group_sent <- function(df,
 
   if (type == "percent") {
     plot <- df %>%
-      ggplot2::ggplot(ggplot2::aes(x = reorder(!!group_quo, n), y = percent, fill = {{ sentiment_var }})) +
+      ggplot2::ggplot(ggplot2::aes(x = reorder(group_var, n),
+                                   y = percent,
+                                   fill = sentiment_var)) +
       ggplot2::geom_col() +
       ggplot2::labs(
         fill = NULL, y = NULL, x = "% of Posts",
@@ -369,7 +376,9 @@ ls_plot_group_sent <- function(df,
       )
   } else if (type == "volume") {
     plot <- df %>%
-      ggplot2::ggplot(ggplot2::aes(x = reorder(!!group_quo, n), y = n, fill = {{ sentiment_var }})) +
+      ggplot2::ggplot(ggplot2::aes(x = reorder(group_var, n),
+                                   y = n,
+                                   fill = sentiment_var)) +
       ggplot2::geom_col() +
       ggplot2::labs(
         fill = NULL, y = NULL, x = "Number of Posts",
