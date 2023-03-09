@@ -433,7 +433,8 @@ ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit 
 
   df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit),
                              plot_date = as.Date(plot_date),
-                             facet_var = !!group_sym)
+                             facet_var = !!group_sym,
+                             facet_var = factor(facet_var))
 
   df %>%
     dplyr::count(plot_date, facet_var) %>%
@@ -441,7 +442,7 @@ ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit 
     ggplot2::geom_col() +
     ggplot2::theme_minimal() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%b") +
-    ggplot2::scale_fill_viridis_c() +
+    ggplot2::scale_fill_viridis_d() +
     ggplot2::theme(legend.position = "none",
                    axis.text.x = ggplot2::element_text(angle = 90)) +
     ggplot2::labs(title = "Topic Volume over Time", x = NULL, y = "Number of Posts") +
