@@ -2,12 +2,32 @@
 % Please edit documentation in R/ls_plotly_umap.R
 \name{ls_plotly_umap}
 \alias{ls_plotly_umap}
-\title{Render a landscape plot in a shiny app}
+\title{Render a landscape plot inside a shiny app}
 \usage{
-ls_plotly_umap(data, x, y, type, group_var, key, text_var, height)
+ls_plotly_umap(data, x, y, type, group_var, key, text_var, height, width)
 }
 \arguments{
-\item{height}{}
+\item{data}{Data Frame or tibble object, will likely need to be called
+with brackets as it should be reactive}
+
+\item{x}{X co-ordinate variable (as a string)}
+
+\item{y}{Y co-ordinate variable (as a string)}
+
+\item{type}{type of plotly chart to render, usually 'scattergl' for perforamcne}
+
+\item{group_var}{Which variable to colouyr by (as a string)}
+
+\item{key}{ID column (as a string)}
+
+\item{text_var}{Text variable (as a string)}
+
+\item{height}{Height of plot (as a strong)}
+
+\item{width}{Width of plot (as a string)}
+}
+\value{
+a plotly object
 }
 \description{
 Renders an interactive plotly plot with a

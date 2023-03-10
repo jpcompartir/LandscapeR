@@ -17,7 +17,7 @@
 #' @param height Height of plot (as a strong)
 #' @param width Width of plot (as a string)
 #'
-#' @return
+#' @return a plotly object
 #' @export
 #'
 #' @examples
