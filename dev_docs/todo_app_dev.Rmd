@@ -126,3 +126,230 @@ The DT table change in app_dev_titles_plot (filter at bottom etc.)
 re-arrange the columns in same file 
 add the tags style thing to navbar pages -
 library(tableHTML) #for CSS styling
+
+
+Some plotly stuff:
+```{r}
+library(plotly)
+m <- highlight_key(mpg)
+p <- ggplot(m, aes(displ, hwy)) + geom_point()
+gg <- highlight(ggplotly(p), "plotly_selected")
+crosstalk::bscols(gg, DT::datatable(m))
+
+?plotly::highlight_key
+
+mpg
+
+
+library(ggforce)
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() +
+  geom_mark_hull(aes(filter = model == "a4", label = model)) +
+  geom_mark_hull(aes(filter = model == "corvette", label = model)) +
+  labs(
+    title = "Fuel economy from 1999 to 2008 for 38 car models",
+    caption = "Source: https://fueleconomy.gov/",
+    x = "Engine Displacement", 
+    y = "Miles Per Gallon"
+  )
+
+LandscapeR::ls_example %>%
+  ls_plot_static(x_var = V1, y_var = V2) %>%
+  ggplotly(marker = list(size = 0.25))
+
+LandscapeR::ls_example %>%
+  ls_plot_volume_over_time(.date_var = date) %>%
+  ggplotly()
+
+LandscapeR::ls_example %>%
+  JPackage::make_bigram_viz(text) %>%
+  ggplotly()
+
+p <- LandscapeR::ls_example %>%
+  dplyr::mutate(date = as.Date(date)) %>%
+  dplyr::count(date) %>%
+  ggplot(aes(x= date, y = n)) +
+  geom_line(color = "green") +
+  theme_minimal()
+
+p %>% 
+  ggplotly()
+
+#Works but poor performance
+m <- highlight_key(ls_example)
+p <- ggplot(m, aes(V1, V2)) + geom_point()
+gg <- highlight(ggplotly(p), "plotly_selected")
+crosstalk::bscols(gg, DT::datatable(m))
+
+
+library(ggplot2)
+library(dplyr)
+library(plotly)
+
+data <- LandscapeR::ls_example %>%
+  mutate(date = as.Date(date),
+         sentiment = factor(sentiment)) %>%
+  count(date,sentiment)
+
+vot <-  data %>%
+  ggplot(aes(x= date, y = n, color = sentiment)) +
+  geom_line() +
+  theme_minimal() +
+  scale_color_manual(values = c(
+   "negative" =  "#D83B01", 
+   "neutral" = "#FFB900", 
+   "positive" = "#107C10"
+  ))+
+  # HelpR::theme_microsoft_discrete() +
+  theme(legend.position = "none",)
+
+vot %>%
+  plotly::ggplotly(dragmode = "lasso") %>%
+  highlight("plotly_selected") %>%
+  plotly::layout(hovermode = "closest",
+                 hoverdistance = 100,
+                  newshape=list(fillcolor="#ff5718", #Colour for shapes
+                    linecolor = "black",
+                    opacity=0.2)) %>%
+  plotly::config(modeBarButtonsToAdd = #Allow drawing on shapes in app
+        list(
+          "drawline",
+          "drawcircle",
+          "drawrect",
+          "eraseshape"))
+
+```
+
+```{r}
+"function addEditableAnnotation(gd, label) {
+  var annotation = {
+    x: 1,
+    y: 1,
+    text: label,
+    showarrow: false,
+    font: {color: '#000000'},
+    hovertext: label,
+    hoverlabel: {namelength: -1},
+    xref: 'x',
+    yref: 'y',
+    xanchor: 'left',
+    yanchor: 'bottom',
+    editable: true
+  };
+  Plotly.addLayoutAnnotations(gd, [annotation]);
+}"
+
+```
+
+```{r}
+library(plotly)
+library(htmlwidgets)
+
+annotation <- list(
+  name = "annotation",
+  icon = list(
+    path =  "M60.64,62.3a11.29,11.29,0,0,0,6.09-6.72l6.35-17.72L60.54,25.31l-17.82,6.4c-2.36.86-5.57,3.41-6.6,6L24.48,65.5l8.42,8.42ZM40.79,39.63a7.89,7.89,0,0,1,3.65-3.17l14.79-5.31,8,8L61.94,54l-.06.19a6.44,6.44,0,0,1-3,3.43L34.07,68l-3.62-3.63Zm16.57,7.81a6.9,6.9,0,1,0-6.89,6.9A6.9,6.9,0,0,0,57.36,47.44Zm-4,0a2.86,2.86,0,1,1-2.85-2.85A2.86,2.86,0,0,1,53.32,47.44Zm-4.13,5.22L46.33,49.8,30.08,66.05l2.86,2.86ZM83.65,29,70,15.34,61.4,23.9,75.09,37.59ZM70,21.06l8,8-2.84,2.85-8-8ZM87,80.49H10.67V87H87Z",
+    transform = 'matrix(1 0 0 1 -15 -15)'
+  ),
+  click = htmlwidgets::JS(
+    "function addEditableAnnotation(gd, label) {
+  var annotation = {
+    x: 1,
+    y: 1,
+    text: label,
+    showarrow: false,
+    font: {color: '#000000'},
+    hovertext: label,
+    hoverlabel: {namelength: -1},
+    xref: 'x',
+    yref: 'y',
+    xanchor: 'left',
+    yanchor: 'bottom',
+    editable: true
+  };
+  Plotly.addLayoutAnnotations(gd, [annotation]);
+}"
+  )
+)
+
+mtcars %>%
+  plotly::plot_ly(x = ~mpg, y = ~qsec, 
+                  type = "scattergl") %>%
+  plotly::config(modeBarButtonsToAdd =
+                   list("drawcircle", annotation),
+                 editable = TRUE) %>%
+  plotly::layout(newshape=list(fillcolor="#ff5718", #Colour for shapes
+                               linecolor = "black",
+                               opacity=0.2))
+```
+
+
+```{r}
+library(plotly)
+
+# create a plotly scatter plot
+p <- plot_ly(data = mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+
+# add click event handler to plot
+p <- onRender(p, "
+  function(el, x) {
+    el.on('plotly_click', function(data) {
+      var xcoord = data.points[0].x;
+      var ycoord = data.points[0].y;
+      var label = 'Clicked at x=' + xcoord.toFixed(2) + ', y=' + ycoord.toFixed(2);
+      var annotation = {
+        x: xcoord,
+        y: ycoord,
+        text: label,
+        showarrow: false,
+        font: {color: '#000000'},
+        hovertext: label,
+        hoverlabel: {namelength: -1},
+        xref: 'x',
+        yref: 'y',
+        xanchor: 'left',
+        yanchor: 'bottom',
+        editable: true
+      };
+      Plotly.addLayoutAnnotations(x.el, [annotation]);
+    });
+  }
+")
+
+# display the plot
+p
+
+```
+
+```{r}
+library(htmlwidgets)
+library(plotly)
+
+plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
+  config(editable = TRUE,
+          modeBarButtonsToAdd = #Allow drawing on shapes in app
+        list(
+          "drawcircle")) %>%
+  onRender("
+    function(el) { 
+      el.on('plotly_relayout', function(d) { 
+        var shapes = d['shapes'];
+        if (shapes && shapes.length > 0) {
+          var newAnnotation = {
+            x: shapes[0]['x0'] + (shapes[0]['x1'] - shapes[0]['x0']) / 2,
+            y: shapes[0]['y0'] + (shapes[0]['y1'] - shapes[0]['y0']) / 2,
+            text: 'Custom Shape',
+            showarrow: true,
+            arrowhead: 7,
+            ax: 0,
+            ay: -40,
+            draggable: true
+          };
+          Plotly.relayout(el, 'annotations[0]', newAnnotation);
+        }
+      });
+    }
+  ")
+
+```
+

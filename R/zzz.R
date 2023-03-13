@@ -326,3 +326,129 @@ ls_wlos <- function(df,
 
     return(viz)
 }
+
+
+#' Quickly plot group sentiment distributions as a perentage in LandscapeR shiny app
+#'
+#' @param df data frame
+#' @param group_var Grouping variable, e.g. country, topic, cluster
+#' @param sentiment_var Sentiment variable (categorical)
+#' @param type Whether the plot should be of volume or py percentage. Accepts "percent" or "volume"
+#' @param title The title of the plot, entered as a string.
+#' @param bar_labels Whether to add the raw volume, percentage or neither to the bars
+#'
+#' @return Ggplot stacked bar chart with x and y coords flipped
+#' @export
+ls_plot_group_sent <- function(df,
+                                 group_var = cluster,
+                                 sentiment_var = sentiment,
+                                 type = c("percent", "volume"),
+                                 title = "Grouped Sentiment Chart",
+                               bar_labels = c("none", "percent", "volume")) {
+
+  group_sym <- group_var #Weird tidy eval pattern when the columns are being generated dynamically with updateSelectInput. First get the variable (in this case a string) then convert to symbol.
+  group_sym <- rlang::ensym(group_var)
+  sentiment_sym <- rlang::ensym(sentiment_var)
+
+  bar_labels <- match.arg(if (missing(bar_labels)) "volume" else bar_labels, c("none", "percent", "volume"))
+  type <- match.arg(if (missing(type)) "percent" else type, c("percent", "volume"))
+
+  df <- df %>%
+    dplyr::mutate(group_var = !!group_sym,
+                  sentiment_var = !!sentiment_sym,
+                  group_var = factor(group_var)) %>%
+    dplyr::count(group_var, sentiment_var) %>%
+    dplyr::add_count(group_var , wt = n, name = ".total") %>%
+    dplyr::mutate(
+      percent = n / .total * 100,
+      percent_character = paste0(round(percent, digits = 1), "%")
+    )
+
+  if (type == "percent") {
+    plot <- df %>%
+      ggplot2::ggplot(ggplot2::aes(x = reorder(group_var, n),
+                                   y = percent,
+                                   fill = sentiment_var)) +
+      ggplot2::geom_col() +
+      ggplot2::labs(
+        fill = NULL, y = NULL, x = "% of Posts",
+        title = title
+      )
+  } else if (type == "volume") {
+    plot <- df %>%
+      ggplot2::ggplot(ggplot2::aes(x = reorder(group_var, n),
+                                   y = n,
+                                   fill = sentiment_var)) +
+      ggplot2::geom_col() +
+      ggplot2::labs(
+        fill = NULL, y = NULL, x = "Number of Posts",
+        title = title
+      )
+  }
+
+  plot <- plot +
+    HelpR::theme_microsoft_discrete() +
+    ggplot2::coord_flip() +
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2::scale_x_discrete(expand = c(0, 0)) +
+    ggplot2::scale_y_discrete(expand = c(0, 0))
+
+  if (bar_labels == "percent") {
+    plot <- plot +
+      ggplot2::geom_text(ggplot2::aes(label = percent_character),
+                         colour = "white",
+                         position = ggplot2::position_stack(0.5),
+                         check_overlap = TRUE
+      )
+  }
+  if (bar_labels == "volume") {
+    plot <- plot +
+      ggplot2::geom_text(ggplot2::aes(label = scales::comma(n)),
+                         colour = "white",
+                         position = ggplot2::position_stack(0.5),
+                         check_overlap = TRUE
+      )
+  }
+  return(plot)
+}
+
+
+#' Quickly plot faceted volume of groups over time in a LandscapeR Shiny App
+#'
+#' @param df Data frame or tibble
+#' @param group_var grouping variable e.g. country, cluster, topic etc.
+#' @param date_var Variable which contains date information (can be datetime too I think)
+#' @param unit A single unit of time fed into lubridate::floor_date  "week", "day", "month","quarter", "year"
+#' @param nrow How many rows the plot should be shown in
+#'
+#' @return ggplot object of facetted bar charts
+#' @export
+ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit = c("day", "week", "month", "quarter", "year"), nrow = 4){
+
+  unit <- match.arg(unit)
+
+  date_sym <- rlang::ensym(date_var)
+  group_sym <- group_var #shiny tidy eval trick
+  group_sym <- rlang::ensym(group_var)
+
+  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit),
+                             plot_date = as.Date(plot_date),
+                             facet_var = !!group_sym,
+                             facet_var = factor(facet_var))
+
+  df %>%
+    dplyr::count(plot_date, facet_var) %>%
+    ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n, fill = facet_var)) +
+    ggplot2::geom_col() +
+    ggplot2::theme_minimal() +
+    ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%b") +
+    ggplot2::scale_fill_viridis_d() +
+    ggplot2::theme(legend.position = "none",
+                   axis.text.x = ggplot2::element_text(angle = 90),
+                   panel.grid.major.x = ggplot2::element_blank(),
+                   panel.grid.minor.y = ggplot2::element_blank()) +
+    ggplot2::labs(title = "Topic Volume over Time", x = NULL, y = "Number of Posts") +
+    ggplot2::facet_wrap(~facet_var, nrow = nrow)
+
+
+}
