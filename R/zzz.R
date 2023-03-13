@@ -444,7 +444,9 @@ ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit 
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%b") +
     ggplot2::scale_fill_viridis_d() +
     ggplot2::theme(legend.position = "none",
-                   axis.text.x = ggplot2::element_text(angle = 90)) +
+                   axis.text.x = ggplot2::element_text(angle = 90),
+                   panel.grid.major.x = ggplot2::element_blank(),
+                   panel.grid.minor.y = ggplot2::element_blank()) +
     ggplot2::labs(title = "Topic Volume over Time", x = NULL, y = "Number of Posts") +
     ggplot2::facet_wrap(~facet_var, nrow = nrow)
 
