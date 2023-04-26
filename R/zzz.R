@@ -81,8 +81,8 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
       ggplot2::ggsave(file,
         plot = plot(), #make sure the reactive object's state is collected here, important!
         device = "png",
-        width = width,
-        height = height,
+        width = width(),
+        height = height(),
         units = "px",
         bg = "white",
         dpi = 100
@@ -451,4 +451,41 @@ ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit 
     ggplot2::facet_wrap(~facet_var, nrow = nrow)
 
 
+}
+
+
+#' Add a re-sizeable text area to take notes in!
+#'
+#' @return a moveable shiny tect box
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' ui <- shiny::fluidPage(
+#' ls_create_note_area()
+#' )
+#'
+#' }
+ls_create_note_area <- function() {
+  shiny::tagList(
+    shiny::tags$style(shiny::HTML("
+      #container {
+        width: 200px;
+        height: 100px;
+        border: 1px solid #ccc;
+        padding: 5px;
+      }
+      #note_area {
+        width: 100%;
+        height: 100%;
+      }
+    ")),
+
+    shinyjqui::jqui_resizable(
+      shiny::div(
+        id = "container",
+        shiny::tags$textarea(id = "note_area", placeholder = "Write your notes here...")
+      ),
+    )
+  )
 }
