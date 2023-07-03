@@ -15,7 +15,7 @@ ls_plot_static <- function(df, x_var = V1, y_var = V2, fill_colour = "black") {
   df %>%
     ggplot2::ggplot(ggplot2::aes(x = {{ x_var }}, y = {{ y_var }})) +
     ggplot2::geom_point(shape = ".", colour = fill_colour) +
-    HelpR::theme_microsoft_continuous() +
+    HelpR::theme_microsoft(scale_type = "continuous") +
     ggplot2::theme_void() +
     ggplot2::theme(
       legend.position = "none",
