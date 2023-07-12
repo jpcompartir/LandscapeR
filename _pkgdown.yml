@@ -15,11 +15,15 @@ reference:
   desc: >
     One stop shop for building a Shiny app to explore a conversation
   contents:
-  - '`conversation_landscape`'
   - '`ls_plot_static`'
   - '`ls_plot_group_facet`'
   - '`ls_plot_group_static`'
   - '`ls_plot_variation_matrix`'
+  - '`ls_plot_group_vol_time`'
+  - '`ls_plotly_umap`'
+  - '`ls_plot_group_sent`'
+  - '`ls_wlos`'
+  - '`ls_sentiment_over_time`'
 
 - title: Utility Functions
   desc: >
@@ -28,6 +32,7 @@ reference:
   - '`column_type_checker`'
   - '`ls_link_click`'
   - '`reactive_labels`'
+  - '`ls_create_note_area`'
 
 repo:
   url:

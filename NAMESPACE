@@ -2,7 +2,6 @@
 
 export("%>%")
 export(column_type_checker)
-export(conversation_landscape)
 export(download_box)
 export(ls_create_note_area)
 export(ls_link_click)
