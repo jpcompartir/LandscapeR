@@ -25,7 +25,7 @@
 #' LandscapeR::ls_example %>%
 #' dplyr::mutate(cluster = factor(cluster)) %>%
 #'  ls_plotly_umap(x = "V1", y = "V2", type = "scattergl",
-#'  key = "document", text_var = "text", height = 600, color = "cluster")
+#'  key = "document", text_var = "text", group_var = "cluster",  height = 600, width = 800)
 #'  }
 ls_plotly_umap <- function(data, x, y, type, group_var, key, text_var,
                            height, width){

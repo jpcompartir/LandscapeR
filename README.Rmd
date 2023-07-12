@@ -20,7 +20,9 @@ knitr::opts_chunk$set(
 
 <img src="man/figures/Capture_Intelligence_FullColour.png" align="center" width="100%" style="padding: 25px 50px 25px 0px;"/>
 
-LandscapeR is our R Package for transforming unstructured raw text into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration & cleaning UI.
+LandscapeR is our R Package for exploring text data which has been transformed into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration & cleaning UI.
+
+If the conversation has been mapped appropriately, you will find that mentions close together in the Shiny application/UMAP plot have similar meanings, posts far apart have less similar meanings. This makes it possible to understand and explore thousands, hundreds of thousands, or even millions of posts at a level which was previously impossible.
 
 
 ## Installation
@@ -35,7 +37,7 @@ devtools::install_github(repo = "jpcompartir/LandscapeR")
 
 We can take this table of text:
 
-```{r example}
+```{r example, message=FALSE}
 library(LandscapeR)
 library(tidyverse)
 
@@ -62,10 +64,16 @@ ls_example %>%
   ls_plot_group_facet(group_var = cluster)
 ```
 
-
 An interesting use case which can be used to inform the LandscapeR investigative process when comparing two grouping variables, such as cluster and sentiment, or product and topic etc. is the `ls_plot_variation_matrix()` function:
 ```{r}
 ls_example %>%
   ls_plot_variation_matrix(cluster, sentiment)
 ```
 
+# Shiny Application
+For the most up-to-date version of the Shiny application, you should install the LandscapeRGolem package:
+```{r, eval = FALSE}
+remotes::install_github(repo = "jpcompartir/LandscaperGolem")
+```
+
+Check out the 'Running Your App Locally' for tips on how to run the app.
