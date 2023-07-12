@@ -1,0 +1,103 @@
+---
+title: "Running Your App Locally"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Running Your App Locally}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, eval = FALSE}
+library(LandscapeRGolem)
+
+run_app()
+```
+
+This will load the app with whatever data sits inside the LandscapeRGolem on your computer's `app_server.R` file. To run the app with custom data, you can use the `run_app_from_other_project` function, and use the `data =` argument to feed in your data.
+
+```{r, eval = FALSE}
+data <- readr::read_csv(path/to/data)
+
+run_app_from_other_project(data = data)
+```
+
+However, both of these methods will run the app using your current R session, meaning you can't do anything else in R without closing the application. Wouldn't it be **great** if we could run the app and keep our R console free to do other things?
+
+WELL YOU CAN!
+
+# Running in a Separate Process
+
+There are two main methods, one involves using the terminal, and the other involves the {processx} R package. If using the terminal isn't too daunting a prospect, I recommend that approach.
+
+To use both steps, you need to save an Rscript (.R file) which gives the instructions of how to run the app. 
+
+First we need to load our libraries and set the port for our shiny app, it's important that no other process is using this port. 
+
+Second we need to make sure that our data has the columns the app requires, which are: document, date, text, clean_text, cluster, V1, V2, permalink. So we define a function that will do this for us.
+
+Third we get some data and run it through our `prepare_data_for_landscaper` function. 
+
+```{r, eval = FALSE}
+library(LandscapeRGolem)
+library(dplyr)
+library(readr)
+options(shiny.port = 3838)
+
+prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var,permalink_var){
+  data <- data %>%
+    dplyr::rename(document = {{document_var}},
+                  date = {{date_var}},
+                  text = {{text_var}},
+                  clean_text = {{clean_text_var}},
+                  cluster = {{colour_var}},
+                  V1 = {{x_var}},
+                  V2 = {{y_var}},
+                  permalink = {{permalink_var}})
+  return(data)
+}
+
+data <- read_csv(path/to/data)
+
+data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink)
+
+LandscapeRGolem::run_app_from_other_project(data = data)
+```
+
+We then need to save this script in a file. I recommend saving this in your current Rstudio project, particularly if you do not feel confident navigating your file system via file paths. Let's say you save it as 'run_app_locally.R', and the project you are working in is called my_project, which is located in a folder called 'projects' which can be found in your home directory. 
+
+From your project's working directory, the path to this file would be run_app_locally.R, that's it!
+
+## Processx
+
+From your Rstudio project, provided you have a saved file named 'run_app_locally.R' containing the code above, with your data correctly entered, you will be able to access the app like so:
+```{r, eval = FALSE}
+library(processx)
+r_process <- process$new("Rscript", "run_app_locally.R")
+r_process #Check it says running, not finished
+```
+
+Then type localhost:3838 into your browser, you should find LandscapeRGolem running. To kill the app:
+```{r, eval = FALSE}
+r_process$kill()
+r_process #should be finished now, not running.
+```
+
+
+## Terminal
+
+From the terminal, the path to this file would be ~/projects/my_project/run_app_locally.R
+
+Open a terminal and execute
+`Rscript ~~/projects/my_project/run_app_locally.R`
+
+You should see
+'Listening on http://127.0.0.1:3838' this means you can copy that http url, or type 'localhost:3838' into your browser to open the app. Your R console will remain free. Remember to close the app when you are done by entering the terminal and (on a Mac) typing 'control + c' then hitting enter.   
+
+You should see 'Execution halted'.
