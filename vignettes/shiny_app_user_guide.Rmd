@@ -1,0 +1,40 @@
+---
+title: "Shiny App User Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Shiny App User Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette assumes that you know how to run the application. If you do not know, check out [run app locally](running_app_locally.html). 
+
+# Home
+
+Home is the first tab you'll see when you open the app. It aims to provide a quick intro to what each tab does, and it contains a cool hex sticker. You generally won't spend much time in this tab, but after updating the package it's worth checking in to see if anything has changed.
+
+The home page provides instructions for resetting the app, and warns you that doing so will return the app to the state you first encountered it in. You can refresh the browser page, or close the app via the terminal, R session, or R process outlined in 'run app locally'. 
+
+# Survey Landscape
+
+This is the tab where most of the work is done, and the main reason the app exists. Navigate to the tab by clicking on it in the navigation bar. You should find four widgets at the top of the screen, a landscape plot, a data table, and if you scroll down, some controls to filter the minimum and maximum co-ordinates the landscape will show.
+
+## The four widgets
+
++ **Colour Variable** - select the variable which should be used to colour each point. Generally this should be something meaningful to your reserach, and with relatively few possible values, i.e. topic, or cluster. And not something like 'date'. Selecting date will mean the app tries to find a colour for each different value of date, which will take a long time to run and likely result in error.
++ **All Data** - entering a file name and clicking download will download all of the data in the app to the directory which you select. If you have used the delete button (explained below) then downloading all data will mean you get the data frame you first encountered minus the deleted rows. This is a good way to clean data, as you'll often find entire clusters or regions of the map which are difficult to clean via keywords, but easy using the selection tool.
++ **Search Text** - Entering a regular expression and clicking the magnifying class will filter the landscape plot for just the documents which contain the regular expression.
++ **Selected Data** - Clicking the download button allows you to download only your selections. You might want to use this when you find a particularly interesting area of the map and would like to analyse it in R, Excel etc.
+ 
+# Distribution Tab
+
+# Compare Groups
+
+# Labelled Data
