@@ -18,6 +18,7 @@
 #' @param width Width of plot (as a string)
 #'
 #' @return a plotly object
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

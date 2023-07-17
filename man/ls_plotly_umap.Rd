@@ -46,3 +46,4 @@ dplyr::mutate(cluster = factor(cluster)) \%>\%
  key = "document", text_var = "text", group_var = "cluster",  height = 600, width = 800)
  }
 }
+\keyword{internal}

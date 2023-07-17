@@ -13,7 +13,10 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/introduction.html</loc>
+    <loc>/articles/running_app_locally.html</loc>
+  </url>
+  <url>
+    <loc>/articles/shiny_app_user_guide.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -25,13 +28,13 @@
     <loc>/reference/column_type_checker.html</loc>
   </url>
   <url>
-    <loc>/reference/conversation_landscape.html</loc>
-  </url>
-  <url>
     <loc>/reference/download_box.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_create_note_area.html</loc>
   </url>
   <url>
     <loc>/reference/ls_example.html</loc>
@@ -43,7 +46,13 @@
     <loc>/reference/ls_plot_group_facet.html</loc>
   </url>
   <url>
+    <loc>/reference/ls_plot_group_sent.html</loc>
+  </url>
+  <url>
     <loc>/reference/ls_plot_group_static.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_plot_group_vol_time.html</loc>
   </url>
   <url>
     <loc>/reference/ls_plot_sentiment_distribution.html</loc>
@@ -59,6 +68,15 @@
   </url>
   <url>
     <loc>/reference/ls_plot_volume_over_time.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_plotly_umap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_sentiment_over_time.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ls_wlos.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
