@@ -2,6 +2,7 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  introduction: introduction.html
-last_built: 2023-01-10T23:22Z
+  running_app_locally: running_app_locally.html
+  shiny_app_user_guide: shiny_app_user_guide.html
+last_built: 2023-07-17T17:42Z
 

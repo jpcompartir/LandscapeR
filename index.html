@@ -8,8 +8,8 @@
 <meta name="description" content="Turn unstructured text data into a navigable, interactive landscape.">
 <title>Turns Unstructured Text Data Into A Navigable Landscape • LandscapeR</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Turns Unstructured Text Data Into A Navigable Landscape">
 <meta property="og:description" content="Turn unstructured text data into a navigable, interactive landscape.">
@@ -41,7 +41,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/introduction.html">introduction</a>
+    <a class="dropdown-item" href="articles/running_app_locally.html">Running Your App Locally</a>
+    <a class="dropdown-item" href="articles/shiny_app_user_guide.html">Shiny App User Guide</a>
   </div>
 </li>
       </ul>
@@ -69,13 +70,14 @@
 <!-- badges: start -->
 <!-- badges: end -->
 <p><img src="reference/figures/Capture_Intelligence_FullColour.png" align="center" width="100%" style="padding: 25px 50px 25px 0px;"></p>
-<p>LandscapeR is our R Package for transforming unstructured raw text into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration &amp; cleaning UI.</p>
+<p>LandscapeR is our R Package for exploring text data which has been transformed into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration &amp; cleaning UI.</p>
+<p>If the conversation has been mapped appropriately, you will find that mentions close together in the Shiny application/UMAP plot have similar meanings, posts far apart have less similar meanings. This makes it possible to understand and explore thousands, hundreds of thousands, or even millions of posts at a level which was previously impossible.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of LandscapeR using the <code>install_github</code> function from the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"jpcompartir/LandscapeR"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"jpcompartir/LandscapeR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-use-case">Example Use Case<a class="anchor" aria-label="anchor" href="#example-use-case"></a>
@@ -84,31 +86,23 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">LandscapeR</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──</span></span>
-<span><span class="co">#&gt; ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 </span></span>
-<span><span class="co">#&gt; ✔ tibble  3.1.8      ✔ dplyr   1.0.10</span></span>
-<span><span class="co">#&gt; ✔ tidyr   1.2.1      ✔ stringr 1.5.0 </span></span>
-<span><span class="co">#&gt; ✔ readr   2.1.3      ✔ forcats 0.5.2 </span></span>
-<span><span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
-<span><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
 <span></span>
 <span><span class="va">ls_example</span> </span>
 <span><span class="co">#&gt; # A tibble: 11,226 × 9</span></span>
-<span><span class="co">#&gt;    document text       cluster clean…¹ date                senti…² perma…³    V1</span></span>
-<span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;   &lt;dttm&gt;              &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1        1 @Shruthi_…       4 shruth… 2022-10-26 12:17:22 positi… &lt;a hre… 3.95 </span></span>
-<span><span class="co">#&gt;  2        2 anyone us…       2 anyone… 2022-10-26 11:44:36 positi… &lt;a hre… 4.59 </span></span>
-<span><span class="co">#&gt;  3        3 Non tech …       7 non te… 2022-10-26 10:20:16 neutral &lt;a hre… 4.01 </span></span>
-<span><span class="co">#&gt;  4        4 I really …       3 i real… 2022-10-26 06:25:23 positi… &lt;a hre… 3.16 </span></span>
-<span><span class="co">#&gt;  5        5 Chrome us…       2 chrome… 2022-10-26 05:02:06 neutral &lt;a hre… 6.98 </span></span>
-<span><span class="co">#&gt;  6        6 I still c…       3 i stil… 2022-10-26 03:16:42 positi… &lt;a hre… 0.601</span></span>
-<span><span class="co">#&gt;  7        7 Try edge …       2 try ed… 2022-10-26 02:38:57 positi… &lt;a hre… 1.93 </span></span>
-<span><span class="co">#&gt;  8        8 telling t…       2 tellin… 2022-10-26 01:49:56 positi… &lt;a hre… 4.21 </span></span>
-<span><span class="co">#&gt;  9        9 When I mo…       7 when i… 2022-10-26 01:02:29 negati… &lt;a hre… 0.487</span></span>
-<span><span class="co">#&gt; 10       10 I repent.…       4 i repe… 2022-10-25 23:26:41 positi… &lt;a hre… 5.77 </span></span>
-<span><span class="co">#&gt; # … with 11,216 more rows, 1 more variable: V2 &lt;dbl&gt;, and abbreviated variable</span></span>
-<span><span class="co">#&gt; #   names ¹​clean_text, ²​sentiment, ³​permalink</span></span></code></pre></div>
+<span><span class="co">#&gt;    document text      cluster clean_text date                sentiment permalink</span></span>
+<span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt;  1        1 @Shruthi…       4 shruthio3… 2022-10-26 12:17:22 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt;  2        2 anyone u…       2 edge nonw… 2022-10-26 11:44:36 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt;  3        3 Non tech…       7 tech peop… 2022-10-26 10:20:16 neutral   &lt;a href=…</span></span>
+<span><span class="co">#&gt;  4        4 I really…       3 minority … 2022-10-26 06:25:23 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt;  5        5 Chrome u…       2 chrome to… 2022-10-26 05:02:06 neutral   &lt;a href=…</span></span>
+<span><span class="co">#&gt;  6        6 I still …       3 believeha… 2022-10-26 03:16:42 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt;  7        7 Try edge…       2 edge rece… 2022-10-26 02:38:57 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt;  8        8 telling …       2 telling t… 2022-10-26 01:49:56 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt;  9        9 When I m…       7 move ptz … 2022-10-26 01:02:29 negative  &lt;a href=…</span></span>
+<span><span class="co">#&gt; 10       10 I repent…       4 repent fi… 2022-10-25 23:26:41 positive  &lt;a href=…</span></span>
+<span><span class="co">#&gt; # ℹ 11,216 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 2 more variables: V1 &lt;dbl&gt;, V2 &lt;dbl&gt;</span></span></code></pre></div>
 <p>And transform it into a navigable landscape:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ls_example</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="reference/ls_plot_static.html">ls_plot_static</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -116,13 +110,13 @@
 <p>We can add colour to a grouping variable to see where our groups sit and how they relate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ls_example</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/ls_plot_group_static.html">ls_plot_group_static</a></span><span class="op">(</span>group_var <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
 <p>We can home in on each group:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ls_example</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/ls_plot_group_facet.html">ls_plot_group_facet</a></span><span class="op">(</span>group_var <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
 <p>An interesting use case which can be used to inform the LandscapeR investigative process when comparing two grouping variables, such as cluster and sentiment, or product and topic etc. is the <code><a href="reference/ls_plot_variation_matrix.html">ls_plot_variation_matrix()</a></code> function:</p>
@@ -133,6 +127,15 @@
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 </div>
 </div>
+<div class="section level1">
+<h1 id="shiny-application">Shiny Application<a class="anchor" aria-label="anchor" href="#shiny-application"></a>
+</h1>
+<p>For the most up-to-date version of the Shiny application, you should install the LandscapeRGolem package:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"jpcompartir/LandscaperGolem"</span><span class="op">)</span></span></code></pre></div>
+<p>Check out the ‘Running Your App Locally’ for tips on how to run the app.</p>
+</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
