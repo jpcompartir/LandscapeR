@@ -1,6 +1,6 @@
 test_that("function raises an error if arguments not called correctly", {
   expect_error(
-    LandscapeR::ls_plotly_umap(
+    LandscapeR:::ls_plotly_umap(
       data = LandscapeR::ls_example,
       x = V1,
       y = V2,
@@ -14,7 +14,7 @@ test_that("function raises an error if arguments not called correctly", {
 })
 
 test_that('function returns a plotly object when called with correct arguments', {
-  my_plotly <- LandscapeR::ls_plotly_umap(
+  my_plotly <- LandscapeR:::ls_plotly_umap(
     data = LandscapeR::ls_example,
     x = "V1",
     y = "V2",
