@@ -36,7 +36,7 @@ jobs:
 
       - name: Install private packages
         run: |
-          remotes::install_github("username/JPackage")
+          remotes::install_github("jpcompartir/JPackage")
           remotes::install_github("Avery-Island/HelpR", auth_token = Sys.getenv("SHAREPACKAGE_AUTH"))
         shell: Rscript {0}
 
