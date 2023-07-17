@@ -30,7 +30,7 @@ jobs:
         with:
           use-public-rspm: true
 
-       - name: Install remotes
+      - name: Install remotes
         run: install.packages("remotes")
         shell: Rscript {0}
 
