@@ -40,10 +40,13 @@ jobs:
           remotes::install_github("Avery-Island/HelpR", auth_token = Sys.getenv("SHAREPACKAGE_AUTH"))
         shell: Rscript {0}
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::pkgdown, local::.
-          needs: website
+      - name: Install dependencies
+        run: |
+          install.packages("remotes")
+          remotes::install_github("Avery-Island/HelpR", auth_token = Sys.getenv("SHAREPACKAGE_AUTH"))
+          install.packages("pkgdown")
+          remotes::install_local(".")  # install the package from the current repository
+        shell: Rscript {0}
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
