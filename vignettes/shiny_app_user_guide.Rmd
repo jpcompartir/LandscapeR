@@ -14,27 +14,153 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette assumes that you know how to run the application. If you do not know, check out [run app locally](running_app_locally.html). 
+This vignette assumes that you know how to run the application. If you do not know, check out [run app locally](running_app_locally.html).
 
 # Home
 
 Home is the first tab you'll see when you open the app. It aims to provide a quick intro to what each tab does, and it contains a cool hex sticker. You generally won't spend much time in this tab, but after updating the package it's worth checking in to see if anything has changed.
 
-The home page provides instructions for resetting the app, and warns you that doing so will return the app to the state you first encountered it in. You can refresh the browser page, or close the app via the terminal, R session, or R process outlined in 'run app locally'. 
+The home page provides instructions for resetting the app, and **warns you that doing so will return the app to the state you first encountered it in**. You can refresh the browser page, or close the app via the terminal, R session, or R process outlined in 'run app locally'.
 
 # Survey Landscape
 
 This is the tab where most of the work is done, and the main reason the app exists. Navigate to the tab by clicking on it in the navigation bar. You should find four widgets at the top of the screen, a landscape plot, a data table, and if you scroll down, some controls to filter the minimum and maximum co-ordinates the landscape will show.
 
-## The four widgets
+## Landscape Plot
 
-+ **Colour Variable** - select the variable which should be used to colour each point. Generally this should be something meaningful to your reserach, and with relatively few possible values, i.e. topic, or cluster. And not something like 'date'. Selecting date will mean the app tries to find a colour for each different value of date, which will take a long time to run and likely result in error.
-+ **All Data** - entering a file name and clicking download will download all of the data in the app to the directory which you select. If you have used the delete button (explained below) then downloading all data will mean you get the data frame you first encountered minus the deleted rows. This is a good way to clean data, as you'll often find entire clusters or regions of the map which are difficult to clean via keywords, but easy using the selection tool.
-+ **Search Text** - Entering a regular expression and clicking the magnifying class will filter the landscape plot for just the documents which contain the regular expression.
-+ **Selected Data** - Clicking the download button allows you to download only your selections. You might want to use this when you find a particularly interesting area of the map and would like to analyse it in R, Excel etc.
- 
+The landscape plot should display each document in the data the app has been loaded with as a single point. The original text variable has been pre-processed, embedded, had the dimensions reduced and then clustered or topic modelled. This should mean that **each point on the map should be similar to nearby points**. You can hover over a point to see a preview of just that point's text. However, it's likely that you want to select multiple points (more on that later) and view in the Data Table to the right of the landscape plot.
+
+### The four widgets
+
+-   **Colour Variable** - *select the variable which should be used to colour each point. Generally this should be something meaningful to your reserach, and with relatively few possible values, i.e. topic, or cluster. And not something like 'date'. Selecting date will mean the app tries to find a colour for each different value of date, which will take a long time to run and likely result in error.*
+-   **All Data** - *entering a file name and clicking download will download all of the data in the app to the directory which you select. If you have used the delete button (explained below) then downloading all data will mean you get the data frame you first encountered minus the deleted rows. This is a good way to clean data, as you'll often find entire clusters or regions of the map which are difficult to clean via keywords, but easy using the selection tool.*
+
+Enter the name of the file you wish to download, it will append .csv to your file name, so there's no need to add it yourself.
+
+-   **Search Text** - *Entering a regular expression and clicking the magnifying class will filter the landscape plot for just the documents which contain the regular expression.*
+-   **Selected Data** - *Clicking the download button allows you to download only your selections. You might want to use this when you find a particularly interesting area of the map and would like to analyse it in R, Excel etc.*
+
+Enter the name of the file you wish to download, it will append .csv to your file name, so there's no need to add it yourself.
+
+### Selecting Data
+
+Plotly has built in icons which allow you to perform different actions on plotly plots. If you don't click any of these, clicking on the landscape and dragging around will perform 'lasso selection', which allows you to draw custom shapes to select points from. When you've selected some points, you'll notice the Data Table populate, the label selection widget appear, and in the bottom right-hand corner of the landscape plot, the Delete Selections widget.
+
+You can narrow down how much data is available to select from via two main avenues:
+
+-   **RegeX Filter** - *enter a regular expression to find only documents which include that expression*
+
+<!-- -->
+
+-   **Clicking Colour Variable Labels** - *If you single click a topic by its name or colour in the top right of the landscape plot, it will temporarily disappear. If you double click, only that topic will remain, the others will temporarily disappear. You can double click again to undo.*
+
+### Other plotly widgets
+
+Hover over each individual widget to get its name/what it does. As a primer, you can:
+Download plot as png
+Rectangle Zoom
+Pan 
+Box Select
+Lasso Select
+Draw line - can be labelled
+Draw circle -  can be labelled
+Draw rectangle -  can be labelled
+Zoom in
+Zoom out
+Autoscale
+Reset Axes
+
+**Beware, these settings are liable to reset when you do anything which interacts with the plot's underlying data, e.g. if you select new data, or delete data.**
+
+## Data Table
+
+Without the Data Table updating in response to your actions, the app would be incredibly difficult to use. This table lets you read and assess multiple posts at once, without having to rely on hovering over individual points.
+
+The permalink column has been edited so that you can click to view each post in its original form, at the website it came from.
+
+**Each column can be filtered** according to what data type it contains. For example, you can filter your topic or cluster variable to only see posts belong to one or a specified range of topics. You can filter the text to contain specific words, doing so does not change the underlying data in the landscape plot, only what is reflected in the table.
+
+# Bigram Network
+
+Provided you've selected some data, you'll find a rendered bigram network when you click on the tab. To keep the app performant, this network will count the bigrams from up to 5,000 documents; **if you have selected more than 5,000 documents, your data will be sampled** before the plot is rendered. For this reason there is no option o download your plot.
+
+If you wish to create a savable version of the bigram network, download the selected data, read the data into R, and then use {ParseR} to render the network.
+
+It is encouraged to download the selected data for any plot you render in the app, to promote reproducible research!
+
 # Distribution Tab
+
+This tab is for viewing some helpful summary plots for your currently selected data. It comes with four plots:
+
+## Volume over Time
+
+Shows the count of documents at equal time steps, binned by a given unit of time. This plot has a draggable element, which allows The controls should be fairly intuitive:
+
+-   **Height and Width sliders** *allow you to change the height and width of the plot. Increasing these values will make the bars bigger, decreasing will do the opposite.*
+-   **Date Range** *allows you to select a start point and end point in time to view.*
+-   **Unit** *allows you to select the time unit, optional values are: day, week, month, year, quarter.*
+-   **Smooth** *allows you to add a smoothing line to your data, and once you click this two boxes will appear, one toggles the standard error segment, the other changes the colour of the smoothing line.*
+-   **Custom Titles** *when toggled allows you to add the graph's title, subtitle, caption, x & y axes titles.*
+-   **Download** *downloads the plot in its current dimensions, with titles added*
+
+## Sentiment over Time
+
+Shows the count of each sentiment category, at equal time steps, binned by the given time unit. There are no new settings added to those provided with the Volume over Time chart.
+
+## Sentiment Distribution
+
+Rather than showing the counts of sentiment over time, this tab shows the overall sentiment distribution. There are no new settings.
+
+## Token Distribution
+
+This plot counts the top words in your selected data. If your clean text variable has not had its stop words removed, this will be filled with uninformative high-frequency words like 'the', 'to', 'and' etc. It's recommended to remove stop words in your clean text variable, this will also impact the bigram network.
 
 # Compare Groups
 
+This tab provides three plots which aim to help you understand some of the differences between groups. A grouping variable will usually be something like 'topic' or 'cluster', and can be selected for each plot separately.
+
+Because there may be a high number of groups, and each plot's height/width will be affected by this number, the draggable, resize element is available for each of these plots. If you find the current plot is overlapping the plot below, drag this element down to give the current plot more space. 
+
+However, in the future the draggable elements may be removed in favour of auto re-sizing the html container dynamically. 
+
+## Weighted log-odds
+
+This plot compares groups of selected data. It shows, for each group, the frequency and weighted log-odds ratio for each term, where a positive log-odds ratio means the term is more likely to occur in this group than in the other groups, and vice versa for negative. See the [ParseR Documentation](https://parser.shareldn.com/articles/distinctness_in_text.html) for a more complete explanation of how weighted log-odds works, or [Julia Silge, creator of Tidylo's explanation](https://juliasilge.com/blog/introducing-tidylo/)
+
+- **Text Size**  *controls the text of each word inside the plot*
+- **Number of Rows**  *controls how many rows all of the plots should be printed on. It's recommended to increase this number to match the number of unique values in your grouping variable. So if there are 10 topics, your grouping variable is topic, set this value to 10. However, increasing the width and height can mean fewer rows will suffice.* 
+- **top_n** *controls the maximum number of words to be shown on each group's plot*
+- **top_terms_cutoff** *controls the number of terms from which the top_n terms can be selected from. This parameter is slightly tricky, see below.*
+
+When calculating WLOs, it's important to understand how words in a corpus tend to be distributed. The distribution tends to follow [zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law), this means we'll tend to see thousands of words with a frequency of 1/2. 
+
+We want our chart to tell us which words are distinctive to each unique value of the grouping variable, but we don't want our chart to be filled with the super low-frequency words which **only** appear in that grouping variable. If we were only interested in how likely the top 100 words by frequency, across the entire corpus, are to appear in each group relative to the others, we can set top_terms_cutoff = 100.
+
+## Group Sentiment
+
+This chart is similar to the Sentiment Distribution tab, except it shows a bar for each unique value of our grouping variable. If we have many unique values in our grouping variable, we'll have many bars. Whilst this may seem to be a good thing, we need to be aware of some default settings and how to change them. 
+
+- **Chart Type** *Choose between Percent and Volume*
+- **Bar Labels Type** *Choose between Percent and Volume*
+
+For Chart Type: Percent it's often helpful to use Bar Labels Type = "volume" and vice versa for percent. This means you're less likely to overstate differences in sentiment when volume is low. 
+
+## Group Volume Over Time
+
+Functions similarly to the Volume over Time chart in the Distribution Tab, but for groups. This plot often benefits from having its container resized using the draggable element.
+
 # Labelled Data
+
+The final tab displays all of the data you have labelled so far. You can use the Data Table filter and sorting widgets to arrange the table how you please, and you can download the data using the widget in the top left.
+
+Enter the name of the file you wish to download, it will append .csv to your file name, so there's no need to add it yourself.
+
+# Suggested Workflow
+
+Load the version of LandscapeRGolem provided to you by the DS team, or follow instructions in the [run app locally](running_app_locally.html) vignette to set up the app with new data.
+
+Inspect regions of your conversation, delete spam & irrelevant areas as/when you find them. 
+
+Map out the conversation on your favourite drawing/labelling software, to ensure you don't forget where the interesting things you find are.
+
+When you identify a particularly interesting or specific area, add a label to it for later use.
