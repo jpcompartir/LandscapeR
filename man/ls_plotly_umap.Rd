@@ -39,7 +39,7 @@ names, such as \code{color}, \code{x}, \code{y}, \code{text}, \code{key}, as str
 }
 
 \examples{
-{
+\dontrun{
 LandscapeR::ls_example \%>\%
 dplyr::mutate(cluster = factor(cluster)) \%>\%
  ls_plotly_umap(x = "V1", y = "V2", type = "scattergl",

@@ -18,10 +18,9 @@
 #' @param width Width of plot (as a string)
 #'
 #' @return a plotly object
-#' @export
 #'
 #' @examples
-#' {
+#' \dontrun{
 #' LandscapeR::ls_example %>%
 #' dplyr::mutate(cluster = factor(cluster)) %>%
 #'  ls_plotly_umap(x = "V1", y = "V2", type = "scattergl",
