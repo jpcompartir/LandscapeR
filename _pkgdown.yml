@@ -20,7 +20,6 @@ reference:
   - '`ls_plot_group_static`'
   - '`ls_plot_variation_matrix`'
   - '`ls_plot_group_vol_time`'
-  - '`ls_plotly_umap`'
   - '`ls_plot_group_sent`'
   - '`ls_wlos`'
   - '`ls_sentiment_over_time`'
