@@ -30,6 +30,16 @@ jobs:
         with:
           use-public-rspm: true
 
+       - name: Install remotes
+        run: install.packages("remotes")
+        shell: Rscript {0}
+
+      - name: Install private packages
+        run: |
+          remotes::install_github("username/JPackage")
+          remotes::install_github("Avery-Island/HelpR", auth_token = Sys.getenv("SHAREPACKAGE_AUTH"))
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.
