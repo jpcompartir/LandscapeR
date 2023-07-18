@@ -7,7 +7,7 @@
 ls_link_click(df, url_var)
 }
 \arguments{
-\item{df}{Data Farame or Tibble Object}
+\item{df}{Data Frame or Tibble Object}
 
 \item{url_var}{URL Column}
 }

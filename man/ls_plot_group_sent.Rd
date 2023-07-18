@@ -2,7 +2,7 @@
 % Please edit documentation in R/zzz.R
 \name{ls_plot_group_sent}
 \alias{ls_plot_group_sent}
-\title{Quickly plot group sentiment distributions as a perentage in LandscapeR shiny app}
+\title{Quickly plot group sentiment distributions as a percentage in LandscapeR shiny app}
 \usage{
 ls_plot_group_sent(
   df,
@@ -27,8 +27,8 @@ ls_plot_group_sent(
 \item{bar_labels}{Whether to add the raw volume, percentage or neither to the bars}
 }
 \value{
-Ggplot stacked bar chart with x and y coords flipped
+Ggplot stacked bar chart with x and y co-ords flipped
 }
 \description{
-Quickly plot group sentiment distributions as a perentage in LandscapeR shiny app
+Quickly plot group sentiment distributions as a percentage in LandscapeR shiny app
 }

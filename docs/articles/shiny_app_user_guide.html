@@ -78,6 +78,7 @@
 
     
     
+<p><img src="reference/figures/landscaper.png" align="right" width="300px;" height="300px" style="padding: 25px 25px 25px 25px;"></p>
 <p>This vignette assumes that you know how to run the application. If
 you do not know, check out <a href="running_app_locally.html">run app
 locally</a>.</p>
@@ -121,7 +122,7 @@ the Data Table to the right of the landscape plot.</p>
 <li>
 <strong>Colour Variable</strong> - <em>select the variable which
 should be used to colour each point. Generally this should be something
-meaningful to your reserach, and with relatively few possible values,
+meaningful to your research, and with relatively few possible values,
 i.e. topic, or cluster. And not something like ‘date’. Selecting date
 will mean the app tries to find a colour for each different value of
 date, which will take a long time to run and likely result in
@@ -150,11 +151,10 @@ the documents which contain the regular expression.</em>
 <strong>Selected Data</strong> - <em>Clicking the download button
 allows you to download only your selections. You might want to use this
 when you find a particularly interesting area of the map and would like
-to analyse it in R, Excel etc.</em>
-</li>
+to analyse it in R, Excel etc.</em> spell Enter the name of the file you
+wish to download, it will append .csv to your file name, so there’s no
+need to add it yourself.</li>
 </ul>
-<p>Enter the name of the file you wish to download, it will append .csv
-to your file name, so there’s no need to add it yourself.</p>
 </div>
 <div class="section level4">
 <h4 id="selecting-data">Selecting Data<a class="anchor" aria-label="anchor" href="#selecting-data"></a>
@@ -238,8 +238,9 @@ selected data. It comes with four plots:</p>
 <h3 id="volume-over-time">Volume over Time<a class="anchor" aria-label="anchor" href="#volume-over-time"></a>
 </h3>
 <p>Shows the count of documents at equal time steps, binned by a given
-unit of time. This plot has a draggable element, which allows The
-controls should be fairly intuitive:</p>
+unit of time. This plot has a draggable element, which allows you to
+resize the plot to give it more space. Surrounding plots will move
+automagically. The other controls should be fairly intuitive:</p>
 <ul>
 <li>
 <strong>Height and Width sliders</strong> <em>allow you to change
@@ -394,9 +395,9 @@ to your file name, so there’s no need to add it yourself.</p>
 <div class="section level2">
 <h2 id="suggested-workflow">Suggested Workflow<a class="anchor" aria-label="anchor" href="#suggested-workflow"></a>
 </h2>
-<p>Load the version of LandscapeRGolem provided to you by the DS team,
-or follow instructions in the <a href="running_app_locally.html">run app
-locally</a> vignette to set up the app with new data.</p>
+<p>Load the version of LandscapeRGolem provided to you by the Data
+Science team, or follow instructions in the <a href="running_app_locally.html">run app locally</a> vignette to set up
+the app with new data.</p>
 <p>Inspect regions of your conversation, delete spam &amp; irrelevant
 areas as/when you find them.</p>
 <p>Map out the conversation on your favourite drawing/labelling

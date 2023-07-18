@@ -14,9 +14,9 @@ with brackets as it should be reactive}
 
 \item{y}{Y co-ordinate variable (as a string)}
 
-\item{type}{type of plotly chart to render, usually 'scattergl' for perforamcne}
+\item{type}{type of plotly chart to render, usually 'scattergl' for performance}
 
-\item{group_var}{Which variable to colouyr by (as a string)}
+\item{group_var}{Which variable to colour by (as a string)}
 
 \item{key}{ID column (as a string)}
 
@@ -41,9 +41,11 @@ names, such as \code{color}, \code{x}, \code{y}, \code{text}, \code{key}, as str
 \examples{
 \dontrun{
 LandscapeR::ls_example \%>\%
-dplyr::mutate(cluster = factor(cluster)) \%>\%
- ls_plotly_umap(x = "V1", y = "V2", type = "scattergl",
- key = "document", text_var = "text", group_var = "cluster",  height = 600, width = 800)
- }
+  dplyr::mutate(cluster = factor(cluster)) \%>\%
+  ls_plotly_umap(
+    x = "V1", y = "V2", type = "scattergl",
+    key = "document", text_var = "text", group_var = "cluster", height = 600, width = 800
+  )
+}
 }
 \keyword{internal}
