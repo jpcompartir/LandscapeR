@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/running_app_locally.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/articles/running_app_locally.html</loc>
   </url>
   <url>
-    <loc>/articles/shiny_app_user_guide.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/articles/shiny_app_user_guide.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/index.html</loc>
   </url>
   <url>
-    <loc>/reference/column_type_checker.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/column_type_checker.html</loc>
   </url>
   <url>
-    <loc>/reference/download_box.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/download_box.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_create_note_area.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_create_note_area.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_example.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_example.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_link_click.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_link_click.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_group_facet.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_group_facet.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_group_sent.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_group_sent.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_group_static.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_group_static.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_group_vol_time.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_group_vol_time.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_sentiment_distribution.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_sentiment_distribution.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_static.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_static.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_tokens_counter.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_tokens_counter.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_variation_matrix.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_variation_matrix.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plot_volume_over_time.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_volume_over_time.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_plotly_umap.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plotly_umap.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_sentiment_over_time.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_sentiment_over_time.html</loc>
   </url>
   <url>
-    <loc>/reference/ls_wlos.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/ls_wlos.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/reactive_labels.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/reactive_labels.html</loc>
   </url>
   <url>
-    <loc>/reference/titles_render.html</loc>
+    <loc>https://jpcompartir.github.io/LandscapeR/reference/titles_render.html</loc>
   </url>
 </urlset>

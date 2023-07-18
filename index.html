@@ -68,8 +68,9 @@
 <div class="page-header"><h1 id="landscaper">LandscapeR<a class="anchor" aria-label="anchor" href="#landscaper"></a>
 </h1></div>
 <!-- badges: start -->
-<!-- badges: end -->
-<p><img src="reference/figures/Capture_Intelligence_FullColour.png" align="center" width="100%" style="padding: 25px 50px 25px 0px;"></p>
+
+<p><img src="reference/figures/Capture_Intelligence_FullColour.png" align="top" width="100%" style="padding: 25px 50px 25px 0px;"></p>
+<p><img src="reference/figures/landscaper.png" align="right" width="300px;" height="300px" style="padding: 25px 25px 25px 25px;"></p>
 <p>LandscapeR is our R Package for exploring text data which has been transformed into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration &amp; cleaning UI.</p>
 <p>If the conversation has been mapped appropriately, you will find that mentions close together in the Shiny application/UMAP plot have similar meanings, posts far apart have less similar meanings. This makes it possible to understand and explore thousands, hundreds of thousands, or even millions of posts at a level which was previously impossible.</p>
 <div class="section level2">
@@ -78,16 +79,12 @@
 <p>You can install the development version of LandscapeR using the <code>install_github</code> function from the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"jpcompartir/LandscapeR"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="example-use-case">Example Use Case<a class="anchor" aria-label="anchor" href="#example-use-case"></a>
-</h2>
 <p>We can take this table of text:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">LandscapeR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jpcompartir.github.io/LandscapeR">LandscapeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ls_example</span> </span>
+<span><span class="va">ls_example</span></span>
 <span><span class="co">#&gt; # A tibble: 11,226 × 9</span></span>
 <span><span class="co">#&gt;    document text      cluster clean_text date                sentiment permalink</span></span>
 <span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;    </span></span>
@@ -109,7 +106,7 @@
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
 <p>We can add colour to a grouping variable to see where our groups sit and how they relate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ls_example</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">ls_example</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/ls_plot_group_static.html">ls_plot_group_static</a></span><span class="op">(</span>group_var <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
@@ -133,14 +130,14 @@
 <p>For the most up-to-date version of the Shiny application, you should install the LandscapeRGolem package:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"jpcompartir/LandscaperGolem"</span><span class="op">)</span></span></code></pre></div>
-<p>Check out the ‘Running Your App Locally’ for tips on how to run the app.</p>
+<p>Check out the <a href="vignettes/running_app_locally.Rmd">Running Your App Locally vignette</a> for tips on how to run the app.</p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/jpcompartir/LandscapeR" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/jpcompartir/LimpiaR/issues" class="external-link">Report an issue</a></li>
+<li><a href="https://github.com/jpcompartir/LandscapeR/issues" class="external-link">Report an issue</a></li>
 </ul>
 </div>
 
@@ -171,7 +168,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

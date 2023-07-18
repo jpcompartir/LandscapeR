@@ -74,11 +74,11 @@ with brackets as it should be reactive</p></dd>
 
 
 <dt>type</dt>
-<dd><p>type of plotly chart to render, usually 'scattergl' for perforamcne</p></dd>
+<dd><p>type of plotly chart to render, usually 'scattergl' for performance</p></dd>
 
 
 <dt>group_var</dt>
-<dd><p>Which variable to colouyr by (as a string)</p></dd>
+<dd><p>Which variable to colour by (as a string)</p></dd>
 
 
 <dt>key</dt>
@@ -115,10 +115,12 @@ names, such as <code>color</code>, <code>x</code>, <code>y</code>, <code>text</c
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu">LandscapeR</span><span class="fu">::</span><span class="va"><a href="ls_example.html">ls_example</a></span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span> <span class="fu">ls_plotly_umap</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"V1"</span>, y <span class="op">=</span> <span class="st">"V2"</span>, type <span class="op">=</span> <span class="st">"scattergl"</span>,</span></span>
-<span class="r-in"><span> key <span class="op">=</span> <span class="st">"document"</span>, text_var <span class="op">=</span> <span class="st">"text"</span>, group_var <span class="op">=</span> <span class="st">"cluster"</span>,  height <span class="op">=</span> <span class="fl">600</span>, width <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span></span>
-<span class="r-in"><span> <span class="op">}</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">ls_plotly_umap</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    x <span class="op">=</span> <span class="st">"V1"</span>, y <span class="op">=</span> <span class="st">"V2"</span>, type <span class="op">=</span> <span class="st">"scattergl"</span>,</span></span>
+<span class="r-in"><span>    key <span class="op">=</span> <span class="st">"document"</span>, text_var <span class="op">=</span> <span class="st">"text"</span>, group_var <span class="op">=</span> <span class="st">"cluster"</span>, height <span class="op">=</span> <span class="fl">600</span>, width <span class="op">=</span> <span class="fl">800</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
