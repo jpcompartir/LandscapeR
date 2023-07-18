@@ -1,6 +1,6 @@
 #' Create a landscape plot and colour in each level of a grouping variable.
 #'
-#' Default colour mapping ises the viridis palette, you can simply add different colour maps to the plot using standard ggplot syntax, as the return object is a ggplot object e.g. plot + `scale_colour_manual(values = ...)`
+#' Default colour mapping uses the viridis palette, you can simply add different colour maps to the plot using standard ggplot syntax, as the return object is a ggplot object e.g. plot + `scale_colour_manual(values = ...)`
 #'
 #' @param df Data Frame or Tibble object
 #' @param x_var The variable containing x-coordinates

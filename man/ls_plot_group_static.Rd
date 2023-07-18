@@ -21,7 +21,7 @@ ls_plot_group_static(df, x_var = V1, y_var = V2, group_var, point_size = 0.1)
 a ggplot object
 }
 \description{
-Default colour mapping ises the viridis palette, you can simply add different colour maps to the plot using standard ggplot syntax, as the return object is a ggplot object e.g. plot + \code{scale_colour_manual(values = ...)}
+Default colour mapping uses the viridis palette, you can simply add different colour maps to the plot using standard ggplot syntax, as the return object is a ggplot object e.g. plot + \code{scale_colour_manual(values = ...)}
 }
 \examples{
 df <- ls_example \%>\% dplyr::mutate(cluster = factor(cluster))

@@ -23,7 +23,7 @@ run_app()
 This will load the app with whatever data sits inside the LandscapeRGolem on your computer's `app_server.R` file. To run the app with custom data, you can use the `run_app_from_other_project` function, and use the `data =` argument to feed in your data.
 
 ```{r, eval = FALSE}
-data <- readr::read_csv(path/to/data)
+data <- readr::read_csv(path / to / data)
 
 run_app_from_other_project(data = data)
 ```
@@ -50,20 +50,22 @@ library(dplyr)
 library(readr)
 options(shiny.port = 3838)
 
-prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var,permalink_var){
+prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var, permalink_var) {
   data <- data %>%
-    dplyr::rename(document = {{document_var}},
-                  date = {{date_var}},
-                  text = {{text_var}},
-                  clean_text = {{clean_text_var}},
-                  cluster = {{colour_var}},
-                  V1 = {{x_var}},
-                  V2 = {{y_var}},
-                  permalink = {{permalink_var}})
+    dplyr::rename(
+      document = {{ document_var }},
+      date = {{ date_var }},
+      text = {{ text_var }},
+      clean_text = {{ clean_text_var }},
+      cluster = {{ colour_var }},
+      V1 = {{ x_var }},
+      V2 = {{ y_var }},
+      permalink = {{ permalink_var }}
+    )
   return(data)
 }
 
-data <- read_csv(path/to/data)
+data <- read_csv(path / to / data)
 
 data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink)
 
@@ -80,13 +82,13 @@ From your Rstudio project, provided you have a saved file named 'run_app_locally
 ```{r, eval = FALSE}
 library(processx)
 r_process <- process$new("Rscript", "run_app_locally.R")
-r_process #Check it says running, not finished
+r_process # Check it says running, not finished
 ```
 
 Then type localhost:3838 into your browser, you should find LandscapeRGolem running. To kill the app:
 ```{r, eval = FALSE}
 r_process$kill()
-r_process #should be finished now, not running.
+r_process # should be finished now, not running.
 ```
 
 

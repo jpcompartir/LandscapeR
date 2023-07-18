@@ -7,7 +7,7 @@
 ls_create_note_area()
 }
 \value{
-a moveable shiny tect box
+a movable shiny text box
 }
 \description{
 Add a re-sizeable text area to take notes in!
@@ -15,8 +15,7 @@ Add a re-sizeable text area to take notes in!
 \examples{
 \dontrun{
 ui <- shiny::fluidPage(
-ls_create_note_area()
+  ls_create_note_area()
 )
-
 }
 }

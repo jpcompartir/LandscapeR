@@ -1,5 +1,9 @@
+url: https://jpcompartir.github.io/LandscapeR
+
 template:
   bootstrap: 5
+  params:
+    search: true
 
 development:
   mode: auto
@@ -41,4 +45,4 @@ repo:
 home:
   links:
   - text: Report an issue
-    href: https://github.com/jpcompartir/LimpiaR/issues
+    href: https://github.com/jpcompartir/LandscapeR/issues

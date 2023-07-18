@@ -11,12 +11,13 @@
 #'
 #' @keywords internal
 ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50d2") {
-
   date_quo <- rlang::enquo(.date_var)
   date_sym <- rlang::ensym(.date_var)
 
-  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit),
-                             plot_date = as.Date(plot_date))
+  df <- df %>% dplyr::mutate(
+    plot_date = lubridate::floor_date(!!date_sym, unit = unit),
+    plot_date = as.Date(plot_date)
+  )
 
   df %>%
     dplyr::count(plot_date) %>%
@@ -45,7 +46,6 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
 #' @keywords internal
 
 ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n = 20, fill = "#0f50d2") {
-
   text_quo <- rlang::ensym(text_var)
 
   df %>%
@@ -56,7 +56,7 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
     ggplot2::geom_col(fill = fill) +
     ggplot2::coord_flip() +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words")+
+    ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
@@ -79,7 +79,7 @@ download_box <- function(exportname, plot, width = 300, height = 250) {
     },
     content = function(file) {
       ggplot2::ggsave(file,
-        plot = plot(), #make sure the reactive object's state is collected here, important!
+        plot = plot(), # make sure the reactive object's state is collected here, important!
         device = "png",
         width = width(),
         height = height(),
@@ -168,7 +168,7 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
 #' Will allow you to click the hyperlink to load a URL, e.g. for selecting an image.
 #' Make sure that DataTable is rendered with the argument 'escape = FALSE' or column will be all text.
 #'
-#' @param df Data Farame or Tibble Object
+#' @param df Data Frame or Tibble Object
 #' @param url_var URL Column
 #'
 #' @return data frame with URL column edited to be clickable
@@ -176,7 +176,6 @@ ls_plot_sentiment_distribution <- function(df, sentiment_var = sentiment) {
 #' @keywords internal
 #'
 ls_link_click <- function(df, url_var) {
-
   url_sym <- rlang::ensym(url_var)
 
   df %>%
@@ -274,61 +273,81 @@ ls_wlos <- function(df,
                     top_n = 30,
                     text_size = 4,
                     nrow = 4,
-                    top_terms_cutoff = 5000){
+                    top_terms_cutoff = 5000) {
+  text_quo <- rlang::enquo(text_var)
+  group_quo <- rlang::enquo(group_var)
 
-    text_quo <- rlang::enquo(text_var)
-    group_quo <- rlang::enquo(group_var)
+  wlos <- df %>%
+    tidytext::unnest_tokens(word, !!text_quo) %>%
+    dplyr::rename(facet_var = !!group_quo) %>%
+    dplyr::mutate(facet_var = factor(facet_var)) %>%
+    dplyr::group_by(facet_var) %>%
+    dplyr::count(word, sort = TRUE) %>%
+    dplyr::ungroup() %>%
+    tidylo::bind_log_odds(
+      set = facet_var,
+      feature = word,
+      n = n
+    )
 
-    wlos <- df %>%
-      tidytext::unnest_tokens(word, !!text_quo) %>%
-      dplyr::rename(facet_var = !!group_quo) %>%
-      dplyr::mutate(facet_var = factor(facet_var)) %>%
-      dplyr::group_by(facet_var) %>%
-      dplyr::count(word, sort = TRUE) %>%
-      dplyr::ungroup() %>%
-      tidylo::bind_log_odds(set = facet_var,
-                            feature = word,
-                            n = n)
+  viz <- wlos %>%
+    dplyr::slice_max(
+      order_by = n,
+      n = top_terms_cutoff
+    ) %>%
+    dplyr::group_by(facet_var) %>%
+    dplyr::top_n(
+      n = top_n,
+      wt = log_odds_weighted
+    ) %>%
+    dplyr::ungroup() %>%
+    ggplot2::ggplot(ggplot2::aes(
+      x = n,
+      y = log_odds_weighted,
+      label = word
+    )) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      lty = 2,
+      color = "gray50",
+      alpha = 0.5,
+      linewidth = 1.2
+    ) +
+    ggrepel::geom_text_repel(
+      size = text_size,
+      segment.size = 0.5,
+      color = "black",
+      bg.color = "white"
+    ) +
+    ggplot2::geom_point(
+      size = .4,
+      show.legend = F
+    ) +
+    ggplot2::facet_wrap(~facet_var,
+      nrow = nrow,
+      scales = "free"
+    ) +
+    ggplot2::scale_x_log10() +
+    ggplot2::labs(
+      x = "Word frequency",
+      y = "Log odds ratio, weighted by uninformative Dirichlet prior"
+    ) +
+    ggplot2::theme(strip.background = ggplot2::element_rect(fill = "gray")) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      strip.background = ggplot2::element_rect(
+        fill = "white",
+        colour = "white"
+      ),
+      strip.text = ggplot2::element_text(face = "bold"),
+      panel.grid.minor = ggplot2::element_blank()
+    )
 
-    viz <- wlos %>%
-      dplyr::slice_max(order_by = n,
-                       n = top_terms_cutoff) %>%
-      dplyr::group_by(facet_var) %>%
-      dplyr::top_n(n = top_n,
-                   wt = log_odds_weighted) %>%
-      dplyr::ungroup() %>%
-      ggplot2::ggplot(ggplot2::aes(x = n,
-                                   y = log_odds_weighted,
-                                   label = word)) +
-      ggplot2::geom_hline(yintercept = 0,
-                          lty = 2,
-                          color = "gray50",
-                          alpha = 0.5,
-                          linewidth = 1.2) +
-      ggrepel::geom_text_repel(size = text_size,
-                               segment.size = 0.5,
-                               color = 'black',
-                               bg.color = "white") +
-      ggplot2::geom_point(size = .4,
-                          show.legend = F) +
-      ggplot2::facet_wrap(~facet_var,
-                          nrow = nrow,
-                          scales = "free") +
-      ggplot2::scale_x_log10() +
-      ggplot2::labs(x = "Word frequency",
-                    y = "Log odds ratio, weighted by uninformative Dirichlet prior") +
-      ggplot2::theme(strip.background = ggplot2::element_rect(fill="gray"))+
-      ggplot2::theme_bw() +
-      ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white",
-                                                              colour = "white"),
-                     strip.text = ggplot2::element_text(face = "bold"),
-                     panel.grid.minor = ggplot2::element_blank())
-
-    return(viz)
+  return(viz)
 }
 
 
-#' Quickly plot group sentiment distributions as a perentage in LandscapeR shiny app
+#' Quickly plot group sentiment distributions as a percentage in LandscapeR shiny app
 #'
 #' @param df data frame
 #' @param group_var Grouping variable, e.g. country, topic, cluster
@@ -337,16 +356,15 @@ ls_wlos <- function(df,
 #' @param title The title of the plot, entered as a string.
 #' @param bar_labels Whether to add the raw volume, percentage or neither to the bars
 #'
-#' @return Ggplot stacked bar chart with x and y coords flipped
+#' @return Ggplot stacked bar chart with x and y co-ords flipped
 #' @export
 ls_plot_group_sent <- function(df,
-                                 group_var = cluster,
-                                 sentiment_var = sentiment,
-                                 type = c("percent", "volume"),
-                                 title = "Grouped Sentiment Chart",
+                               group_var = cluster,
+                               sentiment_var = sentiment,
+                               type = c("percent", "volume"),
+                               title = "Grouped Sentiment Chart",
                                bar_labels = c("none", "percent", "volume")) {
-
-  group_sym <- group_var #Weird tidy eval pattern when the columns are being generated dynamically with updateSelectInput. First get the variable (in this case a string) then convert to symbol.
+  group_sym <- group_var # Weird tidy eval pattern when the columns are being generated dynamically with updateSelectInput. First get the variable (in this case a string) then convert to symbol.
   group_sym <- rlang::ensym(group_var)
   sentiment_sym <- rlang::ensym(sentiment_var)
 
@@ -354,11 +372,13 @@ ls_plot_group_sent <- function(df,
   type <- match.arg(if (missing(type)) "percent" else type, c("percent", "volume"))
 
   df <- df %>%
-    dplyr::mutate(group_var = !!group_sym,
-                  sentiment_var = !!sentiment_sym,
-                  group_var = factor(group_var)) %>%
+    dplyr::mutate(
+      group_var = !!group_sym,
+      sentiment_var = !!sentiment_sym,
+      group_var = factor(group_var)
+    ) %>%
     dplyr::count(group_var, sentiment_var) %>%
-    dplyr::add_count(group_var , wt = n, name = ".total") %>%
+    dplyr::add_count(group_var, wt = n, name = ".total") %>%
     dplyr::mutate(
       percent = n / .total * 100,
       percent_character = paste0(round(percent, digits = 1), "%")
@@ -366,9 +386,11 @@ ls_plot_group_sent <- function(df,
 
   if (type == "percent") {
     plot <- df %>%
-      ggplot2::ggplot(ggplot2::aes(x = reorder(group_var, n),
-                                   y = percent,
-                                   fill = sentiment_var)) +
+      ggplot2::ggplot(ggplot2::aes(
+        x = reorder(group_var, n),
+        y = percent,
+        fill = sentiment_var
+      )) +
       ggplot2::geom_col() +
       ggplot2::labs(
         fill = NULL, y = NULL, x = "% of Posts",
@@ -376,9 +398,11 @@ ls_plot_group_sent <- function(df,
       )
   } else if (type == "volume") {
     plot <- df %>%
-      ggplot2::ggplot(ggplot2::aes(x = reorder(group_var, n),
-                                   y = n,
-                                   fill = sentiment_var)) +
+      ggplot2::ggplot(ggplot2::aes(
+        x = reorder(group_var, n),
+        y = n,
+        fill = sentiment_var
+      )) +
       ggplot2::geom_col() +
       ggplot2::labs(
         fill = NULL, y = NULL, x = "Number of Posts",
@@ -396,17 +420,17 @@ ls_plot_group_sent <- function(df,
   if (bar_labels == "percent") {
     plot <- plot +
       ggplot2::geom_text(ggplot2::aes(label = percent_character),
-                         colour = "white",
-                         position = ggplot2::position_stack(0.5),
-                         check_overlap = TRUE
+        colour = "white",
+        position = ggplot2::position_stack(0.5),
+        check_overlap = TRUE
       )
   }
   if (bar_labels == "volume") {
     plot <- plot +
       ggplot2::geom_text(ggplot2::aes(label = scales::comma(n)),
-                         colour = "white",
-                         position = ggplot2::position_stack(0.5),
-                         check_overlap = TRUE
+        colour = "white",
+        position = ggplot2::position_stack(0.5),
+        check_overlap = TRUE
       )
   }
   return(plot)
@@ -421,20 +445,21 @@ ls_plot_group_sent <- function(df,
 #' @param unit A single unit of time fed into lubridate::floor_date  "week", "day", "month","quarter", "year"
 #' @param nrow How many rows the plot should be shown in
 #'
-#' @return ggplot object of facetted bar charts
+#' @return ggplot object of faceted bar charts
 #' @export
-ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit = c("day", "week", "month", "quarter", "year"), nrow = 4){
-
+ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit = c("day", "week", "month", "quarter", "year"), nrow = 4) {
   unit <- match.arg(unit)
 
   date_sym <- rlang::ensym(date_var)
-  group_sym <- group_var #shiny tidy eval trick
+  group_sym <- group_var # shiny tidy eval trick
   group_sym <- rlang::ensym(group_var)
 
-  df <- df %>% dplyr::mutate(plot_date = lubridate::floor_date(!!date_sym, unit = unit),
-                             plot_date = as.Date(plot_date),
-                             facet_var = !!group_sym,
-                             facet_var = factor(facet_var))
+  df <- df %>% dplyr::mutate(
+    plot_date = lubridate::floor_date(!!date_sym, unit = unit),
+    plot_date = as.Date(plot_date),
+    facet_var = !!group_sym,
+    facet_var = factor(facet_var)
+  )
 
   df %>%
     dplyr::count(plot_date, facet_var) %>%
@@ -443,28 +468,27 @@ ls_plot_group_vol_time <- function(df, group_var = group, date_var = date, unit 
     ggplot2::theme_minimal() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%b") +
     ggplot2::scale_fill_viridis_d() +
-    ggplot2::theme(legend.position = "none",
-                   axis.text.x = ggplot2::element_text(angle = 90),
-                   panel.grid.major.x = ggplot2::element_blank(),
-                   panel.grid.minor.y = ggplot2::element_blank()) +
+    ggplot2::theme(
+      legend.position = "none",
+      axis.text.x = ggplot2::element_text(angle = 90),
+      panel.grid.major.x = ggplot2::element_blank(),
+      panel.grid.minor.y = ggplot2::element_blank()
+    ) +
     ggplot2::labs(title = "Topic Volume over Time", x = NULL, y = "Number of Posts") +
     ggplot2::facet_wrap(~facet_var, nrow = nrow)
-
-
 }
 
 
 #' Add a re-sizeable text area to take notes in!
 #'
-#' @return a moveable shiny tect box
+#' @return a movable shiny text box
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' ui <- shiny::fluidPage(
-#' ls_create_note_area()
+#'   ls_create_note_area()
 #' )
-#'
 #' }
 ls_create_note_area <- function() {
   shiny::tagList(
@@ -480,7 +504,6 @@ ls_create_note_area <- function() {
         height: 100%;
       }
     ")),
-
     shinyjqui::jqui_resizable(
       shiny::div(
         id = "container",
@@ -506,8 +529,7 @@ ls_create_note_area <- function() {
 ls_sentiment_over_time <- function(df,
                                    sentiment_var = sentiment,
                                    date_var = date,
-                                   unit = c("week", "day","month", "quarter", "year")){
-
+                                   unit = c("week", "day", "month", "quarter", "year")) {
   unit <- match.arg(unit)
 
   sent_sym <- rlang::ensym(sentiment_var)
@@ -516,33 +538,40 @@ ls_sentiment_over_time <- function(df,
   sent_string <- rlang::as_string(sent_sym)
   date_string <- rlang::as_string(date_sym)
 
-  if(!sent_string %in% colnames(df)){
+  if (!sent_string %in% colnames(df)) {
     stop(paste0("Cannot find '", sent_string, "' in the data frame, did you mean `sentiment_var = sentiment`?"))
   }
-  if(!date_string %in% colnames(df)){
+  if (!date_string %in% colnames(df)) {
     stop(paste0("Cannot find '", date_string, "' in the data frame, did you mean `date_var = date`?"))
   }
 
 
 
-  df <- df %>% dplyr:: mutate(
+  df <- df %>% dplyr::mutate(
     plot_date = as.Date(!!date_sym),
-    plot_date = lubridate::floor_date(plot_date, unit = unit))
+    plot_date = lubridate::floor_date(plot_date, unit = unit)
+  )
 
   plot <- df %>%
-    dplyr::count(plot_date,!!sent_sym) %>%
+    dplyr::count(plot_date, !!sent_sym) %>%
     dplyr::mutate(!!sent_sym := tolower(!!sent_sym)) %>%
     ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n, fill = !!sent_sym)) +
     ggplot2::geom_col() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
-    ggplot2::scale_fill_manual(aesthetics = c("fill", "colour"),
-                               values = c("positive" = "#107C10",
-                                          "negative" = "#D83B01",
-                                          "neutral" = "#FFB900")) +
+    ggplot2::scale_fill_manual(
+      aesthetics = c("fill", "colour"),
+      values = c(
+        "positive" = "#107C10",
+        "negative" = "#D83B01",
+        "neutral" = "#FFB900"
+      )
+    ) +
     ggplot2::theme_minimal() +
-    ggplot2::theme(legend.position = "none",
-                   panel.grid.major = ggplot2::element_blank(),
-                   axis.text.x = ggplot2::element_text(angle = 90)) +
+    ggplot2::theme(
+      legend.position = "none",
+      panel.grid.major = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(angle = 90)
+    ) +
     ggplot2::labs(y = "n", x = paste0("Date by ", unit))
 
   return(plot)

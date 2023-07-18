@@ -24,7 +24,7 @@ ls_plot_group_vol_time(
 \item{nrow}{How many rows the plot should be shown in}
 }
 \value{
-ggplot object of facetted bar charts
+ggplot object of faceted bar charts
 }
 \description{
 Quickly plot faceted volume of groups over time in a LandscapeR Shiny App

@@ -4,9 +4,13 @@
 # LandscapeR
 
 <!-- badges: start -->
+
+[![pkgdown](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
-<img src="man/figures/Capture_Intelligence_FullColour.png" align="center" width="100%" style="padding: 25px 50px 25px 0px;"/>
+<img src="man/figures/Capture_Intelligence_FullColour.png" align="top" width="100%" style="padding: 25px 50px 25px 0px;"/>
+
+<img src="man/figures/landscaper.png" align="right" width="300px;" height = "300px" style="padding: 25px 25px 25px 25px;"/>
 
 LandscapeR is our R Package for exploring text data which has been
 transformed into a navigable landscape. The package makes use of
@@ -29,15 +33,13 @@ You can install the development version of LandscapeR using the
 devtools::install_github(repo = "jpcompartir/LandscapeR")
 ```
 
-## Example Use Case
-
 We can take this table of text:
 
 ``` r
 library(LandscapeR)
 library(tidyverse)
 
-ls_example 
+ls_example
 #> # A tibble: 11,226 × 9
 #>    document text      cluster clean_text date                sentiment permalink
 #>       <dbl> <chr>       <dbl> <chr>      <dttm>              <chr>     <chr>    
@@ -67,7 +69,7 @@ We can add colour to a grouping variable to see where our groups sit and
 how they relate:
 
 ``` r
-ls_example %>% 
+ls_example %>%
   mutate(cluster = factor(cluster)) %>%
   ls_plot_group_static(group_var = cluster)
 ```
@@ -106,4 +108,6 @@ install the LandscapeRGolem package:
 remotes::install_github(repo = "jpcompartir/LandscaperGolem")
 ```
 
-Check out the ‘Running Your App Locally’ for tips on how to run the app.
+Check out the [Running Your App Locally
+vignette](vignettes/running_app_locally.Rmd) for tips on how to run the
+app.

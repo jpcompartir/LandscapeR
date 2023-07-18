@@ -11,7 +11,6 @@ test_that("ls_plot_group_static uses the correct data", {
   plot_data <- ggplot2::ggplot_build(ls_plot_group_static(df, group_var = group))$data
   expect_equal(sort(plot_data[[1]]$x), sort(df$V1))
   expect_equal(sort(plot_data[[1]]$y), sort(df$V2))
-
 })
 
 # Test that the function sets the x and y axis labels to be empty
