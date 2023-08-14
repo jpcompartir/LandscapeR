@@ -24,6 +24,7 @@ reference:
     One stop shop for building a Shiny app to explore a conversation
   contents:
   - '`ls_plot_static`'
+  - '`ls_plot_density`'
   - '`ls_plot_group_facet`'
   - '`ls_plot_group_static`'
   - '`ls_plot_variation_matrix`'
