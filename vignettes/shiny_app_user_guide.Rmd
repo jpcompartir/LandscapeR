@@ -23,7 +23,7 @@ Home is the first tab you'll see when you open the app. It aims to provide a qui
 
 The home page provides instructions for resetting the app, and **warns you that doing so will return the app to the state you first encountered it in**. You can refresh the browser page, or close the app via the terminal, R session, or R process outlined in 'run app locally'.
 
-# Survey Landscape
+# Landscape
 
 This is the tab where most of the work is done, and the main reason the app exists. Navigate to the tab by clicking on it in the navigation bar. You should find four widgets at the top of the screen, a landscape plot, a data table, and if you scroll down, some controls to filter the minimum and maximum co-ordinates the landscape will show.
 
@@ -156,12 +156,62 @@ The final tab displays all of the data you have labelled so far. You can use the
 
 Enter the name of the file you wish to download, it will append .csv to your file name, so there's no need to add it yourself.
 
-# Suggested Workflow
+# Example Workflow
 
-Load the version of LandscapeRGolem provided to you by the Data Science team, or follow instructions in the [run app locally](running_app_locally.html) vignette to set up the app with new data.
+There is a lot you can do in LandscapeR, we've provided a couple of example repos.
 
-Inspect regions of your conversation, delete spam & irrelevant areas as/when you find them. 
+## Labelling Data
 
-Map out the conversation on your favourite drawing/labelling software, to ensure you don't forget where the interesting things you find are.
+1. Load the version of LandscapeRGolem provided to you by the Data Science team, or follow instructions in the [run app locally](running_app_locally.html) vignette to set up the app with new data.
 
-When you identify a particularly interesting or specific area, add a label to it for later use.
+2. Inspect regions of your conversation, delete spam & irrelevant areas as/when you find them. 
+
+3. Map out the conversation on your favourite drawing/labelling software, to ensure you don't forget where the interesting things you find are.
+
+4. When you identify a particularly interesting or specific area, add a label to it for later use.
+
+5. Save your labelled data and all other data to then analyse in R/Python/Excel/Tableau etc.
+
+## Finding Exemplars
+
+1. Enter a pattern with the terms you wish to find exemplars for
+2. Inspect reamining data points
+3. Select interesting regions
+4. Click the 'Click to View' button
+5. Repeat
+
+# Tweaks
+
+LandscapeR does its best to provide you with the right columns that you'll need. However, occasionally you may need to change one of the variables LandscapeR requires for another.
+
+
+## Editing Columns
+
+LandscapeR tries to give you some helpful defaults, and it imposes some restrictions on the types of column it will read data from. From the [run app locally](running_app_locally.html) vignette we can see that at a minimum our app should have columns with the names document, date, text, clean_text, text, cluster, V1, V2, permalink. 
+
+
+```{r, eval = FALSE}
+prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var,permalink_var, sentiment_var){
+  data <- data %>%
+    dplyr::rename(document = {{document_var}},
+                  date = {{date_var}},
+                  text = {{text_var}},
+                  clean_text = {{clean_text_var}},
+                  cluster = {{colour_var}},
+                  V1 = {{x_var}},
+                  V2 = {{y_var}},
+                  permalink = {{permalink_var}},
+                  sentiment = {{sentiment_var}})
+  return(data)
+}
+
+data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink, sentiment)
+```
+
+What if you had a different variable you wanted to treat as sentiment, say peak, pit or neither? If that column in your data was called 'peak_pit', you could call the `prepare_data_for_landscaper` differently. First you'll need to rename the old sentiment variable, so that you can rename the peak_pit variable to sentiment.
+```{r, eval = FALSE}
+data <- data %>% rename(old_sentiment = sentiment)
+data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink, sentiment_var = peak_pit)
+```
+
+Then when you run your app you should find that that sentiment variable is really the peak and pit.

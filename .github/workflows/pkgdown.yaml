@@ -31,19 +31,10 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Install remotes
-        run: install.packages("remotes")
-        shell: Rscript {0}
-
-      - name: Install private packages
-        run: |
-          remotes::install_github("Avery-Island/HelpR", auth_token = Sys.getenv("SHAREPACKAGE_AUTH"))
-        shell: Rscript {0}
-
-      - name: Install dependencies
+      - name: Install remotes & Dependencies
         run: |
           install.packages("remotes")
-          remotes::install_github("Avery-Island/HelpR", auth_token = Sys.getenv("SHAREPACKAGE_AUTH"))
+          remotes::install_github("jpcompartir/DisplayR")
           install.packages("pkgdown")
           remotes::install_local(".")  # install the package from the current repository
         shell: Rscript {0}
@@ -59,3 +50,5 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
+
+

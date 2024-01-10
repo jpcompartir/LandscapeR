@@ -50,24 +50,23 @@ library(dplyr)
 library(readr)
 options(shiny.port = 3838)
 
-prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var, permalink_var) {
+prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var,permalink_var, sentiment_var){
   data <- data %>%
-    dplyr::rename(
-      document = {{ document_var }},
-      date = {{ date_var }},
-      text = {{ text_var }},
-      clean_text = {{ clean_text_var }},
-      cluster = {{ colour_var }},
-      V1 = {{ x_var }},
-      V2 = {{ y_var }},
-      permalink = {{ permalink_var }}
-    )
+    dplyr::rename(document = {{document_var}},
+                  date = {{date_var}},
+                  text = {{text_var}},
+                  clean_text = {{clean_text_var}},
+                  cluster = {{colour_var}},
+                  V1 = {{x_var}},
+                  V2 = {{y_var}},
+                  permalink = {{permalink_var}},
+                  sentiment = {{sentiment_var}})
   return(data)
 }
 
 data <- read_csv(path / to / data)
 
-data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink)
+data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink, sentiment)
 
 LandscapeRGolem::run_app_from_other_project(data = data)
 ```
