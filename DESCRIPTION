@@ -42,7 +42,8 @@ Imports:
     tidylo (>= 0.2.0),
     ggrepel (>= 0.9.1),
     shiny (>= 1.7.4),
-    shinyjqui (>= 0.4.1)
+    shinyjqui (>= 0.4.1),
+    hexbin (>= 1.28.3)
 Remotes:
   jpcompartir/DisplayR
 Depends: 
