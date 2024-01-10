@@ -25,6 +25,7 @@ ls_plot_volume_over_time <- function(df, .date_var, unit = "week", fill = "#0f50
     ggplot2::geom_col(fill = fill) +
     ggplot2::theme_minimal() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
+    DisplayR::dr_theme_microsoft(scale_type = "continuous") +
     ggplot2::theme(
       legend.position = "none",
       axis.text.x = ggplot2::element_text(angle = 90)
@@ -59,6 +60,7 @@ ls_plot_tokens_counter <- function(df, text_var = .data$mention_content, top_n =
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = NULL, y = "Word Count", title = "Bar Chart of Most Frequent Words") +
+    DisplayR::dr_theme_microsoft(scale_type = "continuous") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
 }
 
@@ -570,6 +572,7 @@ ls_sentiment_over_time <- function(df,
     ggplot2::ggplot(ggplot2::aes(x = plot_date, y = n, fill = !!sent_sym)) +
     ggplot2::geom_col() +
     ggplot2::scale_x_date(date_breaks = "1 months", date_labels = "%d-%b") +
+    DisplayR::dr_theme_microsoft(scale_type = "discrete") +
     ggplot2::scale_fill_manual(
       aesthetics = c("fill", "colour"),
       values = c(
@@ -578,7 +581,6 @@ ls_sentiment_over_time <- function(df,
         "neutral" = "#FFB900"
       )
     ) +
-    ggplot2::theme_minimal() +
     ggplot2::theme(
       legend.position = "none",
       panel.grid.major = ggplot2::element_blank(),
