@@ -25,7 +25,10 @@
 #' #Change the legend:
 #' ls_example %>%
 #'  ls_plot_density(V1, V2, bins = 75) +
-#'  ggplot2::theme(legend.position = "right", legend.key.width = ggplot2::unit(0.25, "cm"), legend.key.height = ggplot2::unit(1.5, "cm")) +
+#'  ggplot2::theme(
+#'  legend.position = "right",
+#'  legend.key.width = ggplot2::unit(0.25, "cm"),
+#'  legend.key.height = ggplot2::unit(1.5, "cm")) +
 #' ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "right"))
 ls_plot_density <- function(df, x_var, y_var, bins = 100, legend_height = 0.25, legend_width = 1.5) {
 
