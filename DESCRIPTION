@@ -23,7 +23,7 @@ Suggests:
     testthat (>= 3.1.4),
     tableHTML (>= 2.1.0),
     htmltools (>= 0.5.2),
-    HelpR (>= 0.1.1),
+    DisplayR,
     viridis (>= 0.6.2)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
@@ -43,6 +43,8 @@ Imports:
     ggrepel (>= 0.9.1),
     shiny (>= 1.7.4),
     shinyjqui (>= 0.4.1)
+Remotes:
+  jpcompartir/DisplayR
 Depends: 
     R (>= 2.10)
 LazyData: true
