@@ -6,4 +6,4 @@ globals <- c(
   "facet_var", "word", "log_odds_weighted"
 )
 
-globalVariables(globals)
+utils::globalVariables(globals)
