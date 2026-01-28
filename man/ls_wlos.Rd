@@ -10,6 +10,7 @@ ls_wlos(
   text_var = clean_text,
   top_n = 30,
   text_size = 4,
+  filter_by = c("association", "frequency"),
   nrow = 4,
   top_terms_cutoff = 5000
 )
@@ -24,6 +25,8 @@ ls_wlos(
 \item{top_n}{Number of terms per plot}
 
 \item{text_size}{An integer determining text size, higher = larger}
+
+\item{filter_by}{whether to perform initial filtering by frequency or association}
 
 \item{nrow}{Number of rows to display the plots across}
 

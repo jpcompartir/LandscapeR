@@ -3,14 +3,9 @@
 
 # LandscapeR
 
-<!-- badges: start -->
-
 [![pkgdown](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml)
-<!-- badges: end -->
 
-<img src="man/figures/Capture_Intelligence_FullColour.png" align="top" width="100%" style="padding: 25px 50px 25px 0px;"/>
-
-<img src="man/figures/landscaper.png" align="right" width="300px;" height = "300px" style="padding: 25px 25px 25px 25px;"/>
+<img src="man/figures/landscaper_hex.png" align="right" width="300px" height="300px" style="padding: 25px 25px 25px 25px;"/>
 
 LandscapeR is our R Package for exploring text data which has been
 transformed into a navigable landscape. The package makes use of
@@ -32,6 +27,8 @@ You can install the development version of LandscapeR using the
 ``` r
 devtools::install_github(repo = "jpcompartir/LandscapeR")
 ```
+
+## Examples
 
 We can take this table of text:
 
@@ -61,6 +58,12 @@ And transform it into a navigable landscape:
 
 ``` r
 ls_example %>% ls_plot_static()
+#> Warning in .setup_fonts(): Font 'Segoe UI' not found in system, download and
+#> install individually to access full package functionality
+#> Warning in .setup_fonts(): Font 'NeueHaasGroteskText Pro Md' not found in
+#> system, download and install individually to access full package functionality
+#> Warning in .setup_fonts(): Font 'GT Walsheim Pro' not found in system, download
+#> and install individually to access full package functionality
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
@@ -99,7 +102,7 @@ ls_example %>%
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
-# Shiny Application
+## Shiny Application
 
 For the most up-to-date version of the Shiny application, you should
 install the LandscapeRGolem package:
@@ -111,3 +114,7 @@ remotes::install_github(repo = "jpcompartir/LandscaperGolem")
 Check out the [Running Your App Locally
 vignette](vignettes/running_app_locally.Rmd) for tips on how to run the
 app.
+
+------------------------------------------------------------------------
+
+<img src="man/figures/samy_banner.png" alt="SAMY Data Science" width="100%"/>
