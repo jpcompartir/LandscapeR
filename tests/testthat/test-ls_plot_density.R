@@ -16,6 +16,7 @@ test_that("Renders a plot and plot has correct values & aesthetics", {
   plot <- expect_silent(ls_plot_density(ls_example, V1, V2, bins = 50, legend_height = 0.3, legend_width = 2))
 
   plot_data <- ggplot2::ggplot_build(plot)
+  
 
   #Check the density is correct in the first place
   expect_equal(plot_data$data[[1]]$count[[1]], 13)
@@ -23,9 +24,9 @@ test_that("Renders a plot and plot has correct values & aesthetics", {
   #And the 20th
   expect_equal(plot_data$data[[1]]$count[[20]], 1)
 
-
   #Legend is placed on top by default
-  expect_equal(plot_data$plot$guides$fill$title.position, "top")
+  expect_equal(plot_data@plot@guides$params[[1]]$theme$legend.title.position, "top")
+
 
   #bins = 50 arg is working
   expect_equal(plot_data$plot$layers[[1]]$stat_params$bins, 50)
