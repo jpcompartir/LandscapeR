@@ -3,12 +3,11 @@ Title: Turns Unstructured Text Data Into A Navigable Landscape
 Version: 0.0.0.9000
 Authors@R: 
     as.person(c(
-  "Jack Penzer <jack.penzer@sharecreative.com> [cre, aut]",
-  "Mike Tapp <michael.tapp@sharecreative.com> [aut]",
-  "Jamie Hudson <jamie.hudson@sharecreative.com> [aut]",
+  "Jack Penzer <jack.penzer@samy.com> [cre, aut]",
+  "Mike Tapp <michael.tapp@samy.com> [aut]",
+  "Jamie Hudson <jamie.hudson@samy.com> [aut]",
   "Tim Mooney <tim.mooney@sharecreative.com> [aut]",
-  "SHARE Creative [cph]",
-  "Capture Intelligence[cph]"
+  "SAMY[cph]"
   ))
 Description: Turn unstructured text data into a navigable, interactive landscape.
 URL: https://jpcompartir.github.io/LandscapeR

@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 
 [![pkgdown](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml)
 
-------------------------------------------------------------------------
-
 <img src="man/figures/landscaper_hex.png" align="right" width="300px" height="300px" style="padding: 25px 25px 25px 25px;"/>
 
 LandscapeR is our R Package for exploring text data which has been transformed into a navigable landscape. The package makes use of cutting-edge language models and their dense word embeddings, dimensionality reduction techniques, clustering and/or topic modelling as well as Shiny for an interactive data-exploration & cleaning UI.
@@ -83,6 +81,6 @@ remotes::install_github(repo = "jpcompartir/LandscaperGolem")
 
 Check out the [Running Your App Locally vignette](vignettes/running_app_locally.Rmd) for tips on how to run the app.
 
-------------------------------------------------------------------------
+---
 
 <img src="man/figures/samy_banner.png" alt="SAMY Data Science" width="100%"/>

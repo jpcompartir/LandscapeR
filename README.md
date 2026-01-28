@@ -5,8 +5,6 @@
 
 [![pkgdown](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/jpcompartir/LandscapeR/actions/workflows/pkgdown.yaml)
 
-------------------------------------------------------------------------
-
 <img src="man/figures/landscaper_hex.png" align="right" width="300px" height="300px" style="padding: 25px 25px 25px 25px;"/>
 
 LandscapeR is our R Package for exploring text data which has been
