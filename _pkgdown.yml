@@ -79,6 +79,12 @@ reference:
   - '`ls_wlos`'
   - '`ls_sentiment_over_time`'
 
+- title: Terrain Maps
+  desc: >
+    Interactive 3D maps of a conversation, written to a single HTML file
+  contents:
+  - '`ls_plot_terrain`'
+
 - title: Utility Functions
   desc: >
     Exported functions for use elsewhere
@@ -92,3 +98,10 @@ repo:
   url:
     home: https://github.com/jpcompartir/LandscapeR
     source: https://github.com/jpcompartir/LandscapeR/tree/main
+
+articles:
+- title: Guides
+  contents:
+  - terrain_maps
+  - running_app_locally
+  - shiny_app_user_guide

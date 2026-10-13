@@ -5,10 +5,8 @@ Authors@R:
     as.person(c(
   "Jack Penzer <jack.penzer@samy.com> [cre, aut]",
   "Mike Tapp <michael.tapp@samy.com> [aut]",
-  "Jamie Hudson <jamie.hudson@samy.com> [aut]",
-  "Tim Mooney <tim.mooney@sharecreative.com> [aut]",
-  "SAMY[cph]"
-  ))
+  "Jamie Hudson <jamie.hudson@samy.com> [aut]", 
+  "SAMY [cph]"))
 Description: Turn unstructured text data into a navigable, interactive landscape.
 URL: https://jpcompartir.github.io/LandscapeR
 License: MIT + file LICENSE
@@ -41,7 +39,12 @@ Imports:
     tidylo (>= 0.2.0),
     ggrepel (>= 0.9.1),
     shiny (>= 1.7.4),
-    shinyjqui (>= 0.4.1)
+    shinyjqui (>= 0.4.1),
+    hexbin (>= 1.28.3),
+    jsonlite (>= 1.8.0),
+    grDevices,
+    stats,
+    utils
 Remotes:
   jpcompartir/DisplayR
 Depends: 

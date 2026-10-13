@@ -9,5 +9,6 @@ inst/doc
 dev_docs
 rendering_an_app
 dev_notes.Rmd
+docs
+tmp/
 .Rprofile
-docs/

@@ -102,7 +102,21 @@ ls_example %>%
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
-## Shiny Application
+## Interactive terrain maps
+
+`ls_plot_terrain()` turns the co-ordinates into an interactive 3D map, saved as a single HTML file that you can open in a browser or send to someone. The height of each part of the map shows how many documents sit there, the colours show the groups, and the place names come from the most distinctive words in each region.
+
+``` r
+ls_example %>%
+  ls_plot_terrain(V1, V2, group_var = cluster, text_var = text,
+                  title = "Browser talk", subtitle = "A map of the conversation")
+```
+
+<img src="man/figures/README-terrain.jpg" width="100%" alt="A 3D terrain map of the example browser conversation, with a mountain for each cluster and labels naming each cluster"/>
+
+You can rotate and zoom the map, search for a place, click a place to read example documents from it, and isolate any group. The [terrain maps article](https://jpcompartir.github.io/LandscapeR/articles/terrain_maps.html) has live examples and a guide to the settings.
+
+# Shiny Application
 
 For the most up-to-date version of the Shiny application, you should
 install the LandscapeRGolem package:
