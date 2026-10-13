@@ -105,8 +105,3 @@ articles:
   - terrain_maps
   - running_app_locally
   - shiny_app_user_guide
-
-home:
-  links:
-  - text: Report an issue
-    href: https://github.com/jpcompartir/LandscapeR/issues
