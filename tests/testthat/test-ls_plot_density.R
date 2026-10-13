@@ -16,13 +16,13 @@ test_that("Renders a plot and plot has correct values & aesthetics", {
   plot <- expect_silent(ls_plot_density(ls_example, V1, V2, bins = 50, legend_height = 0.3, legend_width = 2))
 
   plot_data <- ggplot2::ggplot_build(plot)
+  
 
   #Check the density is correct in the first place
   expect_equal(plot_data$data[[1]]$count[[1]], 13)
 
   #And the 20th
   expect_equal(plot_data$data[[1]]$count[[20]], 1)
-
 
   #Legend is placed on top by default
   #ggplot2 >= 3.5.0 stores guides as a ggproto object, and title.position becomes legend.title.position in the guide's theme

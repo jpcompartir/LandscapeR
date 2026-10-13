@@ -44,6 +44,9 @@ ls_example \%>\%
 #Change the legend:
 ls_example \%>\%
  ls_plot_density(V1, V2, bins = 75) +
- ggplot2::theme(legend.position = "right", legend.key.width = ggplot2::unit(0.25, "cm"), legend.key.height = ggplot2::unit(1.5, "cm")) +
+ ggplot2::theme(
+ legend.position = "right",
+ legend.key.width = ggplot2::unit(0.25, "cm"),
+ legend.key.height = ggplot2::unit(1.5, "cm")) +
 ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "right"))
 }
