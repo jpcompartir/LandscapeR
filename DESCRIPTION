@@ -6,7 +6,7 @@ Authors@R:
   "Jack Penzer <jack.penzer@samy.com> [cre, aut]",
   "Mike Tapp <michael.tapp@samy.com> [aut]",
   "Jamie Hudson <jamie.hudson@samy.com> [aut]", 
-  "SAMY [cph]")
+  "SAMY [cph]"))
 Description: Turn unstructured text data into a navigable, interactive landscape.
 URL: https://jpcompartir.github.io/LandscapeR
 License: MIT + file LICENSE
