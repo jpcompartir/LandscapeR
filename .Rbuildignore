@@ -11,3 +11,4 @@ rendering_an_app
 golem_testing
 ^\.github$
 ^tmp$
+^\.Rprofile$

@@ -1,5 +1,0 @@
-library(devtools)
-library(roxygen2)
-library(pkgdown)
-library(usethis)
-load_all()
