@@ -39,15 +39,6 @@ navbar:
     reference:
       text: Reference
       href: reference/index.html
-    articles:
-      text: Articles
-      menu:
-      - text: All vignettes
-        href: articles/index.html
-      - text: Running Your App Locally
-        href: articles/running_app_locally.html
-      - text: Shiny App User Guide
-        href: articles/shiny_app_user_guide.html
 
 footer:
   structure:
@@ -101,6 +92,7 @@ repo:
 
 articles:
 - title: Guides
+  navbar: ~
   contents:
   - terrain_maps
   - running_app_locally
