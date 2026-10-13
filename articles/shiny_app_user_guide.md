@@ -312,6 +312,7 @@ the names document, date, text, clean_text, text, cluster, V1, V2,
 permalink.
 
 ``` r
+
 prepare_data_for_landscaper <- function(data, document_var, date_var, text_var, clean_text_var, colour_var, x_var, y_var,permalink_var, sentiment_var){
   data <- data %>%
     dplyr::rename(document = {{document_var}},
@@ -336,6 +337,7 @@ differently. First you’ll need to rename the old sentiment variable, so
 that you can rename the peak_pit variable to sentiment.
 
 ``` r
+
 data <- data %>% rename(old_sentiment = sentiment)
 data <- prepare_data_for_landscaper(data, document, date, text, clean_text, cluster_name, V1, V2, permalink, sentiment_var = peak_pit)
 ```

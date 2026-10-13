@@ -65,9 +65,6 @@ per document.
 ``` r
 ls_example %>%
  ls_plot_density(V1, V2, bins = 150)
-#> Warning: Computation failed in `stat_binhex()`.
-#> Caused by error in `compute_group()`:
-#> ! The package "hexbin" is required for `stat_bin_hex()`.
 
 
 #Change the legend:
@@ -78,7 +75,4 @@ ls_example %>%
  legend.key.width = ggplot2::unit(0.25, "cm"),
  legend.key.height = ggplot2::unit(1.5, "cm")) +
 ggplot2::guides(fill = ggplot2::guide_colorbar(title.position = "right"))
-#> Warning: Computation failed in `stat_binhex()`.
-#> Caused by error in `compute_group()`:
-#> ! The package "hexbin" is required for `stat_bin_hex()`.
 ```

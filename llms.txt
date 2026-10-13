@@ -22,6 +22,7 @@ You can install the development version of LandscapeR using the
 `install_github` function from the `devtools` package:
 
 ``` r
+
 devtools::install_github(repo = "jpcompartir/LandscapeR")
 ```
 
@@ -30,6 +31,7 @@ devtools::install_github(repo = "jpcompartir/LandscapeR")
 We can take this table of text:
 
 ``` r
+
 library(LandscapeR)
 library(tidyverse)
 
@@ -54,6 +56,7 @@ ls_example
 And transform it into a navigable landscape:
 
 ``` r
+
 ls_example %>% ls_plot_static()
 #> Warning in .setup_fonts(): Font 'Segoe UI' not found in system, download and
 #> install individually to access full package functionality
@@ -69,6 +72,7 @@ We can add colour to a grouping variable to see where our groups sit and
 how they relate:
 
 ``` r
+
 ls_example %>%
   mutate(cluster = factor(cluster)) %>%
   ls_plot_group_static(group_var = cluster)
@@ -79,6 +83,7 @@ ls_example %>%
 We can home in on each group:
 
 ``` r
+
 ls_example %>%
   mutate(cluster = factor(cluster)) %>%
   ls_plot_group_facet(group_var = cluster)
@@ -93,6 +98,7 @@ cluster and sentiment, or product and topic etc. is the
 function:
 
 ``` r
+
 ls_example %>%
   ls_plot_variation_matrix(cluster, sentiment)
 #> Loading required namespace: viridis
@@ -100,12 +106,38 @@ ls_example %>%
 
 ![](reference/figures/README-unnamed-chunk-6-1.png)
 
-## Shiny Application
+## Interactive terrain maps
+
+[`ls_plot_terrain()`](https://jpcompartir.github.io/LandscapeR/reference/ls_plot_terrain.md)
+turns the co-ordinates into an interactive 3D map, saved as a single
+HTML file that you can open in a browser or send to someone. The height
+of each part of the map shows how many documents sit there, the colours
+show the groups, and the place names come from the most distinctive
+words in each region.
+
+``` r
+
+ls_example %>%
+  ls_plot_terrain(V1, V2, group_var = cluster, text_var = text,
+                  title = "Browser talk", subtitle = "A map of the conversation")
+```
+
+![A 3D terrain map of the example browser conversation, with a mountain
+for each cluster and labels naming each
+cluster](reference/figures/README-terrain.jpg)
+
+You can rotate and zoom the map, search for a place, click a place to
+read example documents from it, and isolate any group. The [terrain maps
+article](https://jpcompartir.github.io/LandscapeR/articles/terrain_maps.html)
+has live examples and a guide to the settings.
+
+# Shiny Application
 
 For the most up-to-date version of the Shiny application, you should
 install the LandscapeRGolem package:
 
 ``` r
+
 remotes::install_github(repo = "jpcompartir/LandscaperGolem")
 ```
 
@@ -145,6 +177,13 @@ One stop shop for building a Shiny app to explore a conversation
 - [`ls_sentiment_over_time()`](https://jpcompartir.github.io/LandscapeR/reference/ls_sentiment_over_time.md)
   : View a sentiment and volume over time chart
 
+## Terrain Maps
+
+Interactive 3D maps of a conversation, written to a single HTML file
+
+- [`ls_plot_terrain()`](https://jpcompartir.github.io/LandscapeR/reference/ls_plot_terrain.md)
+  : Render a landscape as an interactive 3D terrain map
+
 ## Utility Functions
 
 Exported functions for use elsewhere
@@ -161,8 +200,10 @@ Exported functions for use elsewhere
 
 # Articles
 
-### All vignettes
+### Guides
 
+- [Terrain
+  maps](https://jpcompartir.github.io/LandscapeR/articles/terrain_maps.md):
 - [Running Your App
   Locally](https://jpcompartir.github.io/LandscapeR/articles/running_app_locally.md):
 - [Shiny App User

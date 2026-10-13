@@ -5,11 +5,13 @@
 <url><loc>https://jpcompartir.github.io/LandscapeR/articles/index.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/articles/running_app_locally.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/articles/shiny_app_user_guide.html</loc></url>
+<url><loc>https://jpcompartir.github.io/LandscapeR/articles/terrain_maps.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/authors.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/index.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/column_type_checker.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/download_box.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/index.html</loc></url>
+<url><loc>https://jpcompartir.github.io/LandscapeR/reference/knit_print.ls_terrain.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_create_note_area.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_example.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_link_click.html</loc></url>
@@ -20,6 +22,7 @@
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_group_vol_time.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_sentiment_distribution.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_static.html</loc></url>
+<url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_terrain.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_tokens_counter.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_variation_matrix.html</loc></url>
 <url><loc>https://jpcompartir.github.io/LandscapeR/reference/ls_plot_volume_over_time.html</loc></url>

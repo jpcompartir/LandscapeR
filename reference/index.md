@@ -26,6 +26,13 @@ One stop shop for building a Shiny app to explore a conversation
 - [`ls_sentiment_over_time()`](https://jpcompartir.github.io/LandscapeR/reference/ls_sentiment_over_time.md)
   : View a sentiment and volume over time chart
 
+## Terrain Maps
+
+Interactive 3D maps of a conversation, written to a single HTML file
+
+- [`ls_plot_terrain()`](https://jpcompartir.github.io/LandscapeR/reference/ls_plot_terrain.md)
+  : Render a landscape as an interactive 3D terrain map
+
 ## Utility Functions
 
 Exported functions for use elsewhere

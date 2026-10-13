@@ -1,6 +1,7 @@
 # Running Your App Locally
 
 ``` r
+
 library(LandscapeRGolem)
 
 run_app()
@@ -12,6 +13,7 @@ with custom data, you can use the `run_app_from_other_project` function,
 and use the `data =` argument to feed in your data.
 
 ``` r
+
 data <- readr::read_csv(path / to / data)
 
 run_app_from_other_project(data = data)
@@ -44,6 +46,7 @@ Third we get some data and run it through our
 `prepare_data_for_landscaper` function.
 
 ``` r
+
 library(LandscapeRGolem)
 library(dplyr)
 library(readr)
@@ -87,6 +90,7 @@ From your Rstudio project, provided you have a saved file named
 entered, you will be able to access the app like so:
 
 ``` r
+
 library(processx)
 r_process <- process$new("Rscript", "run_app_locally.R")
 r_process # Check it says running, not finished
@@ -96,6 +100,7 @@ Then type localhost:3838 into your browser, you should find
 LandscapeRGolem running. To kill the app:
 
 ``` r
+
 r_process$kill()
 r_process # should be finished now, not running.
 ```
