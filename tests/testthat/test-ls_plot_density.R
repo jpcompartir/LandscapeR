@@ -25,7 +25,8 @@ test_that("Renders a plot and plot has correct values & aesthetics", {
 
 
   #Legend is placed on top by default
-  expect_equal(plot_data$plot$guides$fill$title.position, "top")
+  #ggplot2 >= 3.5.0 stores guides as a ggproto object, and title.position becomes legend.title.position in the guide's theme
+  expect_equal(plot_data$plot$guides$get_params("fill")$theme$legend.title.position, "top")
 
   #bins = 50 arg is working
   expect_equal(plot_data$plot$layers[[1]]$stat_params$bins, 50)
