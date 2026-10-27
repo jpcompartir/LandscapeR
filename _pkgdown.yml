@@ -30,7 +30,7 @@ template:
 navbar:
   bg: dark
   structure:
-    left:  [intro, reference, articles]
+    left:  [intro, reference, articles, news]
     right: [search, github]
   components:
     intro:
@@ -89,6 +89,7 @@ repo:
   url:
     home: https://github.com/jpcompartir/LandscapeR
     source: https://github.com/jpcompartir/LandscapeR/tree/main
+    issue: https://github.com/jpcompartir/LandscapeR/issues/
 
 articles:
 - title: Guides
