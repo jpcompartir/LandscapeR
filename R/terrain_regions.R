@@ -129,8 +129,9 @@ terrain_kmeans <- function(x, y, k, max_n = 150000) {
 }
 
 # Builds the place-name layers. Returns per-document region ids for each layer
-# and the summaries the browser needs.
-terrain_regions <- function(x, y, gi, txt, n_groups, by_group, n_samples = 5) {
+# and the summaries the browser needs. `priority` ranks the example documents
+# (see terrain_priority()).
+terrain_regions <- function(x, y, gi, txt, priority, n_groups, by_group, n_samples = 5) {
   n <- length(x)
   k_coarse <- max(5, min(12, round(n^(1 / 3) / 2.5)))
   k_fine <- max(12, min(40, 3 * k_coarse))
@@ -172,7 +173,7 @@ terrain_regions <- function(x, y, gi, txt, n_groups, by_group, n_samples = 5) {
       idx <- which(region == r)
       s <- character(0)
       if (!is.null(txt) && length(idx)) {
-        pick <- idx[sample.int(length(idx), min(n_samples, length(idx)))]
+        pick <- utils::head(idx[terrain_order(priority[idx])], n_samples)
         s <- gsub("\\s+", " ", txt[pick])
         long <- nchar(s) > 260
         s[long] <- paste0(substr(s[long], 1, 257), "...")

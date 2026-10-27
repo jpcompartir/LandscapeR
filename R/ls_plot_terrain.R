@@ -29,6 +29,20 @@
 #'   used to colour and label the terrain.
 #' @param text_var Optional text variable. One example document per bin is shown
 #'   in the hover tooltip.
+#' @param sample_by Optional expression that chooses which documents are shown
+#'   as examples in the hover tooltip and the place panels. It is evaluated
+#'   using the columns of `df`, as in `dplyr::filter()` or `dplyr::arrange()`.
+#'   A logical result acts as a filter, so only rows where it is `TRUE` are
+#'   shown, for example `label == "clean"`. A numeric result ranks the rows
+#'   from highest to lowest, for example `relevance`. Use `-relevance` to rank
+#'   from lowest to highest. To filter and rank at once, give `NA` to the rows
+#'   you want left out, for example `ifelse(label == "clean", relevance, NA)`.
+#'   A date cannot be used to rank directly: write `as.numeric(date)` to rank
+#'   by it, or a comparison such as `date >= "2024-01-01"` to filter by it.
+#'   Rows where the result is `NA` are never shown, and ties are broken at
+#'   random. It changes only which text is shown, not the heights or colours
+#'   of the map, so a strict filter can leave many columns with no example to
+#'   show on hover.
 #' @param bins Number of bins along the longer axis. Higher values give finer
 #'   detail. By default it grows with the number of rows, from 200 up to 420.
 #' @param bandwidth Smoothing applied to the counts, in bins. Larger values give
@@ -95,6 +109,7 @@ ls_plot_terrain <- function(df,
                             y_var = V2,
                             group_var = NULL,
                             text_var = NULL,
+                            sample_by = NULL,
                             bins = NULL,
                             bandwidth = 1.6,
                             roughness = 0.25,
@@ -135,6 +150,9 @@ ls_plot_terrain <- function(df,
   y <- terrain_pull(df, rlang::enquo(y_var), "y_var")
   g <- terrain_pull(df, rlang::enquo(group_var), "group_var")
   txt <- terrain_pull(df, rlang::enquo(text_var), "text_var")
+  sample_by <- rlang::enquo(sample_by)
+  pri <- terrain_priority(df, sample_by)
+  if (is.null(txt) && !rlang::quo_is_null(sample_by)) warning("`sample_by` has no effect without `text_var`.", call. = FALSE)
 
   if (!is.numeric(x) || !is.numeric(y)) stop("`x_var` and `y_var` must be numeric.")
 
@@ -145,6 +163,7 @@ ls_plot_terrain <- function(df,
   y <- y[keep]
   if (!is.null(g)) g <- g[keep]
   if (!is.null(txt)) txt <- as.character(txt[keep])
+  pri <- pri[keep]
 
   # Groups -------------------------------------------------------------------
   if (is.null(g)) {
@@ -324,7 +343,7 @@ ls_plot_terrain <- function(df,
   # Place names ------------------------------------------------------------------
   places <- NULL
   if (isTRUE(place_names) && !is.null(txt)) {
-    reg <- terrain_regions(x, y, gi, txt, n_groups, by_group = grouped && colour_by == "group")
+    reg <- terrain_regions(x, y, gi, txt, pri, n_groups, by_group = grouped && colour_by == "group")
     # Cell centres in data co-ordinates, for assigning cells to regions.
     ccx <- x0 + ((cells %% nx) + 0.5) * cell
     ccy <- y0 + ((cells %/% nx) + 0.5) * cell
@@ -366,9 +385,11 @@ ls_plot_terrain <- function(df,
   }
 
   # Example text per bin --------------------------------------------------------
+  # The best-ranked document in each bin, so bins whose documents are all
+  # filtered out by `sample_by` have no example.
   samples <- NULL
   if (!is.null(txt)) {
-    ord <- sample.int(length(cell_id))
+    ord <- terrain_order(pri)
     first <- ord[!duplicated(cell_id[ord])]
     s <- txt[first]
     s <- gsub("\\s+", " ", s)
@@ -469,6 +490,32 @@ terrain_pull <- function(df, quo, arg) {
     stop("Cannot find the column given to `", arg, "` in the data frame.", call. = FALSE)
   }
   df[[col]]
+}
+
+# Display priority of each document's text, evaluated like a dplyr::filter() or
+# dplyr::arrange() argument. Lower values are shown first and NA is never
+# shown: a logical result keeps the TRUE rows, a number ranks highest first.
+# With no expression every row ties, so the choice is random.
+terrain_priority <- function(df, quo) {
+  if (rlang::quo_is_null(quo)) return(numeric(nrow(df)))
+  s <- rlang::eval_tidy(quo, df)
+  if (length(s) != nrow(df)) {
+    stop("`sample_by` must give one value per row of the data frame.", call. = FALSE)
+  }
+  if (is.logical(s)) return(ifelse(s, 0, NA_real_))
+  if (is.numeric(s)) return(-as.numeric(s))
+  if (inherits(s, c("Date", "POSIXt"))) {
+    stop("`sample_by` cannot rank by a date directly. Write `as.numeric(date)` to show the newest ",
+         "first, or a comparison such as `date >= \"2024-01-01\"` to keep a date range.", call. = FALSE)
+  }
+  stop("`sample_by` must give a logical or numeric value. To keep certain categories, ",
+       "write a comparison such as `label == \"clean\"`.", call. = FALSE)
+}
+
+# Row order for picking example text: best priority first, ties at random, and
+# rows with NA priority left out.
+terrain_order <- function(priority) {
+  order(priority, stats::runif(length(priority)), na.last = NA)
 }
 
 # Row-normalised Gaussian smoothing matrix, so mass is preserved away from edges.

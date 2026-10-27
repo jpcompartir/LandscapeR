@@ -10,6 +10,7 @@ ls_plot_terrain(
   y_var = V2,
   group_var = NULL,
   text_var = NULL,
+  sample_by = NULL,
   bins = NULL,
   bandwidth = 1.6,
   roughness = 0.25,
@@ -41,6 +42,21 @@ used to colour and label the terrain.}
 
 \item{text_var}{Optional text variable. One example document per bin is shown
 in the hover tooltip.}
+
+\item{sample_by}{Optional expression that chooses which documents are shown
+as examples in the hover tooltip and the place panels. It is evaluated
+using the columns of \code{df}, as in \code{dplyr::filter()} or \code{dplyr::arrange()}.
+A logical result acts as a filter, so only rows where it is \code{TRUE} are
+shown, for example \code{label == "clean"}. A numeric result ranks the rows
+from highest to lowest, for example \code{relevance}. Use \code{-relevance} to rank
+from lowest to highest. To filter and rank at once, give \code{NA} to the rows
+you want left out, for example \code{ifelse(label == "clean", relevance, NA)}.
+A date cannot be used to rank directly: write \code{as.numeric(date)} to rank
+by it, or a comparison such as \code{date >= "2024-01-01"} to filter by it.
+Rows where the result is \code{NA} are never shown, and ties are broken at
+random. It changes only which text is shown, not the heights or colours
+of the map, so a strict filter can leave many columns with no example to
+show on hover.}
 
 \item{bins}{Number of bins along the longer axis. Higher values give finer
 detail. By default it grows with the number of rows, from 200 up to 420.}
