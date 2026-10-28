@@ -23,7 +23,7 @@ fall back to system fonts when there is no internet connection)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">LandscapeR</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@ fall back to system fonts when there is no internet connection)."></head><body>
     <li><a class="dropdown-item" href="../articles/running_app_locally.html">Running Your App Locally</a></li>
     <li><a class="dropdown-item" href="../articles/shiny_app_user_guide.html">Shiny App User Guide</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/jpcompartir/LandscapeR" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -75,6 +76,7 @@ fall back to system fonts when there is no internet connection).</p>
 <span>  y_var <span class="op">=</span> <span class="va">V2</span>,</span>
 <span>  group_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  text_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sample_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bins <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bandwidth <span class="op">=</span> <span class="fl">1.6</span>,</span>
 <span>  roughness <span class="op">=</span> <span class="fl">0.25</span>,</span>
@@ -117,6 +119,23 @@ used to colour and label the terrain.</p></dd>
 <dt id="arg-text-var">text_var<a class="anchor" aria-label="anchor" href="#arg-text-var"></a></dt>
 <dd><p>Optional text variable. One example document per bin is shown
 in the hover tooltip.</p></dd>
+
+
+<dt id="arg-sample-by">sample_by<a class="anchor" aria-label="anchor" href="#arg-sample-by"></a></dt>
+<dd><p>Optional expression that chooses which documents are shown
+as examples in the hover tooltip and the place panels. It is evaluated
+using the columns of <code>df</code>, as in <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange()</a></code>.
+A logical result acts as a filter, so only rows where it is <code>TRUE</code> are
+shown, for example <code>label == "clean"</code>. A numeric result ranks the rows
+from highest to lowest, for example <code>relevance</code>. Use <code>-relevance</code> to rank
+from lowest to highest. To filter and rank at once, give <code>NA</code> to the rows
+you want left out, for example <code>ifelse(label == "clean", relevance, NA)</code>.
+A date cannot be used to rank directly: write <code>as.numeric(date)</code> to rank
+by it, or a comparison such as <code>date &gt;= "2024-01-01"</code> to filter by it.
+Rows where the result is <code>NA</code> are never shown, and ties are broken at
+random. It changes only which text is shown, not the heights or colours
+of the map, so a strict filter can leave many columns with no example to
+show on hover.</p></dd>
 
 
 <dt id="arg-bins">bins<a class="anchor" aria-label="anchor" href="#arg-bins"></a></dt>

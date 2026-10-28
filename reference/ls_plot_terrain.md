@@ -21,6 +21,7 @@ ls_plot_terrain(
   y_var = V2,
   group_var = NULL,
   text_var = NULL,
+  sample_by = NULL,
   bins = NULL,
   bandwidth = 1.6,
   roughness = 0.25,
@@ -62,6 +63,26 @@ ls_plot_terrain(
 
   Optional text variable. One example document per bin is shown in the
   hover tooltip.
+
+- sample_by:
+
+  Optional expression that chooses which documents are shown as examples
+  in the hover tooltip and the place panels. It is evaluated using the
+  columns of `df`, as in
+  [`dplyr::filter()`](https://dplyr.tidyverse.org/reference/filter.html)
+  or
+  [`dplyr::arrange()`](https://dplyr.tidyverse.org/reference/arrange.html).
+  A logical result acts as a filter, so only rows where it is `TRUE` are
+  shown, for example `label == "clean"`. A numeric result ranks the rows
+  from highest to lowest, for example `relevance`. Use `-relevance` to
+  rank from lowest to highest. To filter and rank at once, give `NA` to
+  the rows you want left out, for example
+  `ifelse(label == "clean", relevance, NA)`. A date cannot be used to
+  rank directly: write `as.numeric(date)` to rank by it, or a comparison
+  such as `date >= "2024-01-01"` to filter by it. Rows where the result
+  is `NA` are never shown, and ties are broken at random. It changes
+  only which text is shown, not the heights or colours of the map, so a
+  strict filter can leave many columns with no example to show on hover.
 
 - bins:
 

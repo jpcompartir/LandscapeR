@@ -140,6 +140,55 @@ ls_plot_terrain(ls_example, V1, V2, text_var = text,
                 title = "Density", subtitle = "Documents per region")
 ```
 
+## Choosing the example documents
+
+By default, the tooltip and the place panels show example documents
+picked at random. Social data often holds a lot of noise, such as spam
+and bot posts, so random examples can be poor. If you have already
+marked the good documents in your data, you can use `sample_by` to
+choose the examples from them. It is evaluated using the columns of your
+data, in the same way as an argument to
+[`dplyr::filter()`](https://dplyr.tidyverse.org/reference/filter.html)
+or
+[`dplyr::arrange()`](https://dplyr.tidyverse.org/reference/arrange.html).
+
+The calls below assume a data frame called `posts` with a `label`
+column, holding values such as “clean” and “noise”, and a numeric
+`relevance` column.
+
+``` r
+
+# Show only the documents labelled "clean".
+ls_plot_terrain(posts, V1, V2, text_var = text, sample_by = label == "clean")
+
+# Show the most relevant documents first.
+ls_plot_terrain(posts, V1, V2, text_var = text, sample_by = relevance)
+
+# Show the least relevant documents first.
+ls_plot_terrain(posts, V1, V2, text_var = text, sample_by = -relevance)
+
+# Show the most relevant of the clean documents.
+ls_plot_terrain(posts, V1, V2, text_var = text,
+                sample_by = ifelse(label == "clean", relevance, NA))
+```
+
+The function follows these rules:
+
+- A logical result keeps the documents where it is `TRUE`.
+- A numeric result ranks the documents from highest to lowest.
+- Documents where the result is `NA` are never shown, and ties are
+  broken at random.
+- A date cannot be used to rank directly. Write `as.numeric(date)` to
+  rank by it, or a comparison such as `date >= "2024-01-01"` to filter
+  by it.
+
+`sample_by` changes only the example text. The heights, colours and
+place names still use every document, so if you want the noise removed
+from the map itself, filter the data before you call
+[`ls_plot_terrain()`](https://jpcompartir.github.io/LandscapeR/reference/ls_plot_terrain.md).
+A strict filter can also leave many columns with no example to show when
+you hover over them.
+
 ## Settings you may want to change
 
 Most maps need no settings beyond the variables and a title. The table
