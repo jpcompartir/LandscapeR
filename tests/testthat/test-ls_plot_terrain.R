@@ -95,3 +95,47 @@ test_that("place names can be switched off", {
                          place_names = FALSE, open = FALSE)
   expect_null(terrain_payload(out)$places)
 })
+
+test_that("sample_by as a filter only shows the chosen documents", {
+  df <- ls_example
+  df$keep <- df$sentiment == "positive"
+  df$keep[1:50] <- NA
+  df$tagged <- paste(ifelse(df$keep %in% TRUE, "KEEP", "DROP"), df$text)
+  out <- ls_plot_terrain(df, V1, V2, group_var = cluster, text_var = tagged,
+                         sample_by = keep, open = FALSE)
+  p <- terrain_payload(out)
+  panel <- c(unlist(p$places$groups$samples), unlist(lapply(p$places$layers$regions, `[[`, "samples")))
+  expect_true(length(p$samples$text) > 0)
+  expect_true(all(startsWith(p$samples$text, "KEEP")))
+  expect_true(length(panel) > 0)
+  expect_true(all(startsWith(panel, "KEEP")))
+  # Filtering the text does not drop documents from the map.
+  expect_equal(p$nDocs, nrow(df))
+})
+
+test_that("sample_by as a number ranks the documents, highest first", {
+  df <- ls_example
+  df$score <- sample(nrow(df))
+  df$tagged <- paste0("#", df$score, " ", df$text)
+  score_of <- function(s) as.integer(sub("^#([0-9]+) .*", "\\1", s))
+  top5 <- function(f) unname(lapply(split(f(df$score), df$cluster), function(v) sort(v, decreasing = TRUE)[1:5]))
+
+  p <- terrain_payload(ls_plot_terrain(df, V1, V2, group_var = cluster, text_var = tagged,
+                                       sample_by = score, open = FALSE))
+  expect_equal(lapply(p$places$groups$samples, score_of), top5(identity))
+
+  p <- terrain_payload(ls_plot_terrain(df, V1, V2, group_var = cluster, text_var = tagged,
+                                       sample_by = -score, open = FALSE))
+  expect_equal(lapply(p$places$groups$samples, function(s) -score_of(s)), top5(`-`))
+})
+
+test_that("sample_by rejects values it cannot rank", {
+  expect_error(ls_plot_terrain(ls_example, V1, V2, text_var = text, sample_by = sentiment, open = FALSE),
+               "logical or numeric")
+  expect_error(ls_plot_terrain(ls_example, V1, V2, text_var = text, sample_by = date, open = FALSE),
+               "as.numeric")
+  expect_error(ls_plot_terrain(ls_example, V1, V2, text_var = text, sample_by = c(TRUE, FALSE), open = FALSE),
+               "one value per row")
+  expect_warning(ls_plot_terrain(ls_example, V1, V2, sample_by = sentiment == "positive", open = FALSE),
+                 "no effect without `text_var`")
+})
